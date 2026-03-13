@@ -1,0 +1,78 @@
+wwwroot\assets\css\about.css
+wwwroot\assets\css\blog.css
+wwwroot\assets\css\contact.css
+wwwroot\assets\css\courses-detail.css
+wwwroot\assets\css\courses.css
+wwwroot\assets\css\home.css
+wwwroot\assets\css\teachers.css
+wwwroot\assets\images\1ci card
+wwwroot\assets\images\2ci card
+wwwroot\assets\images\2ci user.jpeg
+wwwroot\assets\images\3cu card
+wwwroot\assets\images\3cu card adam.jpeg
+wwwroot\assets\images\4cu carddir
+wwwroot\assets\images\4cu user.jpeg
+wwwroot\assets\images\5ci card
+wwwroot\assets\images\5ci user.jpeg
+wwwroot\assets\images\6ci card
+wwwroot\assets\images\7ci kurs
+wwwroot\assets\images\8ci card
+wwwroot\assets\images\about-us_01.jpg
+wwwroot\assets\images\about-us_02-3.png
+wwwroot\assets\images\about-us_03.jpg
+wwwroot\assets\images\about-us_page-title.jpg
+wwwroot\assets\images\backimage
+wwwroot\assets\images\backsekil
+wwwroot\assets\images\bacome-a-teacher_02.png
+wwwroot\assets\images\blog-02-600x486.jpg
+wwwroot\assets\images\Blue Yellow Elegant Professional University Logo.png
+wwwroot\assets\images\card1
+wwwroot\assets\images\carousel-1.jpg
+wwwroot\assets\images\contacts_02.png
+wwwroot\assets\images\counter_bg.jpg
+wwwroot\assets\images\courses_12-600x800.jpg
+wwwroot\assets\images\david-leto-380x422.jpg
+wwwroot\assets\images\david.jpg
+wwwroot\assets\images\Feather – Simply beautiful open source icons.html
+wwwroot\assets\images\Feather – Simply beautiful open source icons_files\analytics.js.download
+wwwroot\assets\images\Feather – Simply beautiful open source icons_files\app-1634a995b9d55fdb96b7.js.download
+wwwroot\assets\images\Feather – Simply beautiful open source icons_files\commons-6c88d13cab4dacc87dd1.js.download
+wwwroot\assets\images\Feather – Simply beautiful open source icons_files\component---src-pages-index-js-cfd89461eb66c59758a9.js.download
+wwwroot\assets\images\Feather – Simply beautiful open source icons_files\js
+wwwroot\assets\images\Feather – Simply beautiful open source icons_files\webpack-runtime-fbffb6759d41559e477b.js.download
+wwwroot\assets\images\flip-boxes_01.jpg
+wwwroot\assets\images\flip-boxes_02.jpg
+wwwroot\assets\images\home sekil.jpg
+wwwroot\assets\images\home_01-1.png
+wwwroot\assets\images\home_01-3.png
+wwwroot\assets\images\home_01-4 (1).png
+wwwroot\assets\images\home_01-4.png
+wwwroot\assets\images\home_slider_bg.jpg
+wwwroot\assets\images\icon-box_01-214x208.png
+wwwroot\assets\images\icon_bg.png
+wwwroot\assets\images\imggggg
+wwwroot\assets\images\lauren-davis-380x422.jpg
+wwwroot\assets\images\logo-light (1).png
+wwwroot\assets\images\logo-light.png
+wwwroot\assets\images\logo1.png
+wwwroot\assets\images\logo2.png
+wwwroot\assets\images\logo3.png
+wwwroot\assets\images\logo4.png
+wwwroot\assets\images\logo5.png
+wwwroot\assets\images\logo6.png
+wwwroot\assets\images\logo_footer.png
+wwwroot\assets\images\map.jpg
+wwwroot\assets\images\nicole-brown-380x422.jpg
+wwwroot\assets\images\oliver.jpg
+wwwroot\assets\images\page-title_default.jpg
+wwwroot\assets\images\slider2.jpg
+wwwroot\assets\images\testimonials.jpg
+wwwroot\assets\images\testimonials_01-180x180.jpg
+wwwroot\assets\images\tina-brown-380x422.jpg
+wwwroot\assets\js\about.js
+wwwroot\assets\js\blog.js
+wwwroot\assets\js\contact.js
+wwwroot\assets\js\courses-detail.js
+wwwroot\assets\js\courses.js
+wwwroot\assets\js\home.js
+wwwroot\assets\js\teacher.js

@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css {
+    <link rel="stylesheet" href="~/assets/css/courses-detail.css">
+}
+
+
+
+<main>
+    <section id="main-detail">
+        <div class="main-first">
+
+            <div class="word-part">
+
+                <span class="breadcrumb">
+                    <a href="home.html">Home</a> ›
+                    <a href="courses.html">Courses</a> ›
+                    JavaScript Masterclass
+                </span>
+
+                <h1>JavaScript Masterclass: <br> From Zero to Expert</h1>
+
+                <div class="course-meta">
+
+                    <span class="category">Programming</span>
+
+                    <div class="rating">
+                        ⭐⭐⭐⭐⭐
+                        <span>4.8 (1,240 rəy)</span>
+                    </div>
+
+                    <div class="students">
+                        👥 3,500+ tələbə
+                    </div>
+
+                </div>
+
+                <div class="teacher">
+                    <div class="teacher-img">ML</div>
+                    <span>Müəllim: <b>Michael Lee</b></span>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <div class="container">
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="overview">Ümumi Baxış</button>
+            <button class="tab-btn" data-tab="curriculum">Kurikulum</button>
+            <button class="tab-btn" data-tab="reviews">Rəylər</button>
+        </div>
+
+
+
+        <div class="tab-content active" id="overview">
+            <h2>Bu kursu bitirdikdə nə öyrənəcəksiniz?</h2>
+
+            <ul class="learn-list">
+                <li><i class="fa-solid fa-check"></i> JavaScript əsasları</li>
+                <li><i class="fa-solid fa-check"></i> ES6 xüsusiyyətləri</li>
+                <li><i class="fa-solid fa-check"></i> REST API ilə işləmək</li>
+                <li><i class="fa-solid fa-check"></i> DOM manipulyasiyası</li>
+            </ul>
+
+            <h2>Kurs haqqında</h2>
+
+            <p>
+                Bu kurs sıfırdan başlayaraq sizi JavaScript developer səviyyəsinə çatdırır.
+            </p>
+        </div>
+
+
+        <div class="tab-content" id="curriculum">
+
+            <h2>Kurs Kurikulumu</h2>
+
+            <div class="lesson">
+                <p>JavaScript nədir?</p>
+                <span>08:24</span>
+            </div>
+
+            <div class="lesson">
+                <p>Mühit qurulması (VS Code)</p>
+                <span>12:05</span>
+            </div>
+
+            <div class="lesson">
+                <p>Dəyişənlər: var, let, const</p>
+                <span>18:32</span>
+            </div>
+
+        </div>
+
+
+        <div class="tab-content" id="reviews">
+
+            <h2>Tələbə Rəyləri</h2>
+
+            <div class="review">
+                <h4>Elçin Məmmədov</h4>
+                <p>Bu kurs həyatımı dəyişdi!</p>
+            </div>
+
+            <div class="review">
+                <h4>Leyla Abbasova</h4>
+                <p>Layihə hissəsi çox faydalıdır.</p>
+            </div>
+
+            <div class="review">
+                <h4>Rauf Həsənov</h4>
+                <p>Async/Await çox yaxşı izah olunub.</p>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/assets/js/courses-detail.js"></script>
+}
