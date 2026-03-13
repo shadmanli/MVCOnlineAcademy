@@ -31,3 +31,4 @@ C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\refint\Academy.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.pdb
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.genruntimeconfig.cache
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\ref\Academy.dll
+C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.sourcelink.json

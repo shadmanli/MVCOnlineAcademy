@@ -18,65 +18,11 @@
 </head>
 
 <body>
-@await Component.InvokeAsync("Header");
+@await Component.InvokeAsync("Header")
 
             @RenderBody()
 
-
-    <footer>
-        <section id="footer">
-            <div class="footer-common">
-                <div class="footer-container">
-                    <div class="footer-first">
-                        <div class="for-logoo">
-                            <img src="~/assets/images/logo_footer.png" alt="">
-                        </div>
-                        <div class="info-row">
-                            <span class="orangess">Address:</span>
-                            <p>27 Division St, New <br>York, NY 10002, USA</p>
-                        </div>
-
-                        <div class="info-row">
-                            <span class="orangess">Email:</span>
-                            <p>iguru@mail.com</p>
-                        </div>
-
-                        <div class="info-row">
-                            <span class="orangess">Phone:</span>
-                            <p>507-452-1254</p>
-                        </div>
-
-
-                    </div>
-
-                    <div class="footer-second">
-                        <h3>Popular Courses</h3>
-                        <ul class="end">
-                            <li>
-                                Courses
-                                UI/UX Design
-                            </li>
-                            <li>WordPress Development</li>
-                            <li>Business Strategy</li>
-                            <li>Software Development</li>
-                            <li>
-                                Business English
-                            </li>
-                        </ul>
-                    </div>
-
-
-
-                    <div class="footer-third">
-                        <div class="third">
-                            <h2>Find Us Here</h2>
-                            <img src="~/assets/images/map.jpg" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </footer>
+    @await Component.InvokeAsync("Footer")
 
     <div class="modal" id="loginModal">
         <div class="modal-box login-box">
