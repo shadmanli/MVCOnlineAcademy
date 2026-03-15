@@ -2,6 +2,8 @@
 
 namespace Academy.Areas.Admin.Controllers
 {
+
+    [Area("Admin")]
     public class DashboardController : Controller
     {
         [Area("Admin")]

@@ -1,8 +1,13 @@
 using Academy.Data;
+using Academy.Services;
+using Academy.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<ISliderService, SliderService>();
+builder.Services.AddAutoMapper(typeof(Program));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

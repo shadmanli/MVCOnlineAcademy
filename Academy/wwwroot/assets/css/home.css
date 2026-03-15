@@ -398,10 +398,10 @@ body{
 }
 
 .first h3,
-.second h3{
-  color:white;
-  font-size:23px;
-  margin-top:120px;
+.second h3 {
+    color: white;
+    font-size: 23px;
+    margin-top: 40px !important;
 }
 
 .first span,

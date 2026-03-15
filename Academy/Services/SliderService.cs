@@ -3,6 +3,7 @@ using Academy.Models;
 using Academy.Services.Interfaces;
 using Academy.ViewModels.Slider;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academy.Services
 {
@@ -42,6 +43,11 @@ namespace Academy.Services
             sliders.CreatedAt = DateTime.Now;
             await _context.Sliders.AddAsync(sliders);
             await _context.SaveChangesAsync();
+        }
+
+        public  async Task<IEnumerable<Slider>> GetAllAsync()
+        {
+            return await _context.Sliders.OrderByDescending(m=>m.Id).ToListAsync();
         }
     }
 }

@@ -50,9 +50,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "AutoMapper": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
-              "version": "[16.1.1, )"
+              "version": "[12.0.1, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

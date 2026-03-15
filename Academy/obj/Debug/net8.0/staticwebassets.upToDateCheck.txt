@@ -91,7 +91,6 @@ wwwroot\assets\css\blog.css
 wwwroot\assets\css\contact.css
 wwwroot\assets\css\courses-detail.css
 wwwroot\assets\css\courses.css
-wwwroot\assets\css\home.css
 wwwroot\assets\css\teachers.css
 wwwroot\assets\images\1ci card
 wwwroot\assets\images\2ci card
@@ -164,3 +163,6 @@ wwwroot\assets\js\courses-detail.js
 wwwroot\assets\js\courses.js
 wwwroot\assets\js\home.js
 wwwroot\assets\js\teacher.js
+wwwroot\uploads\sliders\3d67f526-b33e-46a4-af51-63e590d7ff37_lauren-davis-380x422.jpg
+wwwroot\uploads\sliders\5129e279-6341-44a8-9059-7e442abb7210_home_slider_bg.jpg
+wwwroot\assets\css\home.css

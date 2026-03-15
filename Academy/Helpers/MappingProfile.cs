@@ -9,6 +9,7 @@ namespace Academy.Helpers
         public MappingProfile()
         {
             CreateMap<SliderCreateVM, Slider>();
+            CreateMap<Slider, SliderVM>();
         }
     }
 }

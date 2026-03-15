@@ -1,19 +1,22 @@
-﻿
+﻿@model IEnumerable<SliderVM>
 
-<section id="main-start">
-    <div class="slider">
-        <div class="top-line"></div>
-        <div class="slide-active" style="background-image:url('./assets/images/home_slider_bg.jpg')">
-            <p>Best Online Courses</p>
-            <h2>Best Education From<br>Your Home</h2>
-            <a href="courses.html">View Courses</a>
+@if (Model != null && Model.Any())
+{
+    <section id="main-start" class="main-intro">
+        <div class="slider">
+            <div class="top-line"></div>
+
+            @foreach (var slide in Model)
+            {
+                <div class="slide" style="background: url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;">
+                    <div class="slide-text">
+                        <h2>@slide.Title</h2>
+                        <p>@slide.Description</p>
+                        <a href="courses.html">View Courses</a>
+                       
+                    </div>
+                </div>
+            }
         </div>
-
-        <div class="slide" style="background-image:url('./assets/images/home sekil.jpg')">
-            <p>Top Online Courses for Exam Success</p>
-            <h2>Best Online Learning<br>Platform</h2>
-            <a href="courses.html">View Courses</a>
-        </div>
-
-    </div>
-</section>
+    </section>
+}
