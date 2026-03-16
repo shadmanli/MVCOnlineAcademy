@@ -8,6 +8,7 @@ C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Academy.runtimeconf
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Academy.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Academy.pdb
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Humanizer.dll
@@ -255,4 +256,3 @@ C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\refint\Academy.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.pdb
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.genruntimeconfig.cache
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\ref\Academy.dll
-C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

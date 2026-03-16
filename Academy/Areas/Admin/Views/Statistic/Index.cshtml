@@ -1,0 +1,78 @@
+﻿@model IEnumerable<StatisticVM>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center" style="margin-top:70px;">
+        <h2>Statistika</h2>
+
+        <a asp-action="Create" class="btn btn-success">
+            Yeni Statistika
+        </a>
+    </div>
+
+    <div class="row mt-4">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body text-center">
+                        <label>Başlıq</label>
+                        <h4 class="one" style="color:gray">@item.Title</h4>
+
+                        <label>Say</label>
+                        <h2 class="two" style="color:gray">@item.Count</h2>
+
+                        <a asp-action="Detail"
+                           asp-route-id="@item.Id"
+                           class="btn btn-info btn-sm">
+                            Ətraflı
+                        </a>
+
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-primary btn-sm ms-1">
+                            Yenilə
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-danger btn-sm ms-1 delete-statistic-btn"
+                                data-id="@item.Id">
+                            Sil
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.delete-statistic-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            if (!confirm('Silinsin?')) return;
+
+            const id = this.dataset.id;
+
+            fetch(`/Admin/Statistic/Delete/${id}`, {
+                method: 'GET'
+            })
+            .then(res => {
+                if (res.ok) {
+
+                    const card = this.closest('.col-md-4');
+                    card.remove();
+
+                } else {
+                    alert('Silinmə zamanı xəta baş verdi!');
+                }
+            })
+            .catch(() => alert('Xəta baş verdi!'));
+        });
+    });
+</script>
+

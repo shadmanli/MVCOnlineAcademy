@@ -1,23 +1,23 @@
-﻿<section id="About">
+﻿
+@model AboutUsVM
+
+<section id="About">
     <div class="about-part">
         <div class="image">
-            <img class="main-img" src="~/assets/images/home_01-1.png" alt="">
-            <img class="circle-green" src="~/assets/images/home_01-3.png" alt="">
-            <img class="circle-orange" src="~/assets/images/home_01-4 (1).png" alt="">
+            <img class="main-img" src="~/uploads/aboutus/@Model.Image" alt="">
+         
         </div>
         <div class="about-text">
             <h5>ABOUT US</h5>
             <span>
-                Learn New Skills,
-                <br>Advance Your Career
+                @Model.Title
+                <br>
             </span>
             <p>
-                Iguru has a first rate academic program, a fully qualified. With over 50 years of experience teaching
-                English around the world, we know that no two learners are the same. That’s why we tailor our course to
-                your learning level, motivations and lifestyle. Set your level!
+               @Model.Description
             </p>
             <span class="number">
-                Call Us <span class="phone">+1 888 561 795 1 </span>or
+                Call Us <span class="phone">@Model.Phone </span>or
             </span>
             <a href="courses.html">Submit</a>
         </div>

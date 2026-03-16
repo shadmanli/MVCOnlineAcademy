@@ -1,26 +1,20 @@
 ﻿
+@model IEnumerable<StatisticVM>
 <section id="Numbers">
     <div class="common-numbers">
         <div class="img-quality" style="background-image: url(./assets/images/counter_bg.jpg);">
 
 
             <div class="number-situatedd">
-                <div class="quality-container">
-                    <h3>589</h3>
-                    <span>Creative Events</span>
-                </div>
-                <div class="quality-container">
-                    <h3>589</h3>
-                    <span>Creative Events</span>
-                </div>
-                <div class="quality-container">
-                    <h3>589</h3>
-                    <span>Creative Events</span>
-                </div>
-                <div class="quality-container">
-                    <h3>589</h3>
-                    <span>Creative Events</span>
-                </div>
+                @foreach(var item in Model)
+                {
+                    <div class="quality-container">
+                        <h3>@item.Title</h3>
+                        <span>@item.Count</span>
+                    </div>
+                }
+
+
             </div>
         </div>
     </div>

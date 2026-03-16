@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ISliderService, SliderService>();
+builder.Services.AddScoped<IAboutUsService, AboutUsService>();
+builder.Services.AddScoped<IStatisticService, StatisticService>();
+builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 

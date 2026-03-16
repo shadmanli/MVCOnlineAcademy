@@ -1,0 +1,74 @@
+﻿@model IEnumerable<AboutUsVM>
+<div class="container-fluid px-4 mt-5 st-4">
+
+    <h2 class="mb-4" style="margin-top: 70px;">AboutUs</h2>
+
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-secondary">Əlavə et</a>
+    </div>
+
+    <div id="sliderContainer">
+        <div class="row" id="sliderRow">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4" data-slider-id="@item.Id">
+                        <div class="card shadow-sm mb-4">
+
+                            <img class="card-img-top"
+                                 src="@(Url.Content("~/uploads/aboutus/" + item.Image))"
+                                 alt="Slider Image" />
+
+                            <div class="card-body text-center">
+
+                                <a asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info btn-sm">
+                                    Ətraflı
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-primary btn-sm ms-1">
+                                    Yenilə
+                                </a>
+
+                                <button type="button"
+                                        class="btn btn-danger btn-sm ms-1 delete-about-btn"
+                                        data-id="@item.Id">
+                                    Sil
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.delete-about-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (!confirm('Silinsin?')) return;
+
+            const id = this.dataset.id;
+
+            fetch(`/Admin/AboutUs/Delete/${id}`, {
+                method: 'GET'
+            })
+            .then(res => {
+                if (res.ok) {
+                   
+                    const sliderDiv = this.closest('[data-slider-id]');
+                    sliderDiv.remove();
+                } else {
+                    alert('Silinmə zamanı xəta baş verdi!');
+                }
+            })
+            .catch(() => alert('Xəta baş verdi!'));
+        });
+    });
+</script>

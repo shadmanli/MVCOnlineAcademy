@@ -7,6 +7,10 @@ namespace Academy.Services.Interfaces
     {
         Task CreateAsync(SliderCreateVM slider);
         Task<IEnumerable<Slider>> GetAllAsync();
+        Task<Slider> GetByIdAsync(int id);  
+        Task DeleteAsync(Slider slider);
+        Task EditAsync(SliderEditVM slider);
+
 
     }
 }

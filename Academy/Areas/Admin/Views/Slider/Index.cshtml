@@ -50,3 +50,27 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.querySelectorAll('.delete-slider-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (!confirm('Silinsin?')) return;
+
+            const id = this.dataset.id;
+
+            fetch(`/Admin/Slider/Delete/${id}`, {
+                method: 'GET'
+            })
+            .then(res => {
+                if (res.ok) {
+                
+                    const sliderDiv = this.closest('[data-slider-id]');
+                    sliderDiv.remove();
+                } else {
+                    alert('Silinmə zamanı xəta baş verdi!');
+                }
+            });
+        });
+    });
+</script>

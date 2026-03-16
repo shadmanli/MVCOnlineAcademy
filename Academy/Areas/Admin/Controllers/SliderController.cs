@@ -38,5 +38,48 @@ namespace Academy.Areas.Admin.Controllers
             await _sliderService.CreateAsync(model);
             return RedirectToAction(nameof(Index));
         }
+
+
+        public async Task<IActionResult> Detail(int id)
+        {
+            var slider = await _sliderService.GetByIdAsync(id);
+            if (slider == null) return NotFound();
+            var SliderVM = _mapper.Map<SliderDetailVM>(slider);
+            return View(SliderVM);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var slider = await _sliderService.GetByIdAsync(id);
+            if (slider == null) return NotFound();
+            await _sliderService.DeleteAsync(slider);
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpGet]
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var slider = await _sliderService.GetByIdAsync(id);
+            var sliderEditVM = new SliderEditVM
+            {
+                Id = slider.Id,
+                Title = slider.Title,
+                Description = slider.Description,
+                Image = slider.Image,
+            };
+            return View(sliderEditVM);
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> Edit(SliderEditVM model)
+        {
+            await _sliderService.EditAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

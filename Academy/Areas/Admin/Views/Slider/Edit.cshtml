@@ -1,0 +1,45 @@
+﻿@model SliderEditVM
+
+<div class="container py-10">
+    <h2>Slayderi Yenilə</h2>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Image" />
+
+        <div class="mb-3">
+            <label>Cari Şəkil:</label><br />
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="~/uploads/sliders/@Model.Image"
+                     alt="Current Image"
+                     style="max-width:150px; height:auto;" />
+            }
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Photo">Yeni Şəkil (istəyə bağlı)</label>
+            <input asp-for="Photo" type="file" class="form-control" />
+            <span asp-validation-for="Photo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Title">Başlıq</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description">Təsvir</label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Təsdiqlə</button>
+            <a asp-action="Index" class="btn btn-secondary">İmtina et</a>
+        </div>
+    </form>
+</div>
+
+
