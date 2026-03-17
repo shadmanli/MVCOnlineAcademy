@@ -1,9 +1,13 @@
-﻿<section id="Mission">
+﻿
+@model MissionVM
+
+
+<section id="Mission">
     <div class="mission-parts">
         <div class="mission-left">
             <span>OUR MISSION</span>
-            <h1>At What We Believe</h1>
-            <p>Our culture is diverse, inclusive, and committed to personal and <br> professional development. We’re not afraid to take on a new  <br>challenge, and we love taking courses!</p>
+            <h1>@Model.Title</h1>
+            <p>@Model.Description</p>
 
             <div class="skills">
 
@@ -44,8 +48,9 @@
                 </div>
             </div>
         </div>
+
         <div class="image-mission">
-            <img src="~/assets/images/about-us_02-3.png" alt="">
+            <img src="@Url.Content("~/uploads/mission/" + Model.Image)" alt="">
         </div>
     </div>
 </section>

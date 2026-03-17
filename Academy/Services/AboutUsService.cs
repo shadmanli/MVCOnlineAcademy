@@ -43,7 +43,7 @@ namespace Academy.Services
         public async Task DeleteAsync(AboutUs aboutus)
         {
            var data = await _context.AboutUs.FindAsync(aboutus.Id);
-            if (data == null) return;
+           ;
             var path = Path.Combine(_env.WebRootPath, "uploads", "aboutus", data.Image);
             if (File.Exists(path))
             {

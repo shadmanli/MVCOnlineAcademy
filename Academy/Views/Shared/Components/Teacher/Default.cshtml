@@ -1,0 +1,27 @@
+﻿@using Academy.ViewModels.Banner
+@model IEnumerable<BannerVM>
+
+@{
+ 
+    var banner = Model?.FirstOrDefault(b => b.Page == "Teacher");
+}
+
+@if (banner != null)
+{
+    <section id="teacher-section">
+        <div class="teacher-container">
+            <div class="top-line"></div>
+
+            <div class="teacher-img">
+                <img src="@Url.Content("~/uploads/banner/" + banner.Image)" alt="@banner.Title">
+
+                <div class="teacher-content">
+                    <h1>@banner.Title</h1>
+                    <span>
+                        <a asp-controller="Home" asp-action="Index">Home</a> > @banner.Page
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+}

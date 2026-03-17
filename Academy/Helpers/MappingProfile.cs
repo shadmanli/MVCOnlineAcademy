@@ -1,8 +1,10 @@
 ﻿using Academy.Models;
 using Academy.ViewModels.AboutUs;
 using Academy.ViewModels.Banner;
+using Academy.ViewModels.Blog;
 using Academy.ViewModels.Feature;
 using Academy.ViewModels.FeatureVM;
+using Academy.ViewModels.Mission;
 using Academy.ViewModels.Slider;
 using Academy.ViewModels.Statistic;
 using AutoMapper;
@@ -36,7 +38,13 @@ namespace Academy.Helpers
 
             CreateMap<Banner, BannerDetailVM>();
 
+            CreateMap<Mission, MissionVM>();
+                CreateMap<MissionCreateVM, Mission>();
+           CreateMap<Mission, MissionDetailVM>();
 
+
+            CreateMap <BlogCreateVM, Blog>();
+             CreateMap<Blog, BlogVM>();
         }
     }
 }

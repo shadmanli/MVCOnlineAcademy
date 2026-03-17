@@ -10,6 +10,8 @@ builder.Services.AddScoped<IAboutUsService, AboutUsService>();
 builder.Services.AddScoped<IStatisticService, StatisticService>();
 builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddScoped<IBannerService, BannerService>();
+builder.Services.AddScoped<IMissionService, MissionService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 
