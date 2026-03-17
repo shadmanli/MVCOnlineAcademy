@@ -9,6 +9,7 @@ builder.Services.AddScoped<ISliderService, SliderService>();
 builder.Services.AddScoped<IAboutUsService, AboutUsService>();
 builder.Services.AddScoped<IStatisticService, StatisticService>();
 builder.Services.AddScoped<IFeatureService, FeatureService>();
+builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 

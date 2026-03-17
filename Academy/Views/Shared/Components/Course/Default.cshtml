@@ -1,16 +1,27 @@
-﻿<section id="blog-main">
-    <div class="blog-first">
+﻿@using Academy.ViewModels.Banner
+@model IEnumerable<BannerVM>
 
-        <div class="top-line"></div>
-        <div class="blog-content">
-            <h1>Courses</h1>
-            <span> <a href="home.html">Home</a> > Courses</span>
+@{
+   
+    var banner = Model.FirstOrDefault(b => b.Page == "Courses");
+}
+
+@if (banner != null)
+{
+    <section id="blog-main">
+        <div class="blog-first">
+
+            <div class="top-line"></div>
+
+            <div class="blog-content">
+                <h1>@banner.Title</h1>
+                <span> <a asp-controller="Home" asp-action="Index">Home</a> > @banner.Page</span>
+            </div>
+
+            <div class="blog-img">
+                <img src="@Url.Content("~/uploads/banner/" + banner.Image)" alt="@banner.Title">
+            </div>
+
         </div>
-
-
-        <div class="blog-img">
-            <img src="~/assets/images/page-title_default.jpg" alt="">
-        </div>
-
-    </div>
-</section>
+    </section>
+}

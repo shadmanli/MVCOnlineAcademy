@@ -1,5 +1,7 @@
 ﻿using Academy.Models;
 using Academy.ViewModels.AboutUs;
+using Academy.ViewModels.Banner;
+using Academy.ViewModels.Feature;
 using Academy.ViewModels.FeatureVM;
 using Academy.ViewModels.Slider;
 using Academy.ViewModels.Statistic;
@@ -26,7 +28,14 @@ namespace Academy.Helpers
             CreateMap<Statistic, StatisticDetailVM>();
           
              CreateMap<Feature, FeatureVM>();
-        
+            CreateMap<FeatureCreateVM, Feature>();
+                CreateMap<Feature, FeatureDetailVM>();
+
+            CreateMap<Banner, BannerVM>();
+             CreateMap<BannerCreateVM, Banner>();
+
+            CreateMap<Banner, BannerDetailVM>();
+
 
         }
     }

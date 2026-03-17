@@ -3,52 +3,68 @@
   "WorkspaceRootPath": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\home\\logoviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\home\\logoviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\wwwroot\\assets\\css\\blog.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:wwwroot\\assets\\css\\blog.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\home\\feedbackviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\home\\feedbackviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\shared\\components\\blog\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\shared\\components\\blog\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\home\\advanceviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\home\\advanceviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\blog\\blogviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\blog\\blogviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\services\\featureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:services\\featureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\blog\\blogcardviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\blog\\blogcardviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\services\\interfaces\\istatisticservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:services\\interfaces\\istatisticservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\shared\\components\\course\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\shared\\components\\course\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\models\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:models\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\shared\\components\\contactheader\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\shared\\components\\contactheader\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\models\\slider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:models\\slider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\course\\courseviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\course\\courseviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\services\\interfaces\\ifeatureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:services\\interfaces\\ifeatureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\course\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\course\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewmodels\\feature\\featurecreatevm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewmodels\\feature\\featurecreatevm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\coursedetail\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\coursedetail\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\areas\\admin\\controllers\\featurecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:areas\\admin\\controllers\\featurecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\contact\\contactheaderviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\contact\\contactheaderviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\areas\\admin\\controllers\\statisticcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:areas\\admin\\controllers\\statisticcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\about\\aboutviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\about\\aboutviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\areas\\admin\\controllers\\slidercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:areas\\admin\\controllers\\slidercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\about\\aboutlogoviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\about\\aboutlogoviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\about\\aboutcardviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\about\\aboutcardviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\viewcomponents\\about\\aboutacademyviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:viewcomponents\\about\\aboutacademyviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\about\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\about\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\shared\\components\\about\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\shared\\components\\about\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -63,157 +79,209 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "LogoViewComponent.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Home\\LogoViewComponent.cs",
-              "RelativeDocumentMoniker": "ViewComponents\\Home\\LogoViewComponent.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Home\\LogoViewComponent.cs",
-              "RelativeToolTip": "ViewComponents\\Home\\LogoViewComponent.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T13:25:12.803Z",
+              "Title": "blog.css",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\wwwroot\\assets\\css\\blog.css",
+              "RelativeDocumentMoniker": "wwwroot\\assets\\css\\blog.css",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\wwwroot\\assets\\css\\blog.css",
+              "RelativeToolTip": "wwwroot\\assets\\css\\blog.css",
+              "ViewState": "AgIAALEAAAAAAAAAAAAhwMoAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-03-17T12:16:56.133Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "FeedbackViewComponent.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Home\\FeedbackViewComponent.cs",
-              "RelativeDocumentMoniker": "ViewComponents\\Home\\FeedbackViewComponent.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Home\\FeedbackViewComponent.cs",
-              "RelativeToolTip": "ViewComponents\\Home\\FeedbackViewComponent.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T13:25:11.486Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AdvanceViewComponent.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Home\\AdvanceViewComponent.cs",
-              "RelativeDocumentMoniker": "ViewComponents\\Home\\AdvanceViewComponent.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Home\\AdvanceViewComponent.cs",
-              "RelativeToolTip": "ViewComponents\\Home\\AdvanceViewComponent.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T13:25:10.615Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IStatisticService.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Services\\Interfaces\\IStatisticService.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\IStatisticService.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Services\\Interfaces\\IStatisticService.cs",
-              "RelativeToolTip": "Services\\Interfaces\\IStatisticService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T13:25:05.614Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BaseEntity.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Models\\BaseEntity.cs",
-              "RelativeDocumentMoniker": "Models\\BaseEntity.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Models\\BaseEntity.cs",
-              "RelativeToolTip": "Models\\BaseEntity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T13:25:04.302Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Slider.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Models\\Slider.cs",
-              "RelativeDocumentMoniker": "Models\\Slider.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Models\\Slider.cs",
-              "RelativeToolTip": "Models\\Slider.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T13:25:02.421Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "FeatureCreateVM.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewModels\\Feature\\FeatureCreateVM.cs",
-              "RelativeDocumentMoniker": "ViewModels\\Feature\\FeatureCreateVM.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewModels\\Feature\\FeatureCreateVM.cs",
-              "RelativeToolTip": "ViewModels\\Feature\\FeatureCreateVM.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T12:53:54.004Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "IFeatureService.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Services\\Interfaces\\IFeatureService.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\IFeatureService.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Services\\Interfaces\\IFeatureService.cs",
-              "RelativeToolTip": "Services\\Interfaces\\IFeatureService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA3AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T12:53:17.291Z",
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\Blog\\Default.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Components\\Blog\\Default.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\Blog\\Default.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Components\\Blog\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T12:11:23.133Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "FeatureService.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Services\\FeatureService.cs",
-              "RelativeDocumentMoniker": "Services\\FeatureService.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Services\\FeatureService.cs",
-              "RelativeToolTip": "Services\\FeatureService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABCAAAAAAAAAA==",
+              "Title": "BlogCardViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Blog\\BlogCardViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\Blog\\BlogCardViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Blog\\BlogCardViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\Blog\\BlogCardViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T12:53:15.482Z",
+              "WhenOpened": "2026-03-17T12:07:15.847Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BlogViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Blog\\BlogViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\Blog\\BlogViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Blog\\BlogViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\Blog\\BlogViewComponent.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T12:07:14.378Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\Course\\Default.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Components\\Course\\Default.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\Course\\Default.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Components\\Course\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T12:02:02.145Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CourseViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Course\\CourseViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\Course\\CourseViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Course\\CourseViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\Course\\CourseViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T12:00:33.466Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Course\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Course\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Course\\Index.cshtml",
+              "RelativeToolTip": "Views\\Course\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T12:00:23.866Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\CourseDetail\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\CourseDetail\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\CourseDetail\\Index.cshtml",
+              "RelativeToolTip": "Views\\CourseDetail\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T12:00:03.126Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\About\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\About\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\About\\Index.cshtml",
+              "RelativeToolTip": "Views\\About\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T11:50:23.772Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "StatisticController.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Areas\\Admin\\Controllers\\StatisticController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\StatisticController.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Areas\\Admin\\Controllers\\StatisticController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\StatisticController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "AboutViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\About\\AboutViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\About\\AboutViewComponent.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAABEAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T12:52:50.873Z",
+              "WhenOpened": "2026-03-17T11:49:53.589Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "SliderController.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Areas\\Admin\\Controllers\\SliderController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\SliderController.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Areas\\Admin\\Controllers\\SliderController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\SliderController.cs",
-              "ViewState": "AgIAADsAAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
+              "Title": "AboutLogoViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutLogoViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\About\\AboutLogoViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutLogoViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\About\\AboutLogoViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T12:52:44.648Z",
+              "WhenOpened": "2026-03-17T11:49:12.693Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AboutCardViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutCardViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\About\\AboutCardViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutCardViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\About\\AboutCardViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T11:48:30.773Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AboutAcademyViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutAcademyViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\About\\AboutAcademyViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\About\\AboutAcademyViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\About\\AboutAcademyViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T11:48:20.851Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "FeatureController.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Areas\\Admin\\Controllers\\FeatureController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\FeatureController.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Areas\\Admin\\Controllers\\FeatureController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\FeatureController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Title": "ContactHeaderViewComponent.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Contact\\ContactHeaderViewComponent.cs",
+              "RelativeDocumentMoniker": "ViewComponents\\Contact\\ContactHeaderViewComponent.cs",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\ViewComponents\\Contact\\ContactHeaderViewComponent.cs",
+              "RelativeToolTip": "ViewComponents\\Contact\\ContactHeaderViewComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-16T12:52:31.309Z",
+              "WhenOpened": "2026-03-17T11:46:11.633Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\About\\Default.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Components\\About\\Default.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\About\\Default.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Components\\About\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T11:38:47.664Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\ContactHeader\\Default.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Components\\ContactHeader\\Default.cshtml",
+              "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\ContactHeader\\Default.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Components\\ContactHeader\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-17T11:38:32.392Z",
               "EditorCaption": ""
             }
           ]

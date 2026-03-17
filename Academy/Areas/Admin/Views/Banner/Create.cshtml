@@ -1,0 +1,31 @@
+﻿@model BannerCreateVM
+
+<h2>Yeni Banner Əlavə Et</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Şəkil</label>
+        <input asp-for="Image" type="file" class="form-control" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Səhifə</label>
+        <select asp-for="Page" class="form-control">
+            <option value="About">About</option>
+            <option value="Contact">Contact</option>
+            <option value="Blog">Blog</option>
+            <option value="Courses">Courses</option>
+        </select>
+        <span asp-validation-for="Page" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Yarat</button>
+</form>

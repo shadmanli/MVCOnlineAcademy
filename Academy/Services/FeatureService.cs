@@ -4,6 +4,7 @@ using Academy.Services.Interfaces;
 using Academy.ViewModels.Feature;
 using Academy.ViewModels.FeatureVM;
 using AutoMapper;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academy.Services
@@ -20,7 +21,16 @@ namespace Academy.Services
 
         public async Task CreateAsync(FeatureCreateVM model)
         {
-            
+            var data = _mapper.Map<Feature>(model);
+            await _context.Feature.AddAsync(data);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Feature feature)
+        {
+            var data  = await _context.Feature.FindAsync(feature.Id);
+             _context.Feature.Remove(data);
+                await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<FeatureVM>> GetAllAsync()
@@ -28,6 +38,13 @@ namespace Academy.Services
             var data = await _context.Feature.ToListAsync();
             var featureVMs = _mapper.Map<IEnumerable<FeatureVM>>(data);
             return featureVMs;
+        }
+
+        public async Task<Feature> GetByIdAsync(int id)
+        {
+            var data = await _context.Feature.FindAsync(id);
+            
+            return data;
         }
     }
 }

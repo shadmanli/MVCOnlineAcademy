@@ -200,6 +200,7 @@ gap:39px;
     text-align: center;
     color: #fff;
     line-height: 1.5;
+    z-index: 40 !important;
 }
 
 .blog-content a {

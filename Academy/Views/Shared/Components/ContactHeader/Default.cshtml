@@ -1,16 +1,27 @@
-﻿<section id="contact-main">
-    <div class="contact-container">
+﻿@using Academy.ViewModels.Banner
 
-        <div class="top-line"></div>
-        <div class="containt-img">
-            <img src="./assets/images/page-title_default.jpg" alt="">
+@model IEnumerable<BannerVM>
 
+@{
+    var banner = Model.FirstOrDefault(b => b.Page == "Contact");
+}
 
-            <div class="contact-content">
-                <h3>Contacts</h3>
-                <a href="home.html"> Home > Contacts</a>
+@if (banner != null)
+{
+    <section id="contact-main">
+        <div class="contact-container">
+
+            <div class="top-line"></div>
+            <div class="containt-img">
+              
+                <img src="@Url.Content("~/uploads/banner/" + banner.Image)" alt="@banner.Title">
+
+                <div class="contact-content">
+                    <h3>@banner.Title</h3>
+                    <a asp-controller="Home" asp-action="Index">Home > @banner.Page</a>
+                </div>
+
             </div>
-
-
         </div>
-</section>
+    </section>
+}

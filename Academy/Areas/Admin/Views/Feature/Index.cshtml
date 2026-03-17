@@ -22,7 +22,7 @@
                         <label>Başlıq</label>
                         <h4 class="one" style="color:gray">@item.Title</h4>
 
-                        <label>Say</label>
+                        <label>Təsvir</label>
                         <h2 class="two" style="color:gray">@item.Description</h2>
 
                         <a asp-action="Detail"
@@ -38,7 +38,7 @@
                         </a>
 
                         <button type="button"
-                                class="btn btn-danger btn-sm ms-1 delete-statistic-btn"
+                                class="btn btn-danger btn-sm ms-1 delete-feature-btn"
                                 data-id="@item.Id">
                             Sil
                         </button>
@@ -50,3 +50,29 @@
 
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.delete-feature-btn').forEach(btn=>{
+       btn.addEventListener('click', function () {
+
+            if (!confirm('Silinsin?')) return;
+
+            const id = this.dataset.id;
+
+            fetch(`/Admin/Feature/Delete/${id}`, {
+                method: 'GET'
+            })
+            .then(res => {
+                if (res.ok) {
+
+                    const card = this.closest('.col-md-4');
+                    card.remove();
+
+                } else {
+                    alert('Silinmə zamanı xəta baş verdi!');
+                }
+            })
+            .catch(() => alert('Xəta baş verdi!'));
+        });
+    })
+</script>

@@ -1,12 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Academy.Services.Interfaces;
+using Academy.ViewModels.FeatureVM;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academy.ViewComponents.About
 {
     public class AboutCardViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        private readonly IFeatureService _featureService;
+        private readonly IMapper _mapper;
+        public AboutCardViewComponent(IFeatureService featureService,IMapper mapper)
         {
-            return View();
+            _featureService = featureService;
+            _mapper = mapper;
+        }
+        public async Task< IViewComponentResult> InvokeAsync()
+        {
+            var data = await _featureService.GetAllAsync();
+                var featureVMs = _mapper.Map<IEnumerable<FeatureVM>>(data);
+               
+            return View(featureVMs);
         }
     } 
 }
