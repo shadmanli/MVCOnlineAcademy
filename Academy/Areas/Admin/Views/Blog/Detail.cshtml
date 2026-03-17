@@ -1,0 +1,39 @@
+﻿@model BlogDetailVM
+
+<div class="container mt-10">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <h2 class="mb-4"> Ətraflı</h2>
+
+            <div class="card shadow-sm">
+
+
+
+                <img src="@(Url.Content("~/uploads/blog/" + Model.Image))"
+                     class="card-img-top mt-0"
+                     alt="Slider Image" />
+
+                <div class="card-body">
+                    <strong>Başlıq:</strong><br />
+                    <h4 class="card-title" style=" color:grey;">@Model.Title</h4>
+
+                    <p class="card-text">
+                        <strong>Təsvir:</strong><br />
+                        @Model.Description
+                    </p>
+
+                    <p class="card-text">
+                        <strong>Ad:</strong><br />
+                        @Model.Name
+                    </p>
+
+                    <a asp-action="Index" class="btn btn-secondary">Siyahıya qayıt</a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

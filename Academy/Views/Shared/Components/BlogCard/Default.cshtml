@@ -1,143 +1,34 @@
-﻿<section id="last-card">
+﻿@using Academy.ViewModels.Blog
+@model IEnumerable<BlogVM>
+
+<section id="last-card">
 
     <div class="blog-card">
 
         <div class="cards-container">
 
 
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
+            @foreach(var item in Model)
+            {
+                <div class="blog-card-single">
+                    <div class="blog-img">
+                        <img src="@Url.Content("~/uploads/blog/" + item.Image)" alt="">
+                    </div>
+                    <div class="blog-text">
+                        <span>
+                           @item.Title
+                            <a href="" class="link1">@item.Name</a>
+                        </span>
+                        <h3> @item.Description<br> </h3>
+                        <a href="" class="link2">View More</a>
+                    </div>
                 </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
+            }
+
+          
 
 
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="./assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="blog.html" class="link2">View More</a>
-                </div>
-            </div>
+          
 
         </div>
 

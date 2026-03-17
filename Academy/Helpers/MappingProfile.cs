@@ -45,6 +45,7 @@ namespace Academy.Helpers
 
             CreateMap <BlogCreateVM, Blog>();
              CreateMap<Blog, BlogVM>();
+                CreateMap<Blog, BlogDetailVM>();
         }
     }
 }

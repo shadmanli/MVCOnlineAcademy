@@ -1,4 +1,5 @@
-﻿using Academy.Services.Interfaces;
+﻿using Academy.Models;
+using Academy.Services.Interfaces;
 using Academy.ViewModels.Blog;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,20 @@ namespace Academy.Areas.Admin.Controllers
             await _blogService.CreateAsycn(model);
             return RedirectToAction(nameof(Index));
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
+        {
+            var model = await _blogService.GetByIdAsync(id);
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _blogService.DeleteAsync(id); 
+            return Ok();
         }
     }
 }

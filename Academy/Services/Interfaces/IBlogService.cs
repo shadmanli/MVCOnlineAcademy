@@ -1,4 +1,5 @@
-﻿using Academy.ViewModels.Blog;
+﻿using Academy.Models;
+using Academy.ViewModels.Blog;
 
 namespace Academy.Services.Interfaces
 {
@@ -6,6 +7,9 @@ namespace Academy.Services.Interfaces
     {
         public Task<IEnumerable<BlogVM>> GetAllAsync();
         public Task CreateAsycn(BlogCreateVM model);
+
+        public Task<BlogDetailVM> GetByIdAsync(int id);   
+        public Task DeleteAsync(int id);
 
     }
 }

@@ -45,7 +45,7 @@
                                 </a>
 
                                 <button type="button"
-                                        class="btn btn-danger btn-sm ms-1 delete-about-btn"
+                                        class="btn btn-danger btn-sm ms-1 delete-blog-btn"
                                         data-id="@item.Id">
                                     Sil
                                 </button>
@@ -58,3 +58,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.delete-blog-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (!confirm('Silinsin?')) return;
+
+            const id = this.dataset.id;
+
+            fetch(`/Admin/Blog/Delete/${id}`, {
+                method: 'GET'
+            })
+            .then(res => {
+                if (res.ok) {
+
+                    const sliderDiv = this.closest('[data-slider-id]');
+                    sliderDiv.remove();
+                } else {
+                    alert('Silinmə zamanı xəta baş verdi!');
+                }
+            })
+            .catch(() => alert('Xəta baş verdi!'));
+        });
+    });
+</script>

@@ -1,6 +1,7 @@
 ﻿using Academy.Data;
 using Academy.Models;
 using Academy.Services.Interfaces;
+using Academy.ViewModels.AboutUs;
 using Academy.ViewModels.Blog;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,20 @@ namespace Academy.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            var data = await _context.Blog.FindAsync(id);
+            var path = Path.Combine(_env.WebRootPath, "uploads", "blog", data.Image);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            _context.Blog.Remove(data);
+            await _context.SaveChangesAsync();
+        }
+
+        
+
         public async  Task<IEnumerable<BlogVM>> GetAllAsync()
         {
 
@@ -47,6 +62,12 @@ namespace Academy.Services
             return _mapper.Map<IEnumerable<BlogVM>>(blog);
 
 
+        }
+
+        public async Task<BlogDetailVM> GetByIdAsync(int id)
+        {
+           var data = await _context.Blog.FindAsync(id);
+            return _mapper.Map<BlogDetailVM>(data);
         }
     }
 }
