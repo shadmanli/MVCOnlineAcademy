@@ -1,12 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Academy.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academy.ViewComponents.About
 {
-    public class OpportunitiesViewComponent:ViewComponent
+    public class OpportunitiesViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        private readonly ITopicService _topicService;
+
+        public OpportunitiesViewComponent(ITopicService topicService)
         {
-            return View();
+            _topicService = topicService;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var data = await _topicService.GetAllAsync();
+            return View(data);
         }
     }
 }

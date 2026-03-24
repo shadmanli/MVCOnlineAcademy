@@ -1,0 +1,77 @@
+﻿@using System.Linq
+@model IEnumerable<ContactSectionVM>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between mb-4">
+        <h2>Contact Sections</h2>
+        <a asp-action="Create" class="btn btn-secondary">Əlavə et</a>
+    </div>
+
+    @if (Model?.Any() == true)
+    {
+        foreach (var sec in Model)
+        {
+            <div class="mb-5" data-id="@sec.Id">
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h3>@sec.Title</h3>
+                        <p>@sec.SubTitle</p>
+                    </div>
+
+                    <div>
+                        <a asp-action="Detail"
+                           asp-route-id="@sec.Id"
+                           class="btn btn-info btn-sm">
+                            Ətraflı
+                        </a>
+
+                        <button class="btn btn-danger btn-sm delete-btn">
+                            Sil
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @if (sec.Items?.Any() == true)
+                    {
+                        foreach (var item in sec.Items)
+                        {
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <h5>@item.Description</h5>
+                                        <p>@item.Address</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        }
+    }
+
+</div>
+
+<script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            if (!confirm('Silinsin?')) return;
+
+            const div = this.closest('[data-id]');
+            const id = div.getAttribute('data-id');
+
+            fetch(`/Admin/ContactSection/Delete/${id}`, {
+                method: 'POST'
+            })
+            .then(res => {
+                if (res.ok) div.remove();
+            });
+
+        });
+    });
+</script>

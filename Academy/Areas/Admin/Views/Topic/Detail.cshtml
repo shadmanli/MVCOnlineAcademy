@@ -1,0 +1,52 @@
+﻿@model TopicDetailVM
+
+<div class="container mt-5">
+
+    <div class="mb-4">
+        <h2>@Model.Title</h2>
+        <p class="text-muted">@Model.SubTitle</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mb-3">Geri qayıt</a>
+
+    <div class="row">
+        @if (Model.Articles != null && Model.Articles.Any())
+        {
+            @foreach (var item in Model.Articles)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+
+                        <img src="~/uploads/article/@item.Image"
+                             class="card-img-top"
+                             style="height:200px; object-fit:cover;" />
+
+                        <div class="card-body text-center">
+                            <p>@item.Description</p>
+                            <p>@item.Text</p>
+                            <div class="mt-2">
+                                <a asp-area="Admin"
+                                   asp-controller="Article"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info btn-sm">Ətraflı</a>
+
+                                <a asp-area="Admin"
+                                   asp-controller="Article"
+                                   asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-primary btn-sm ms-1">Yenilə</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Article yoxdur</p>
+        }
+    </div>
+
+</div>

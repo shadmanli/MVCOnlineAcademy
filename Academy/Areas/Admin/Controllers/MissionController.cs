@@ -20,7 +20,6 @@ namespace Academy.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await _missionService.GetAllAsync();
-
             return View(data);
         }
 

@@ -12,6 +12,13 @@ builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddScoped<IMissionService, MissionService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IAboutService, AboutService>();
+builder.Services.AddScoped<IImpactItemService, ImpactItemService>();
+builder.Services.AddScoped<IImpactSectionService, ImpactSectionService>();
+builder.Services.AddScoped<ITopicService, TopicService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IContactItemService, ContactItemService>();
+builder.Services.AddScoped<IContactSectionService, ContactSectionService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 

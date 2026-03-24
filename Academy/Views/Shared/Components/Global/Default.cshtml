@@ -1,47 +1,34 @@
-﻿<section id="global">
+﻿@using Academy.ViewModels.ImpactSection
+@model IEnumerable<ImpactSectionVM>
+
+<section id="global">
     <div class="global-container">
-        <div class="global-first">
-            <span>Global Impact</span>
-            <h2>Create an Online Vidoe <br> Course & Earn Money by Teaching</h2>
-        </div>
 
-        <div class="global-card-common">
-            <div class="global-card">
-                <div class="global-img">
-                    <img src="./assets/images/icon-box_01-214x208.png" alt="">
-                </div>
-
-                <div class="global-content">
-                    <span>Plan Your Course</span>
-                    <p>Whether you want to develop as a <br> professional or discover a new hobby,<br> there's an online course for that.</p>
-                </div>
+        @foreach (var sec in Model)
+        {
+            <div class="global-first">
+                <span>@sec.Title</span>
+                <h2>@sec.SubTitle</h2>
             </div>
 
+            <div class="global-card-common">
 
-            <div class="global-card">
-                <div class="global-img">
-                    <img src="./assets/images/icon-box_01-214x208.png" alt="">
-                </div>
+                @foreach (var item in sec.Items)
+                {
+                    <div class="global-card">
+                        <div class="global-img">
+                            <img src="~/uploads/impactitem/@item.Image" alt="">
+                        </div>
 
-                <div class="global-content">
-                    <span>Plan Your Course</span>
-                    <p>Whether you want to develop as a <br> professional or discover a new hobby,<br> there's an online course for that.</p>
-                </div>
+                        <div class="global-content">
+                            <span>@item.Title</span>
+                            <p>@item.Description</p>
+                        </div>
+                    </div>
+                }
+
             </div>
+        }
 
-
-
-
-            <div class="global-card">
-                <div class="global-img">
-                    <img src="./assets/images/icon-box_01-214x208.png" alt="">
-                </div>
-
-                <div class="global-content">
-                    <span>Plan Your Course</span>
-                    <p>Whether you want to develop as a <br> professional or discover a new hobby,<br> there's an online course for that.</p>
-                </div>
-            </div>
-        </div>
     </div>
 </section>

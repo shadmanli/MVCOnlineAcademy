@@ -12,18 +12,28 @@ window.addEventListener("load", function() {
 });
 
 
-
 document.addEventListener('DOMContentLoaded', function () {
-  const swiper = new Swiper('.swiper-container', {
-    slidesPerView: 2,           
-    spaceBetween: 1,           
-    loop: false,              
-    pagination: {
-      el: '.swiper-pagination',   
-      clickable: true,            
-    },
-    slideToClickedSlide: true,    
-  });
+
+    new Swiper('.swiper', {
+        slidesPerView: 2,
+        spaceBetween: 20,
+        loop: true,
+
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+
+        breakpoints: {
+            0: {
+                slidesPerView: 1
+            },
+            768: {
+                slidesPerView: 2
+            }
+        }
+    });
+
 });
 
 const hamburger = document.querySelector(".hamburger");

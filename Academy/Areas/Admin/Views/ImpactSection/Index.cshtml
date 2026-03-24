@@ -1,0 +1,103 @@
+﻿@using System.Linq
+@using Academy.ViewModels.ImpactSection
+@model IEnumerable<ImpactSectionVM>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Impact Sections</h2>
+        <a asp-action="Create" class="btn btn-secondary">Əlavə et</a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var impactSection in Model)
+        {
+            <div class="mb-5" data-section-id="@impactSection.Id">
+
+               
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <h3>@impactSection.Title</h3>
+                        <p>@impactSection.SubTitle</p>
+                    </div>
+
+                    <div>
+                    
+                        <a asp-action="Detail"
+                           asp-route-id="@impactSection.Id"
+                           class="btn btn-info btn-sm">
+                            Ətraflı
+                        </a>
+
+                        <!-- ❌ DELETE -->
+                        <button type="button"
+                                class="btn btn-danger btn-sm delete-section-btn ms-2">
+                            Sil
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ITEMS (ONLY VIEW) -->
+                <div class="row">
+                    @if (impactSection.Items != null && impactSection.Items.Any())
+                    {
+                        @foreach (var item in impactSection.Items)
+                        {
+                            <div class="col-md-4">
+                                <div class="card mb-3 shadow-sm">
+
+                                    <img src="~/uploads/impactitem/@item.Image"
+                                         class="card-img-top" />
+
+                                    <div class="card-body text-center">
+                                        <h5>@item.Title</h5>
+                                        <p>@item.Description</p>
+
+                                        <!-- ❌ BURADA BUTTONLARI SİLDİK -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Bu section üçün item yoxdur</p>
+                    }
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <p>Heç bir section yoxdur</p>
+    }
+
+</div>
+
+
+<script>
+    document.querySelectorAll('.delete-section-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            if (!confirm('Bu section və içindəki bütün itemlər silinsin?')) return;
+
+            const sectionDiv = this.closest('[data-section-id]');
+            const id = sectionDiv.getAttribute('data-section-id');
+
+            fetch(`/Admin/ImpactSection/Delete/${id}`, {
+                method: 'POST' // ✅ düzəldildi
+            })
+            .then(res => {
+                if (res.ok) {
+                    sectionDiv.remove();
+                } else {
+                    alert('Silinmə zamanı xəta baş verdi!');
+                }
+            })
+            .catch(() => alert('Xəta baş verdi!'));
+        });
+    });
+</script>

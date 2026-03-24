@@ -632,150 +632,47 @@ margin-top: 170px;
   margin-top: 120px;
 }
 
-
 #Testimonial {
-  position: relative;
-  padding: 150px 20px 100px;
-  overflow: hidden;
+    background: #1f2633;
+    padding: 130px 0;
+    color: white;
 }
-
-
-.testimonial-common > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-
-
-.testimonial-text,
-.swiper-container {
-  position: relative;
-  z-index: 2;
-}
-
-
 
 .testimonial-text {
-  text-align: center;
-  color: #fff;
-  max-width: 800px;
-  margin: 0 auto 60px;
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-.testimonial-text span {
-  color: #ff6d34;
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
+    .testimonial-text span {
+        color: orange;
+        font-size: 14px;
+    }
 
-.testimonial-text h1 {
-  font-size: 36px;
-  margin: 10px 0;
-}
-
-.testimonial-text p {
-  font-size: 15px;
-  margin-top: 15px;
-}
-
-
+    .testimonial-text h1 {
+        margin: 10px 0;
+    }
 
 .card-general {
-  width: 100%;
-  max-width: 520px;
-  padding: 30px 25px;
-  border-radius: 14px;
-
-
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-  box-sizing: border-box;
-}
-
-.card-number img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-}
-
-.contentt h4 {
-  margin: 0;
-  color: #fff;
-}
-
-.contentt span {
-  font-size: 14px;
-  color: #d0d0d0;
-}
-
-.text-card {
-  margin-top: 20px;
-  color: #f1f1f1;
-  font-size: 14px;
-}
-
-
-
-.swiper-container {
-  width: 100%;
-  padding: 40px 0 60px;
-}
-
-.swiper-slide {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.swiper-pagination {
-  margin-top: 30px;
-}
-
-
-
-@media (max-width: 992px) {
-
-  #Testimonial {
-    padding: 120px 20px 80px;
-  }
-
-  .testimonial-text h1 {
-    font-size: 28px;
-  }
-
-  .card-general {
-    max-width: 90%;
-  }
-}
-
-@media (max-width: 576px) {
-
-  #Testimonial {
-    padding: 100px 15px 60px;
-  }
-
-  .testimonial-text h1 {
-    font-size: 22px;
-  }
-
-  .testimonial-text p {
-    font-size: 13px;
-  }
-
-  .card-general {
+    background: #2b3242;
     padding: 20px;
-  }
+    border-radius: 15px;
+}
 
-  .card-number img {
-    width: 60px;
-    height: 60px;
-  }
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+    .header img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+
+.swiper {
+    width: 100%;
 }
 
 #about-pulse {
@@ -795,13 +692,15 @@ margin-top: 170px;
 .text-part {
   margin-left: 11pc;
 }
-
+.card-general{
+    height:240px;
+}
 
 
 .card-single {
-  width: 350px;
-  height: 250px;
-  perspective: 1000px;
+    width: 350px;
+    height: 250px;
+    perspective: 1000px;
 }
 
 .card-inner {

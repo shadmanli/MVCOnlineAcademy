@@ -86,7 +86,6 @@ wwwroot\Admin\scss\bootstrap\scss\_transitions.scss
 wwwroot\Admin\scss\bootstrap\scss\_type.scss
 wwwroot\Admin\scss\bootstrap\scss\_utilities.scss
 wwwroot\Admin\scss\bootstrap\scss\_variables.scss
-wwwroot\assets\css\about.css
 wwwroot\assets\css\blog.css
 wwwroot\assets\css\contact.css
 wwwroot\assets\css\courses-detail.css
@@ -165,16 +164,24 @@ wwwroot\assets\js\courses.js
 wwwroot\assets\js\home.js
 wwwroot\assets\js\teacher.js
 wwwroot\uploads\aboutus\c08836e7-6288-4660-9d4c-a9d5cacef4d0_home_01-1.png
-wwwroot\uploads\sliders\16c52056-b445-4099-8523-352d03f165c0_home_slider_bg.jpg
-wwwroot\uploads\sliders\3d67f526-b33e-46a4-af51-63e590d7ff37_lauren-davis-380x422.jpg
-wwwroot\uploads\banner\d00862ed-6447-4ab2-b294-0ddf84efdb81_carousel-1.jpg
+wwwroot\uploads\about\b64c0d68-40f8-4638-8277-eade4bcc4ce2_about-us_01.jpg
+wwwroot\uploads\about\f393d0f8-345a-4a79-9558-d9ed13745ba2_2325c5ce-47ff-41ca-8304-e683ca50c00b.mp4
+wwwroot\uploads\article\7d669249-9c6e-402f-9d4f-b0b9eff09b75_flip-boxes_01.jpg
+wwwroot\uploads\banner\0d11598f-f348-4eef-ba56-40f0c6879688_flip-boxes_02.jpg
 wwwroot\uploads\banner\3d2ebd8b-eeb9-4e06-9bf1-fdcbed4f532f_carousel-1.jpg
-wwwroot\uploads\banner\eb26bf11-648f-41ae-a173-788919db760b_home sekil.jpg
 wwwroot\uploads\banner\6f5e9601-1831-4b11-bfeb-8657356377ee_carousel-1.jpg
 wwwroot\uploads\banner\7d81621f-562d-44e3-883b-4447fadea057_home sekil.jpg
-wwwroot\uploads\banner\0d11598f-f348-4eef-ba56-40f0c6879688_flip-boxes_02.jpg
-wwwroot\uploads\banner\d78652e1-bbf2-43aa-891b-a3e667b21f4f_home sekil.jpg
 wwwroot\uploads\banner\9bd8d918-fc57-4902-865e-237f99159f56_page-title_default.jpg
-wwwroot\uploads\mission\d29adf45-c6a7-4778-91ae-54edb30a0cb2_about-us_02-3.png
-wwwroot\uploads\blog\e38799aa-4aa8-4728-88ac-8368e767ee06_blog-02-600x486.jpg
+wwwroot\uploads\banner\d00862ed-6447-4ab2-b294-0ddf84efdb81_carousel-1.jpg
+wwwroot\uploads\banner\d78652e1-bbf2-43aa-891b-a3e667b21f4f_home sekil.jpg
+wwwroot\uploads\banner\eb26bf11-648f-41ae-a173-788919db760b_home sekil.jpg
 wwwroot\uploads\blog\63a4cb2a-3713-4712-ab6b-0fe42b3d9603_blog-02-600x486.jpg
+wwwroot\uploads\blog\e38799aa-4aa8-4728-88ac-8368e767ee06_blog-02-600x486.jpg
+wwwroot\uploads\impactitem\3ab4f670-b723-43bb-8175-707c96f5b894_icon-box_01-214x208.png
+wwwroot\uploads\impactitem\508059ba-97fd-42fc-818c-16586896808f_icon-box_01-214x208.png
+wwwroot\uploads\impactitem\8cc8c735-8124-46f1-bf54-ff5b8a05b770_icon-box_01-214x208.png
+wwwroot\uploads\impactitem\e7fbc310-1055-4020-8d6b-515077127cec_icon-box_01-214x208.png
+wwwroot\uploads\mission\d29adf45-c6a7-4778-91ae-54edb30a0cb2_about-us_02-3.png
+wwwroot\uploads\sliders\16c52056-b445-4099-8523-352d03f165c0_home_slider_bg.jpg
+wwwroot\uploads\sliders\3d67f526-b33e-46a4-af51-63e590d7ff37_lauren-davis-380x422.jpg
+wwwroot\assets\css\about.css

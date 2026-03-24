@@ -1,0 +1,28 @@
+﻿@model ImpactItemCreateVM
+
+<form asp-area="Admin" asp-controller="ImpactItem" asp-action="Create" method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <input asp-for="Title" class="form-control" placeholder="Title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <select asp-for="ImpactSectionId" asp-items="Model.Sections" class="form-control">
+            <option value="">Section seç</option>
+        </select>
+        <span asp-validation-for="ImpactSectionId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <input type="file" asp-for="Image" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+
+</form>

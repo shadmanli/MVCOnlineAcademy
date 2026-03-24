@@ -1,0 +1,95 @@
+﻿@using System.Linq
+@model IEnumerable<Academy.ViewModels.Topic.TopicVM>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Topics</h2>
+        <a asp-action="Create" class="btn btn-secondary">Əlavə et</a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var topic in Model)
+        {
+            <div class="mb-5" data-topic-id="@topic.Id">
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <h3>@topic.Title</h3>
+                        <p>@topic.SubTitle</p>
+                    </div>
+
+                    <div>
+                        <a asp-action="Detail"
+                           asp-route-id="@topic.Id"
+                           class="btn btn-info btn-sm">
+                            Ətraflı
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-danger btn-sm delete-topic-btn ms-2">
+                            Sil
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ARTICLES -->
+                <div class="row">
+                    @if (topic.Articles != null && topic.Articles.Any())
+                    {
+                        @foreach (var item in topic.Articles)
+                        {
+                            <div class="col-md-4">
+                                <div class="card mb-3 shadow-sm">
+
+                                    <img src="~/uploads/article/@item.Image"
+                                         class="card-img-top" />
+
+                                    <div class="card-body text-center">
+                                        <p>@item.Description</p>
+                                        <p>@item.Text</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Bu topic üçün article yoxdur</p>
+                    }
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <p>Heç bir topic yoxdur</p>
+    }
+
+</div>
+
+<script>
+    document.querySelectorAll('.delete-topic-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            if (!confirm('Bu topic və içindəki bütün article-lar silinsin?')) return;
+
+            const div = this.closest('[data-topic-id]');
+            const id = div.getAttribute('data-topic-id');
+
+            fetch(`/Admin/Topic/Delete/${id}`, {
+                method: 'POST'
+            })
+            .then(res => {
+                if (res.ok) {
+                    div.remove();
+                } else {
+                    alert('Xəta baş verdi!');
+                }
+            });
+        });
+    });
+</script>

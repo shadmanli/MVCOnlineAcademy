@@ -1,12 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Academy.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academy.ViewComponents.Contact
 {
-    public class ContactInfoViewComponent:ViewComponent
+    public class ContactInfoViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        private readonly IContactSectionService _contactSectionService;
+
+        public ContactInfoViewComponent(IContactSectionService contactSectionService)
         {
-            return View();
+            _contactSectionService = contactSectionService;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var data = await _contactSectionService.GetAllAsync();
+            return View(data);
         }
     }
 }

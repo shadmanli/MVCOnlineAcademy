@@ -1,37 +1,38 @@
-﻿<section id="our-contact">
+﻿@model IEnumerable<Academy.ViewModels.ContactSection.ContactSectionVM>
+
+@{
+    var contactSection = Model.FirstOrDefault();
+}
+
+<section id="our-contact">
     <div class="common-container">
+
+       
         <div class="common-first">
             <span>OUR CONTACTS</span>
-            <h1>We`re here to Help You</h1>
-            <p>
-                Got a project in mind? We’d love to hear about it. Take five minutes to fill out our project <br>form so that we can get to know you and understand your project.
 
-            </p>
+            <h1>@contactSection?.Title</h1>
+            <p>@contactSection?.SubTitle</p>
+
         </div>
 
+      
         <div class="common-cardly">
 
+            @foreach (var sec in Model)
+            {
+                @foreach (var item in sec.Items)
+                {
+                    <div class="card-number">
+                        <i class="fa-regular fa-map"></i>
 
-            <div class="card-number">
-                <i class="fa-regular fa-map"></i>
-                <h3>Visit Us Deaily</h3>
-                <p>27 Division St, New York, 10002</p>
-            </div>
+                        <h3>@item.Description</h3>
+                        <p>@item.Address</p>
 
+                    </div>
+                }
+            }
 
-            <div class="card-number">
-                <i class="fa-regular fa-map"></i>
-                <h3>Visit Us Deaily</h3>
-                <p>27 Division St, New York, 10002</p>
-            </div>
-
-
-
-            <div class="card-number">
-                <i class="fa-regular fa-map"></i>
-                <h3>Visit Us Deaily</h3>
-                <p>27 Division St, New York, 10002</p>
-            </div>
         </div>
 
     </div>

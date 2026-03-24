@@ -1,0 +1,43 @@
+﻿@model ContactSectionDetailVM
+
+<div class="container mt-5">
+
+    <h2>@Model.Title</h2>
+    <p>@Model.SubTitle</p>
+
+    <a asp-action="Index" class="btn btn-secondary mb-3">Geri</a>
+
+    <div class="row">
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+
+                        <div class="card-body text-center">
+
+                            <h5>@item.Description</h5>
+                            <p>@item.Address</p>
+
+                            <div class="mt-2">
+                                <a asp-area="Admin"
+                                   asp-controller="ContactItem"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info btn-sm">Ətraflı</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Item yoxdur</p>
+        }
+    </div>
+
+</div>

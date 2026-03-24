@@ -1,0 +1,17 @@
+﻿namespace Academy.ViewModels.ImpactItem
+{
+    public class ImpactItemDetailVM
+    {
+        public int Id { get; set; }
+
+        public string Image { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public int ImpactSectionId { get; set; }
+
+        public string SectionName { get; set; } 
+    }
+}

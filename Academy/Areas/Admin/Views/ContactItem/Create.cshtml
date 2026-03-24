@@ -1,0 +1,21 @@
+﻿@model ContactItemCreateVM
+
+<form asp-area="Admin" asp-controller="ContactItem" asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <input asp-for="Description" class="form-control" placeholder="Description" />
+    </div>
+
+    <div class="mb-3">
+        <input asp-for="Address" class="form-control" placeholder="Address" />
+    </div>
+
+    <div class="mb-3">
+        <select asp-for="ContactSectionId" asp-items="Model.Sections" class="form-control">
+            <option value="">Section seç</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+
+</form>

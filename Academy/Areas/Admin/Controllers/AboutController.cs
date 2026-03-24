@@ -1,0 +1,64 @@
+﻿using Academy.Services.Interfaces;
+using Academy.ViewModels.About;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Academy.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    public class AboutController : Controller
+    {
+        private readonly IAboutService _aboutService;
+        private readonly IMapper _mapper;
+        public AboutController(IAboutService aboutService, IMapper mapper)
+        {
+            _aboutService = aboutService;
+            _mapper = mapper;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var data = await _aboutService.GetAllAsync();
+            return View(data);
+
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AboutCreateVM about)
+        {
+
+            await _aboutService.CreateAsync(about);
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
+        [HttpGet]
+
+        public async Task<IActionResult> Detail(int id)
+        {
+            var data = await _aboutService.GetAllAsync();
+            var about = data.FirstOrDefault(a => a.Id == id);
+            var res = _mapper.Map<AboutDetailVM>(about);
+            if (about == null)
+            {
+                return NotFound();
+            }
+            return View(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _aboutService.DeleteAsync(id);
+            return Ok();
+        }
+    }
+}
