@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:wwwroot\\assets\\css\\about.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\wwwroot\\assets\\js\\about.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:wwwroot\\assets\\js\\about.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\shared\\components\\testimonial\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\shared\\components\\testimonial\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\shared\\components\\contactinfo\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:views\\shared\\components\\contactinfo\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\wwwroot\\assets\\js\\about.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|solutionrelative:wwwroot\\assets\\js\\about.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B91ABFB4-1C24-4412-B3FA-BB87E9AE9946}|Academy.csproj|c:\\users\\asus\\desktop\\academyinzara\\academy\\views\\about\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -110,8 +110,12 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -120,14 +124,14 @@
               "RelativeDocumentMoniker": "wwwroot\\assets\\css\\about.css",
               "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\wwwroot\\assets\\css\\about.css",
               "RelativeToolTip": "wwwroot\\assets\\css\\about.css",
-              "ViewState": "AgIAAJgCAAAAAAAAAAAAALQCAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAIgCAAAAAAAAAAAAAJkCAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-03-24T17:57:09.344Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Default.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\About\\Default.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\Components\\About\\Default.cshtml",
@@ -148,31 +152,30 @@
               "RelativeToolTip": "ViewComponents\\About\\TestimonialViewComponent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:48:52.894Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:48:52.894Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "about.js",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\wwwroot\\assets\\js\\about.js",
               "RelativeDocumentMoniker": "wwwroot\\assets\\js\\about.js",
               "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\wwwroot\\assets\\js\\about.js",
               "RelativeToolTip": "wwwroot\\assets\\js\\about.js",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAADEAAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADEAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-03-24T17:46:14.974Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Default.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\Testimonial\\Default.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\Components\\Testimonial\\Default.cshtml",
               "ToolTip": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\Testimonial\\Default.cshtml",
               "RelativeToolTip": "Views\\Shared\\Components\\Testimonial\\Default.cshtml",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAABEAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAAAFwAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-03-24T17:45:17.013Z",
               "EditorCaption": ""
@@ -187,8 +190,7 @@
               "RelativeToolTip": "ViewModels\\ContactSection\\ContactSectionVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:39:13.581Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:39:13.581Z"
             },
             {
               "$type": "Document",
@@ -200,12 +202,11 @@
               "RelativeToolTip": "ViewModels\\ContactItem\\ContactItemVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:39:03.956Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:39:03.956Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Default.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\AcademyInzara\\Academy\\Views\\Shared\\Components\\ContactInfo\\Default.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\Components\\ContactInfo\\Default.cshtml",
@@ -213,8 +214,7 @@
               "RelativeToolTip": "Views\\Shared\\Components\\ContactInfo\\Default.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-24T17:38:46.579Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:38:46.579Z"
             },
             {
               "$type": "Document",
@@ -226,8 +226,7 @@
               "RelativeToolTip": "ViewComponents\\Contact\\ContactInfoViewComponent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:38:28.386Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:38:28.386Z"
             },
             {
               "$type": "Document",
@@ -239,8 +238,7 @@
               "RelativeToolTip": "Services\\ContactSectionService.cs",
               "ViewState": "AgIAACIAAAAAAAAAAAAwwDsAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:38:06.696Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:38:06.696Z"
             },
             {
               "$type": "Document",
@@ -252,8 +250,7 @@
               "RelativeToolTip": "Services\\ContactItemService.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAswDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:37:56.661Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:37:56.661Z"
             },
             {
               "$type": "Document",
@@ -265,8 +262,7 @@
               "RelativeToolTip": "Models\\Article.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:32:32.636Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:32:32.636Z"
             },
             {
               "$type": "Document",
@@ -278,8 +274,7 @@
               "RelativeToolTip": "Models\\Topic.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:32:26.288Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:32:26.288Z"
             },
             {
               "$type": "Document",
@@ -291,8 +286,7 @@
               "RelativeToolTip": "Services\\ArticleService.cs",
               "ViewState": "AgIAADoAAAAAAAAAAAAqwFIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:29:36.387Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:29:36.387Z"
             },
             {
               "$type": "Document",
@@ -304,8 +298,7 @@
               "RelativeToolTip": "Services\\TopicService.cs",
               "ViewState": "AgIAACEAAAAAAAAAAAAqwEEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:29:29.287Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:29:29.287Z"
             },
             {
               "$type": "Document",
@@ -317,8 +310,7 @@
               "RelativeToolTip": "Services\\ImpactItemService.cs",
               "ViewState": "AgIAADIAAAAAAAAAAAAmwFEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:29:11.197Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:29:11.197Z"
             },
             {
               "$type": "Document",
@@ -330,8 +322,7 @@
               "RelativeToolTip": "ViewComponents\\About\\OpportunitiesViewComponent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:28:39.541Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:28:39.541Z"
             },
             {
               "$type": "Document",
@@ -343,8 +334,7 @@
               "RelativeToolTip": "ViewModels\\Article\\ArticleVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:28:17.452Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:28:17.452Z"
             },
             {
               "$type": "Document",
@@ -356,8 +346,7 @@
               "RelativeToolTip": "ViewModels\\Topic\\TopicVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:28:01.893Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:28:01.893Z"
             },
             {
               "$type": "Document",
@@ -369,8 +358,7 @@
               "RelativeToolTip": "Areas\\Admin\\Views\\Topic\\Create.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-24T17:27:55.528Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:27:55.528Z"
             },
             {
               "$type": "Document",
@@ -382,8 +370,7 @@
               "RelativeToolTip": "ViewModels\\ImpactSection\\ImpactSectionCreateVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:27:30.229Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:27:30.229Z"
             },
             {
               "$type": "Document",
@@ -395,8 +382,7 @@
               "RelativeToolTip": "ViewModels\\ImpactItem\\ImpactItemDetailVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:27:26.893Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:27:26.893Z"
             },
             {
               "$type": "Document",
@@ -408,8 +394,7 @@
               "RelativeToolTip": "ViewModels\\ImpactItem\\ImpactItemVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T17:27:20.996Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:27:20.996Z"
             },
             {
               "$type": "Document",
@@ -421,8 +406,7 @@
               "RelativeToolTip": "Views\\Shared\\Components\\Opportunities\\Default.cshtml",
               "ViewState": "AgIAACIAAAAAAAAAAAAAADQAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-24T17:26:41.166Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T17:26:41.166Z"
             },
             {
               "$type": "Document",
@@ -434,12 +418,7 @@
               "RelativeToolTip": "Views\\About\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-24T17:26:09.591Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2026-03-24T17:26:09.591Z"
             }
           ]
         }
