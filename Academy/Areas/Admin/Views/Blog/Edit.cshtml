@@ -1,0 +1,33 @@
+﻿@model BlogEditVM
+
+<h2>Blog Yenilə</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label>Başlıq</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Təsvir</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>Ad</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Köhnə şəkil</label><br />
+        <img src="~/uploads/blog/@Model.ExistingImage" width="200" />
+    </div>
+
+    <div class="mb-3">
+        <label>Yeni şəkil</label>
+        <input asp-for="Image" type="file" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Yenilə</button>
+</form>

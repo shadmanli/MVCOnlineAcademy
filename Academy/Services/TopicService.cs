@@ -61,5 +61,11 @@ namespace Academy.Services
 
             return _mapper.Map<TopicDetailVM>(data);
         }
+
+        public async Task UpdateAsync(Topic topic)
+        {
+            _context.Topics.Update(topic);
+            await _context.SaveChangesAsync();
+        }
     }
 }

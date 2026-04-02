@@ -1,4 +1,5 @@
-﻿using Academy.ViewModels.Topic;
+﻿using Academy.Models;
+using Academy.ViewModels.Topic;
 
 namespace Academy.Services.Interfaces
 {
@@ -8,5 +9,7 @@ namespace Academy.Services.Interfaces
         Task CreateAsync(TopicCreateVM model);
         Task<TopicDetailVM> GetByIdAsync(int id);
         Task DeleteAsync(int id);
+
+        Task UpdateAsync(Topic topic);   
     }
 }

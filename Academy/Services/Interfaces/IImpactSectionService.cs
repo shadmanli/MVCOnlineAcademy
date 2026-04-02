@@ -9,6 +9,7 @@ namespace Academy.Services.Interfaces
      public  Task CreateAsync(ImpactSectionCreateVM model);
         public Task<ImpactSectionDetailVM> GetByIdAsync(int id);
         public Task DeleteAsync(int id);
+        Task UpdateAsync(ImpactSectionEditVM model);
 
     }
 }

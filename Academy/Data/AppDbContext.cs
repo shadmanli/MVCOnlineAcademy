@@ -19,7 +19,13 @@ namespace Academy.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<ContactSection> Contacts { get; set; }
         public DbSet<ContactItem> ContactItems {  get; set; }
-
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }  
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
        
         

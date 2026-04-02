@@ -28,12 +28,19 @@
                             <span class="badge bg-info mb-2">
                                 @item.TopicName
                             </span>
-
                             <div class="mt-2">
                                 <a asp-action="Detail"
                                    asp-route-id="@item.Id"
                                    class="btn btn-info btn-sm">
                                     Ətraflı
+                                </a>
+
+                                <a asp-area="Admin"
+                                   asp-controller="Article"
+                                   asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-primary btn-sm ms-1">
+                                    Yenilə
                                 </a>
 
                                 <button type="button"

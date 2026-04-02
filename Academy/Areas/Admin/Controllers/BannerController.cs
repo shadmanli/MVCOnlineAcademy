@@ -54,5 +54,27 @@ namespace Academy.Areas.Admin.Controllers
             await _bannerService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _bannerService.GetByIdAsync(id);
+            if (data == null) return NotFound();
+
+            var model = _mapper.Map<BannerEditVM>(data);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, BannerEditVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await _bannerService.UpdateAsync(id, model);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

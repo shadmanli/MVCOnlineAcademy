@@ -86,6 +86,67 @@ namespace Academy.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task EditAsync(AboutEditVM model)
+        {
+            var data = await _context.About.FindAsync(model.Id);
+
+            if (data == null) return;
+
+            string folderPath = Path.Combine(_env.WebRootPath, "uploads", "about");
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+       
+            if (model.NewImage != null && model.NewImage.Length > 0)
+            {
+        
+                if (!string.IsNullOrEmpty(data.Image))
+                {
+                    string oldImagePath = Path.Combine(folderPath, data.Image);
+                    if (File.Exists(oldImagePath))
+                        File.Delete(oldImagePath);
+                }
+
+       
+                string newImageName = $"{Guid.NewGuid()}_{model.NewImage.FileName}";
+                string newImagePath = Path.Combine(folderPath, newImageName);
+                using (FileStream stream = new FileStream(newImagePath, FileMode.Create))
+                {
+                    await model.NewImage.CopyToAsync(stream);
+                }
+
+                data.Image = newImageName;
+            }
+
+           
+            if (model.NewVideo != null && model.NewVideo.Length > 0)
+            {
+         
+                if (!string.IsNullOrEmpty(data.Video))
+                {
+                    string oldVideoPath = Path.Combine(folderPath, data.Video);
+                    if (File.Exists(oldVideoPath))
+                        File.Delete(oldVideoPath);
+                }
+
+
+                string newVideoName = $"{Guid.NewGuid()}_{model.NewVideo.FileName}";
+                string newVideoPath = Path.Combine(folderPath, newVideoName);
+                using (FileStream stream = new FileStream(newVideoPath, FileMode.Create))
+                {
+                    await model.NewVideo.CopyToAsync(stream);
+                }
+
+                data.Video = newVideoName;
+            }
+
+    
+            data.Title = model.Title;
+            data.Description = model.Description;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async  Task<IEnumerable<AboutVM>> GetAllAsync()
         {
             var data = await _context.About.ToListAsync();
@@ -100,6 +161,9 @@ namespace Academy.Services
             return aboutVM;
         }
 
-      
+        public async Task<About> GetEntityByIdAsync(int id)
+        {
+            return await _context.About.FindAsync(id);
+        }
     }
 }

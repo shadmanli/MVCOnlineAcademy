@@ -1,0 +1,67 @@
+﻿@model AboutEditVM
+
+<div class="container mt-5" style="margin-top:60px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <h2 class="mb-3" style="margin-top:50px;">Yenilə</h2>
+
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+              
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Başlıq</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+          
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Təsvir</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+       
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Cari şəkil</label><br />
+                        <img src="@(Url.Content("~/uploads/about/" + Model.Image))"
+                             width="150"
+                             class="img-thumbnail" />
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label class="form-label">Yeni şəkil seç</label>
+                    <input asp-for="NewImage" type="file" class="form-control" />
+                </div>
+
+                
+                @if (!string.IsNullOrEmpty(Model.Video))
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Cari video</label><br />
+                        <video width="100%" height="200" controls>
+                            <source src="@(Url.Content("~/uploads/about/" + Model.Video))" type="video/mp4">
+                        </video>
+                    </div>
+                }
+
+              
+                <div class="mb-3">
+                    <label class="form-label">Yeni video seç</label>
+                    <input asp-for="NewVideo" type="file" class="form-control" />
+                </div>
+
+            
+                <button type="submit" class="btn btn-primary">Yadda saxla</button>
+                <a asp-action="Index" class="btn btn-secondary">İmtina et</a>
+
+            </form>
+        </div>
+    </div>
+</div>

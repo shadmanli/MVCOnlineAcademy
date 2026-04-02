@@ -276,75 +276,80 @@ gap:39px;
 }
 
 
-
 #benefit-section {
-    width: 1990px;
-    height: 700px;
+    width: 100%;
     background-color: #232838;
-    margin-top: 70px;
-    position: relative;
+    padding: 100px 0;
 }
 
+/* container */
+.benefit-container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+.right-benefit {
+    margin-left: auto;
+}
 
+/* LEFT SIDE */
 .left-benefit {
     color: #fff;
-    position: absolute;
-    top: 25%;
-    left: 10%;
+    max-width: 500px;
 }
 
 .one {
-    font-size: 25px;
+    font-size: 22px;
     color: coral;
     font-weight: bold;
 }
 
-
 .left-benefit h1 {
-    font-size: 45px;
-    margin-bottom: 26px;
+    font-size: 48px;
+    margin: 15px 0 40px;
 }
 
-.left-benefit i {
-    color: aquamarine;
-    font-size: 30px;
-    margin-right: 10px;
+/* ITEMS */
+.item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+    .item i {
+        font-size: 26px;
+        color: aquamarine;
+        margin-top: 6px;
+    }
+
+/* TEXT */
+.text {
+    max-width: 600px;
 }
 
 .two {
-    font-size: 23px;
+    display: block;
+    font-size: 22px;
     font-weight: bold;
-    line-height: 2.5;
+    margin-bottom: 8px;
 }
 
-.benefit-column p {
-    font-size: 18px;
-    margin-left: 37px;
-    line-height: 1.5;
-}
-
-.benefit-conatiner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-
+.text p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #ddd;
 }
 
 
-.right-benefit {
-    position: absolute;
-    top: 15%;
-
-
-
+.right-benefit img {
+    width: 480px;
+    border-radius: 50% 40% 50% 40%;
+    object-fit: cover;
+    
 }
-
-.first {
-    margin-bottom: 16px;
-}
-
-
 
 #instructor {
   width: 100%;
@@ -531,6 +536,8 @@ gap:39px;
     text-align: center;
   }
 }
+
+
 #Say {
     width: 100%;
 }

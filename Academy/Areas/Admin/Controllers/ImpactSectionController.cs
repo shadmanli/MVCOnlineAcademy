@@ -1,5 +1,6 @@
 ﻿using Academy.Services.Interfaces;
 using Academy.ViewModels.ImpactSection;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Academy.Areas.Admin.Controllers
@@ -8,9 +9,11 @@ namespace Academy.Areas.Admin.Controllers
     public class ImpactSectionController : Controller
     {
         private readonly IImpactSectionService _impactSectionService;
-        public ImpactSectionController(IImpactSectionService impactSectionService)
+        private readonly IMapper _mapper;
+        public ImpactSectionController(IImpactSectionService impactSectionService, IMapper mapper)
         {
             _impactSectionService = impactSectionService;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
@@ -46,6 +49,25 @@ namespace Academy.Areas.Admin.Controllers
         {
             await _impactSectionService.DeleteAsync(id);
             return Ok();
+        }
+
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var section = await _impactSectionService.GetByIdAsync(id);
+            if (section == null) return NotFound();
+
+            var model = _mapper.Map<ImpactSectionEditVM>(section);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ImpactSectionEditVM model)
+        {
+           
+
+            await _impactSectionService.UpdateAsync(model);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

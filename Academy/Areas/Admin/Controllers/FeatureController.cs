@@ -54,5 +54,26 @@ namespace Academy.Areas.Admin.Controllers
             await _featureService.DeleteAsync(data);
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await _featureService.GetByIdForEditAsync(id);
+            if (model == null) return NotFound();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(FeatureEditVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await _featureService.UpdateAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

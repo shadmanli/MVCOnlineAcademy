@@ -48,5 +48,11 @@ namespace Academy.Services
            var data = await _context.Statistics.FindAsync(id);
             return data;
         }
+
+        public async Task UpdateAsync(Statistic statistic)
+        {
+            _context.Statistics.Update(statistic);
+            await _context.SaveChangesAsync();
+        }
     }
 }

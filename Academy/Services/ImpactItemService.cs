@@ -77,5 +77,19 @@ namespace Academy.Services
            var data = await _context.ImpactItems.FindAsync(id);
             return data;
         }
+
+
+        public async Task UpdateAsync(ImpactItemEditVM model)
+        {
+            var data = await _context.ImpactItems
+                .FirstOrDefaultAsync(x => x.Id == model.Id);
+
+            if (data == null) return;
+
+            _mapper.Map(model, data);
+
+            _context.ImpactItems.Update(data);
+            await _context.SaveChangesAsync();
+        }
     }
 }

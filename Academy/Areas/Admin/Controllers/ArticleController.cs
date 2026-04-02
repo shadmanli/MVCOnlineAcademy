@@ -74,5 +74,40 @@ namespace Academy.Areas.Admin.Controllers
             await _articleService.DeleteAsync(id);
             return Ok();
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _articleService.GetByIdAsync(id);
+            if (data == null) return NotFound();
+
+            var topics = await _context.Topics.ToListAsync();
+
+            var model = new ArticleEditVM
+            {
+                Id = data.Id,
+                Description = data.Description,
+                Text = data.Text,
+                ExistingImage = data.Image,
+                TopicId = data.TopicId,
+                Topics = topics.Select(x => new SelectListItem
+                {
+                    Text = x.Title,
+                    Value = x.Id.ToString()
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ArticleEditVM model)
+        {
+          
+
+            await _articleService.UpdateAsync(model);
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

@@ -65,5 +65,32 @@ namespace Academy.Services
                 await _context.SaveChangesAsync();
 
         }
+
+        public async Task UpdateAsync(MissionEditVM mission)
+        {
+            var data = await _context.Mission.FindAsync(mission.Id);
+            if (data == null) return;
+
+            data.Title = mission.Title;
+            data.Description = mission.Description;
+
+            if (mission.Image != null)
+            {
+                var oldPath = Path.Combine(_env.WebRootPath, "uploads", "mission", data.Image);
+                if (File.Exists(oldPath)) File.Delete(oldPath);
+
+                string fileName = $"{Guid.NewGuid()}_{mission.Image.FileName}";
+                string path = Path.Combine(_env.WebRootPath, "uploads", "mission", fileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await mission.Image.CopyToAsync(stream);
+                }
+
+                data.Image = fileName;
+            }
+
+            _context.Mission.Update(data);
+            await _context.SaveChangesAsync();
+        }
     }
 }

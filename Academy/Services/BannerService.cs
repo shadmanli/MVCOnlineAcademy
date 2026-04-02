@@ -61,5 +61,31 @@ namespace Academy.Services
             var vm = _mapper.Map<BannerDetailVM>(data);
             return vm;
         }
+
+        public async Task UpdateAsync(int id, BannerEditVM model)
+        {
+            var data = await _context.Banners.FindAsync(id);
+            if (data == null) return;
+
+            if (model.Image != null)
+            {
+                string folderPath = Path.Combine(_env.WebRootPath, "uploads", "banner");
+
+                string fileName = $"{Guid.NewGuid()}_{model.Image.FileName}";
+                string path = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                data.Image = fileName;
+            }
+
+            data.Title = model.Title;
+            data.Page = model.Page;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

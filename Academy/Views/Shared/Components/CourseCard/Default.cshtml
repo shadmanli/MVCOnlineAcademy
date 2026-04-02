@@ -1,303 +1,103 @@
-﻿<section id="courses-common">
+﻿@using Academy.ViewModels.Course
+@model List<CourseVM>
 
-
+<section id="courses-common">
     <div class="top-filter">
+
         <div class="search-box">
             <input type="text" placeholder="Search courses...">
-            <button>
+            <button type="button">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </div>
 
         <div class="sort-box">
             <select>
-                <option>Default Sorting</option>
-                <option>Sort by popularity</option>
-                <option>Sort by latest</option>
-                <option>Sort by price: low to high</option>
-                <option>Sort by price: high to low</option>
+                <option value="">Default Sorting</option>
+                <option value="latest">Sort by latest</option>
+                <option value="low">Price: low to high</option>
+                <option value="high">Price: high to low</option>
             </select>
         </div>
-    </div>
 
+    </div>
 
     <div class="courses-layout">
 
-
         <div class="sidebar">
-
-
-            <div class="category-card">
-                <h3 class="card-title">Categories</h3>
-                <div class="pill-group">
-                    <label class="pill-label">
-                        <input type="checkbox">
-                        <span class="pill">Azerbaycan dili <span class="pill-count">12</span></span>
-                    </label>
-                    <label class="pill-label">
-                        <input type="checkbox">
-                        <span class="pill">English <span class="pill-count">8</span></span>
-                    </label>
-                    <label class="pill-label">
-                        <input type="checkbox">
-                        <span class="pill">Programming <span class="pill-count">15</span></span>
-                    </label>
-                    <label class="pill-label">
-                        <input type="checkbox">
-                        <span class="pill">Design <span class="pill-count">6</span></span>
-                    </label>
-                    <label class="pill-label">
-                        <input type="checkbox">
-                        <span class="pill">Business <span class="pill-count">9</span></span>
-                    </label>
-                    <label class="pill-label">
-                        <input type="checkbox">
-                        <span class="pill">Marketing <span class="pill-count">4</span></span>
-                    </label>
-                </div>
-            </div>
-
-
-
-            <div class="category-card">
-                <h3 class="card-title">Qiymət Aralığı</h3>
-
-                <div class="price-range">
-                    <div class="price-values">
-                    </div>
-
-                    <input type="range" min="0" max="500" value="100">
-
-
-                    <div class="price-labels">
-                        <span>$0</span>
-                        <span>$500</span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="category-card">
-                <h3 class="card-title">Rating</h3>
-
-                <div class="rating-filter">
-
-                    <div class="rating-item active">
-                        <span>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </span>
-                        <span>Hamısı</span>
-                    </div>
-
-                    <div class="rating-item">
-                        <span>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </span>
-                        <span>4.0+</span>
-                    </div>
-
-                    <div class="rating-item">
-                        <span>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </span>
-                        <span>3.0+</span>
-                    </div>
-
-                </div>
-            </div>
-
-
-
-            <div class="category-card">
-                <h3 class="card-title">Teacher</h3>
-
-                <div class="teacher-item">
-                    <label>
-                        <input type="checkbox">
-                        <span class="avatar ld">LD</span>
-                        Lauren Devis
-                    </label>
-                </div>
-
-                <div class="teacher-item">
-                    <label>
-                        <input type="checkbox">
-                        <span class="avatar js">JS</span>
-                        John Smith
-                    </label>
-                </div>
-
-                <div class="teacher-item">
-                    <label>
-                        <input type="checkbox">
-                        <span class="avatar ml">ML</span>
-                        Michael Lee
-                    </label>
-                </div>
-
-            </div>
-
+          
         </div>
-
 
         <div class="courses-container">
 
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var course in Model)
+                {
+                    <div class="card-courses">
 
-            <div class="card-courses">
-                <div class="courses-img">
-                    <span class="img-top">Photo</span>
-                    <img src="~/assets/images/courses_12-600x800.jpg" alt="">
+                        <a href="/course/detail/@course.Id">
 
-                    <div class="card-content">
-                        <span>Lauren Devis</span>
-                        <h3>Postwar Abstract Painting</h3>
-                        <div class="rating">
-                            <span>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </span>
+                            <div class="courses-img">
 
-                            <button class="course-btn">$300</button>
-                        </div>
+                                <span class="img-top">
+                                    @(course.CategoryName ?? "No Category")
+                                </span>
+
+                                <img src="@(string.IsNullOrEmpty(course.ImageUrl)
+                                                                                 ? "/images/default.png"
+                                                                                 : "/uploads/course/" + course.ImageUrl)"
+                             alt="@course.Title" />
+
+                                <div class="card-content">
+
+                                    <span class="instructor">
+                                        @(course.InstructorName ?? "Unknown Instructor")
+                                    </span>
+
+                                    <h3 class="title">
+                                        @course.Title
+                                    </h3>
+
+                                    <div class="rating">
+                                        <span>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                        </span>
+
+                                        <span class="price">
+                                            $@course.Price
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </a>
+
                     </div>
+                        }
+            }
+            else
+            {
+                <div class="no-course">
+                    <p>Course tapılmadı</p>
                 </div>
-            </div>
+            }
 
-
-            <div class="card-courses">
-                <div class="courses-img">
-                    <span class="img-top">Languages</span>
-                    <img src="~/assets/images/courses_12-600x800.jpg" alt="">
-
-                    <div class="card-content">
-                        <span>John Smith</span>
-                        <h3>Advanced English Course</h3>
-                        <div class="rating">
-                            <span>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </span>
-
-                            <button class="course-btn">$300</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="card-courses">
-                <div class="courses-img">
-                    <span class="img-top">Programming</span>
-                    <img src="~/assets/images/courses_12-600x800.jpg" alt="">
-
-                    <div class="card-content">
-                        <span>Michael Lee</span>
-                        <h3>JavaScript Masterclass</h3>
-                        <div class="rating">
-                            <span><i class="fa-regular fa-star"></i> 5.0</span>
-                            <button class="course-btn">$500</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="card-courses">
-                <div class="courses-img">
-                    <span class="img-top">Programming</span>
-                    <img src="~/assets/images/courses_12-600x800.jpg" alt="">
-
-                    <div class="card-content">
-                        <span>Michael Lee</span>
-                        <h3>JavaScript Masterclass</h3>
-                        <div class="rating">
-                            <span>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </span>
-
-                            <button class="course-btn">$300</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="card-courses">
-                <div class="courses-img">
-                    <span class="img-top">Programming</span>
-                    <img src="~/assets/images/courses_12-600x800.jpg" alt="">
-
-                    <div class="card-content">
-                        <span>Michael Lee</span>
-                        <h3>JavaScript Masterclass</h3>
-                        <div class="rating">
-                            <span>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </span>
-
-                            <button class="course-btn">$300</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="card-courses">
-                <div class="courses-img">
-                    <span class="img-top">Programming</span>
-                    <img src="~/assets/images/courses_12-600x800.jpg" alt="">
-
-                    <div class="card-content">
-                        <span>Michael Lee</span>
-                        <h3>JavaScript Masterclass</h3>
-                        <div class="rating">
-                            <span>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </span>
-
-                            <button class="course-btn">$300</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            
             <div class="pagination">
-                <a href="" class="prev">«</a>
-                <a href="" class="page ">1</a>
-                <a href="" class="page active">2</a>
-                <a href="" class="page">3</a>
-                <a href="" class="page">4</a>
-                <a href="" class="page">5</a>
-                <a href="" class="next">»</a>
+                <a href="#" class="prev">«</a>
+                <a href="#" class="page active">1</a>
+                <a href="#" class="page">2</a>
+                <a href="#" class="page">3</a>
+                <a href="#" class="next">»</a>
             </div>
-
-
-
 
         </div>
-
     </div>
 </section>

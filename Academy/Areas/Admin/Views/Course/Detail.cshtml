@@ -1,0 +1,26 @@
+﻿@using Academy.ViewModels.Course
+@model CourseDetailVM
+
+<div class="container mt-5">
+
+    <div class="card shadow-sm">
+
+        <img src="~/uploads/course/@Model.ImageUrl" class="card-img-top" style="height:300px; object-fit:cover;" />
+
+        <div class="card-body">
+
+            <h3>@Model.Title</h3>
+
+            <p>@Model.Description</p>
+
+            <p><b>Instructor:</b> @Model.InstructorName</p>
+            <p><b>Language:</b> @Model.LanguageName</p>
+            <p><b>Category:</b> @Model.CategoryName</p>
+
+            <h4 class="text-success">$@Model.Price</h4>
+
+        </div>
+
+    </div>
+
+</div>

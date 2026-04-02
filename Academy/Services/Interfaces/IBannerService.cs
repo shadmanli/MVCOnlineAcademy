@@ -9,6 +9,7 @@ namespace Academy.Services.Interfaces
 
         public Task<BannerDetailVM> GetByIdAsync(int id);
         public Task DeleteAsync(int id);
+        Task UpdateAsync(int id, BannerEditVM model);
 
     }
 }

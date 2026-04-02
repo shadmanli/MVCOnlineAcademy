@@ -10,5 +10,7 @@ namespace Academy.Services.Interfaces
         public Task CreateAsync(FeatureCreateVM model);
         public Task<Feature> GetByIdAsync(int id);
         public Task DeleteAsync(Feature feature);
+        Task UpdateAsync(FeatureEditVM model);
+        Task<FeatureEditVM> GetByIdForEditAsync(int id);
     }
 }

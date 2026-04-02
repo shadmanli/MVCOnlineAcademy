@@ -27,6 +27,12 @@
                             Ətraflı
                         </a>
 
+                        <a asp-action="Edit"
+                           asp-route-id="@topic.Id"
+                           class="btn btn-warning btn-sm ms-2">
+                            Yenilə
+                        </a>
+
                         <button type="button"
                                 class="btn btn-danger btn-sm delete-topic-btn ms-2">
                             Sil
@@ -34,7 +40,6 @@
                     </div>
                 </div>
 
-                <!-- ARTICLES -->
                 <div class="row">
                     @if (topic.Articles != null && topic.Articles.Any())
                     {

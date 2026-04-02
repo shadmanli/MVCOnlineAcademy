@@ -9,5 +9,7 @@ namespace Academy.Services.Interfaces
         Task CreateAsync(ArticleCreateVM model);
         Task<Article> GetByIdAsync(int id);
         Task DeleteAsync(int id);
+        Task UpdateAsync(ArticleEditVM model);   
+
     }
 }

@@ -1,0 +1,23 @@
+﻿@using Academy.ViewModels.Instructor
+@model InstructorDetailVM
+
+<div class="container mt-5">
+
+    <h2>@Model.FullName</h2>
+
+    <h4 class="mt-4">Courses:</h4>
+
+    <div class="row">
+        @foreach (var course in Model.Courses)
+        {
+            <div class="col-md-4">
+                <div class="card p-2 shadow-sm">
+                    <h5 style="color:black;">@course.Title</h5>
+                </div>
+            </div>
+        }
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-3">Geri</a>
+
+</div>

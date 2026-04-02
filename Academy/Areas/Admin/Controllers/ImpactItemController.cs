@@ -68,5 +68,43 @@ namespace Academy.Areas.Admin.Controllers
            await _impactItemService.DeleteAsync(id);
             return Ok();
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var item = await _impactItemService.GetByIdAsync(id);
+            if (item == null) return NotFound();
+
+            var model = _mapper.Map<ImpactItemEditVM>(item);
+
+            var sections = await _context.ImpactSections.ToListAsync();
+
+            model.Sections = sections.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ImpactItemEditVM model)
+        {
+          
+            
+                var sections = await _context.ImpactSections.ToListAsync();
+
+                model.Sections = sections.Select(x => new SelectListItem
+                {
+                    Text = x.Title,
+                    Value = x.Id.ToString()
+                }).ToList();
+
+                return View(model);
+            
+
+            await _impactItemService.UpdateAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

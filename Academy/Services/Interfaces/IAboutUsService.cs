@@ -11,7 +11,7 @@ namespace Academy.Services.Interfaces
         Task<AboutUs> GetByIdAsync(int id);
 
         Task DeleteAsync(AboutUs aboutus);
-
+        Task EditAsync(AboutUsEditVM model);
 
     }
 }

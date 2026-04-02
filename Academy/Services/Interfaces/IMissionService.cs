@@ -9,5 +9,6 @@ namespace Academy.Services.Interfaces
         public Task CreateAsync(MissionCreateVM mission);
         public Task<Mission> GetByIdAsync(int id);
         public Task DeleteAsync(Mission mission);
+        Task UpdateAsync(MissionEditVM mission);
     }
 }

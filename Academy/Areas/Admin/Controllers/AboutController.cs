@@ -41,17 +41,16 @@ namespace Academy.Areas.Admin.Controllers
 
 
         [HttpGet]
-
         public async Task<IActionResult> Detail(int id)
         {
-            var data = await _aboutService.GetAllAsync();
-            var about = data.FirstOrDefault(a => a.Id == id);
-            var res = _mapper.Map<AboutDetailVM>(about);
-            if (about == null)
+            var data = await _aboutService.GetByIdAsync(id); 
+
+            if (data == null)
             {
                 return NotFound();
             }
-            return View(res);
+
+            return View(data); 
         }
 
         [HttpGet]
@@ -59,6 +58,35 @@ namespace Academy.Areas.Admin.Controllers
         {
             await _aboutService.DeleteAsync(id);
             return Ok();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _aboutService.GetEntityByIdAsync(id);
+
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            var model = _mapper.Map<AboutEditVM>(data); 
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+     
+        public async Task<IActionResult> Edit(int id, AboutEditVM model)
+        {
+            if (id != model.Id)
+                return BadRequest();
+
+            await _aboutService.EditAsync(model);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

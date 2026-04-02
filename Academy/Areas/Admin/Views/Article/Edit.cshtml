@@ -1,0 +1,38 @@
+﻿@model ArticleEditVM
+
+<div class="container mt-5">
+    <h2>Article yenilə</h2>
+
+    <form method="post" enctype="multipart/form-data">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label>Current Image</label><br />
+            <img src="~/uploads/article/@Model.ExistingImage" width="150" />
+        </div>
+
+        <div class="mb-3">
+            <label>New Image</label>
+            <input asp-for="Image" type="file" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <input asp-for="Description" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Text</label>
+            <textarea asp-for="Text" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Topic seç</label>
+            <select asp-for="TopicId" asp-items="Model.Topics" class="form-control"></select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Yadda saxla</button>
+        <a asp-action="Index" class="btn btn-secondary">Geri</a>
+    </form>
+</div>

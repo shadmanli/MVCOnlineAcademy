@@ -1,4 +1,5 @@
-﻿using Academy.Services.Interfaces;
+﻿using Academy.Models;
+using Academy.Services.Interfaces;
 using Academy.ViewModels.Topic;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace Academy.Areas.Admin.Controllers
             _topicService = topicService;
         }
 
-      
+
         public async Task<IActionResult> Index()
         {
             var data = await _topicService.GetAllAsync();
@@ -27,7 +28,7 @@ namespace Academy.Areas.Admin.Controllers
             return View();
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> Create(TopicCreateVM model)
         {
@@ -39,7 +40,7 @@ namespace Academy.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-     
+
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
@@ -51,12 +52,47 @@ namespace Academy.Areas.Admin.Controllers
             return View(data);
         }
 
-    
+
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             await _topicService.DeleteAsync(id);
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _topicService.GetByIdAsync(id);
+            if (data == null) return NotFound();
+
+            var model = new TopicEditVM
+            {
+                Id = data.Id,
+                Title = data.Title,
+                SubTitle = data.SubTitle
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(TopicEditVM model)
+        {
+
+
+            var topic = new Topic
+            {
+                Id = model.Id,
+                Title = model.Title,
+                SubTitle = model.SubTitle
+            };
+
+            await _topicService.UpdateAsync(topic);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }

@@ -55,5 +55,24 @@ namespace Academy.Areas.Admin.Controllers
             await _missionService.DeleteAsync(data);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _missionService.GetByIdAsync(id);
+            if (data == null) return NotFound();
+
+            var editVM = _mapper.Map<MissionEditVM>(data);
+            return View(editVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(MissionEditVM mission)
+        {
+          
+
+            await _missionService.UpdateAsync(mission);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

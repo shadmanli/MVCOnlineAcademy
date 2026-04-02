@@ -66,5 +66,19 @@ namespace Academy.Services
 
             return _mapper.Map<ImpactSectionDetailVM>(data);
         }
+
+
+        public async Task UpdateAsync(ImpactSectionEditVM model)
+        {
+            var data = await _context.ImpactSections
+                .FirstOrDefaultAsync(x => x.Id == model.Id);
+
+            if (data == null) return;
+
+            _mapper.Map(model, data);
+
+            _context.ImpactSections.Update(data);
+            await _context.SaveChangesAsync();
+        }
     }
 }

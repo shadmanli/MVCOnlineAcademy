@@ -1,12 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Academy.Data;
+using Academy.Services.Interfaces;
+using Academy.ViewModels.Course;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academy.ViewComponents.Course
 {
-    public class CourseCardViewComponent:ViewComponent
+    public class CourseCardViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        private readonly ICourseService _service;
+
+        public CourseCardViewComponent(ICourseService service)
         {
-            return View();
+            _service = service;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var courses = await _service.GetAllAsync(); 
+            return View(courses);
         }
     }
 }

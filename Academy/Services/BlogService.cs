@@ -69,5 +69,41 @@ namespace Academy.Services
            var data = await _context.Blog.FindAsync(id);
             return _mapper.Map<BlogDetailVM>(data);
         }
+
+
+        public async Task UpdateAsync(int id, BlogEditVM model)
+        {
+            var data = await _context.Blog.FindAsync(id);
+            if (data == null) return;
+
+            if (model.Image != null)
+            {
+                string folderPath = Path.Combine(_env.WebRootPath, "uploads", "blog");
+
+              
+                string oldPath = Path.Combine(folderPath, data.Image);
+                if (File.Exists(oldPath))
+                {
+                    File.Delete(oldPath);
+                }
+
+              
+                string fileName = $"{Guid.NewGuid()}_{model.Image.FileName}";
+                string newPath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(newPath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                data.Image = fileName;
+            }
+
+            data.Title = model.Title;
+            data.Description = model.Description;
+            data.Name = model.Name;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

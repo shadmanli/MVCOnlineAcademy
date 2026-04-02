@@ -1,4 +1,7 @@
-﻿<section id="Say">
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+<section id="Say">
     <div class="Testimonials-container">
         <div class="testimonial-content">
             <span>What The Say</span>
@@ -49,3 +52,161 @@
         </div>
     </div>
 </section>
+
+<style>
+
+    #Say {
+        width: 100%;
+    }
+
+    .testimonial-content {
+        text-align: center;
+        margin-top: 110px;
+    }
+
+        .testimonial-content span {
+            font-size: 18px;
+            color: coral;
+            font-weight: 600;
+        }
+
+        .testimonial-content p {
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+
+    .testimonial-card {
+        width: 550px;
+        height: 260px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(194, 191, 191, 0.6);
+    }
+
+    .imgg {
+        border-radius: 50%;
+        width: 80px;
+        margin-top: 39px;
+        margin-left: 35px;
+    }
+
+    .side {
+        display: flex;
+        gap: 20px;
+    }
+
+    .title {
+        margin-top: 56px;
+    }
+
+
+    .testimonial-single p {
+        margin-top: 10px;
+        margin-left: 35px;
+        font-size: 20px;
+    }
+
+    .slider {
+        margin-top: 40px;
+    }
+
+    .testimonial-card {
+        margin: 0 15px;
+    }
+
+    .slick-dots li button:before {
+        font-size: 12px;
+        color: #c0bebe;
+    }
+
+    .slick-dots li.slick-active button:before {
+        color: #ff6d34;
+    }
+
+    .green {
+        width: 300px;
+        height: 10px;
+        color: green;
+    }
+
+
+    .top-side a {
+        width: 150px;
+        height: 50px;
+        background-color: coral;
+        color: #fff;
+        border: none;
+        font-size: 17px;
+        font-weight: 500;
+        border-radius: 5px;
+        margin-right: 105px;
+        margin-top: 105px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        border: 2px solid coral;
+    }
+
+        .top-side a:hover {
+            background-color: transparent;
+            color: coral;
+        }
+
+    .top-side {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dot-common {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #c0bebe;
+    }
+
+
+    .dot-active {
+        background-color: #ff6d34;
+    }
+
+</style>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+
+<script>
+    $(document).ready(function(){
+      $('.slider').slick({
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        dots: true,
+        arrows: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 1
+            }
+          }
+        ]
+      });
+    });
+</script>

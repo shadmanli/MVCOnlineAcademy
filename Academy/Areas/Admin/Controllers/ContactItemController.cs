@@ -63,5 +63,32 @@ namespace Academy.Areas.Admin.Controllers
             await _service.DeleteAsync(id);
             return Ok();
         }
+
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var item = await _service.GetByIdAsync(id);
+            if (item == null) return NotFound();
+
+            var model = _mapper.Map<ContactItemEditVM>(item);
+
+            var sections = await _context.Contacts.ToListAsync();
+            model.Sections = sections.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ContactItemEditVM model)
+        {
+           
+
+            await _service.UpdateAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

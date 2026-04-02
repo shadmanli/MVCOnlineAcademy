@@ -1,0 +1,54 @@
+﻿@model Academy.ViewModels.ImpactItem.ImpactItemEditVM
+
+<div class="container mt-5">
+    <h2>Edit Impact Item</h2>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Image" />
+
+        <!-- Şəkil seç -->
+        <div class="mb-3">
+            <label>Yeni şəkil</label>
+            <input asp-for="ImageFile" type="file" class="form-control" id="imgInput" />
+        </div>
+
+        <!-- Preview -->
+        <div class="mb-3">
+            <img id="preview"
+                 src="@(!string.IsNullOrEmpty(Model.Image)
+                                         ? Url.Content("~/uploads/impactitem/" + Model.Image)
+                                         : "/images/no-image.png")"
+                 style="width:150px;height:150px;object-fit:cover;" />
+        </div>
+
+        <!-- Title -->
+        <div class="mb-3">
+            <input asp-for="Title" class="form-control" />
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <!-- Section -->
+        <div class="mb-3">
+            <select asp-for="ImpactSectionId" asp-items="Model.Sections" class="form-select"></select>
+        </div>
+
+        <button class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script>
+    const input = document.getElementById("imgInput");
+    const preview = document.getElementById("preview");
+
+    input.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+        }
+    });
+</script>

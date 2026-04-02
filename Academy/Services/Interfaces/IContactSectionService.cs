@@ -8,5 +8,6 @@ namespace Academy.Services.Interfaces
         Task CreateAsync(ContactSectionCreateVM model);
         Task<ContactSectionDetailVM> GetByIdAsync(int id);
         Task DeleteAsync(int id);
+        Task UpdateAsync(ContactSectionEditVM model);
     }
 }

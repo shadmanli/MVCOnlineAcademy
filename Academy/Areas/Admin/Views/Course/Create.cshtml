@@ -1,0 +1,21 @@
+﻿@using Academy.ViewModels.Course
+@model CourseCreateVM
+
+<form method="post" enctype="multipart/form-data">
+
+    <input asp-for="Title" class="form-control mb-2" placeholder="Title" />
+    <textarea asp-for="Description" class="form-control mb-2"></textarea>
+
+    <input asp-for="Price" class="form-control mb-2" placeholder="Price" />
+
+    <input type="file" asp-for="Image" class="form-control mb-2" />
+
+    <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control mb-2"></select>
+    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control mb-2"></select>
+    <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-control mb-2"></select>
+
+    <input asp-for="Duration" class="form-control mb-2" placeholder="Duration" />
+
+    <button class="btn btn-success">Create</button>
+
+</form>

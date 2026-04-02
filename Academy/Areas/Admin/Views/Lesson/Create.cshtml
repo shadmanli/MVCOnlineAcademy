@@ -1,0 +1,14 @@
+﻿@using Academy.ViewModels.Lesson
+@model LessonCreateVM
+
+<form method="post">
+
+    <input asp-for="Title" class="form-control mb-2" placeholder="Title" />
+
+    <select asp-for="CourseId" asp-items="Model.Courses" class="form-control mb-2">
+        <option value="">Course seç</option>
+    </select>
+
+    <button class="btn btn-success">Create</button>
+
+</form>

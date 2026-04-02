@@ -63,5 +63,56 @@ namespace Academy.Services
            var about = await _context.AboutUs.FindAsync(id);
             return about;
         }
+
+
+        public async Task EditAsync(AboutUsEditVM model)
+        {
+            var data = await _context.AboutUs.FindAsync(model.Id);
+
+            if (data == null) return;
+
+            string folderPath = Path.Combine(_env.WebRootPath, "uploads", "aboutus");
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            if (!string.IsNullOrWhiteSpace(model.Title))
+                data.Title = model.Title.Trim();
+
+      
+            if (!string.IsNullOrWhiteSpace(model.Description))
+                data.Description = model.Description.Trim();
+
+            if (!string.IsNullOrWhiteSpace(model.Phone))
+                data.Phone = model.Phone.Trim();
+
+        
+            if (model.NewImage != null && model.NewImage.Length > 0)
+            {
+               
+                if (!string.IsNullOrEmpty(data.Image))
+                {
+                    string oldPath = Path.Combine(folderPath, data.Image);
+
+                    if (File.Exists(oldPath))
+                        File.Delete(oldPath);
+                }
+
+              
+                string extension = Path.GetExtension(model.NewImage.FileName);
+                string newImageName = $"{Guid.NewGuid()}{extension}";
+                string newPath = Path.Combine(folderPath, newImageName);
+
+                using (FileStream stream = new FileStream(newPath, FileMode.Create))
+                {
+                    await model.NewImage.CopyToAsync(stream);
+                }
+
+                data.Image = newImageName;
+            }
+
+    
+            await _context.SaveChangesAsync();
+        }
     }
 }

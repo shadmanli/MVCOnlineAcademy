@@ -49,5 +49,17 @@ namespace Academy.Services
                 .Include(x => x.ContactSection)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task UpdateAsync(ContactItemEditVM model)
+        {
+            var data = await _context.ContactItems.FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (data == null) return;
+
+            _mapper.Map(model, data); 
+          
+
+            _context.ContactItems.Update(data);
+            await _context.SaveChangesAsync();
+        }
     }
 }

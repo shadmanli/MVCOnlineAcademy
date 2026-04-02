@@ -56,5 +56,30 @@ namespace Academy.Areas.Admin.Controllers
             return Ok();
             
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _statisticService.GetByIdAsync(id);
+            if (data == null) return NotFound();
+
+            var editVM = _mapper.Map<StatisticEditVM>(data);
+            return View(editVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(StatisticEditVM model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var statistic = await _statisticService.GetByIdAsync(model.Id);
+            if (statistic == null) return NotFound();
+
+            // Mapping vasitəsi ilə dəyişiklikləri tətbiq et
+            _mapper.Map(model, statistic);
+            await _statisticService.UpdateAsync(statistic);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

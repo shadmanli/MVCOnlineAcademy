@@ -53,5 +53,29 @@ namespace Academy.Areas.Admin.Controllers
             await _aboutUsService.DeleteAsync(data);
             return Ok();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _aboutUsService.GetByIdAsync(id);
+
+            if (data == null) return NotFound();
+
+            var model = _mapper.Map<AboutUsEditVM>(data);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, AboutUsEditVM model)
+        {
+            if (id != model.Id)
+                return BadRequest();
+
+            await _aboutUsService.EditAsync(model);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

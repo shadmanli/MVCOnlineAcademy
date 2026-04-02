@@ -1,4 +1,5 @@
-﻿using Academy.Models;
+﻿
+using Academy.Models;
 using Academy.Services.Interfaces;
 using Academy.ViewModels.Blog;
 using AutoMapper;
@@ -50,6 +51,29 @@ namespace Academy.Areas.Admin.Controllers
         {
             await _blogService.DeleteAsync(id); 
             return Ok();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _blogService.GetByIdAsync(id);
+            if (data == null) return NotFound();
+
+            var model = _mapper.Map<BlogEditVM>(data);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, BlogEditVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await _blogService.UpdateAsync(id, model);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

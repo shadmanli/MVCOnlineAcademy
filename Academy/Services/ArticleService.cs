@@ -86,5 +86,45 @@ namespace Academy.Services
         {
             return await _context.Articles.FindAsync(id);
         }
+
+        public async Task UpdateAsync(ArticleEditVM model)
+        {
+            var data = await _context.Articles.FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (data == null) return;
+
+            string folderPath = Path.Combine(_env.WebRootPath, "uploads", "article");
+
+            if (model.Image != null)
+            {
+              
+                if (!string.IsNullOrEmpty(data.Image))
+                {
+                    string oldPath = Path.Combine(folderPath, data.Image);
+                    if (File.Exists(oldPath))
+                    {
+                        File.Delete(oldPath);
+                    }
+                }
+
+               
+
+
+                string fileName = $"{Guid.NewGuid()}_{model.Image.FileName}";
+                string newPath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(newPath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                data.Image = fileName;
+            }
+
+            data.Description = model.Description;
+            data.Text = model.Text;
+            data.TopicId = model.TopicId;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

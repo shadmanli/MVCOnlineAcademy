@@ -61,5 +61,17 @@ namespace Academy.Services
 
             return _mapper.Map<ContactSectionDetailVM>(data);
         }
+
+        public async Task UpdateAsync(ContactSectionEditVM model)
+        {
+            var data = await _context.Contacts.FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (data == null) return;
+
+            _mapper.Map(model, data); 
+           
+
+            _context.Contacts.Update(data);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -1,0 +1,34 @@
+﻿@model BannerEditVM
+
+<h2>Banner Yenilə</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Hazırkı şəkil</label><br />
+        <img src="~/uploads/banner/@Model.ExistingImage" width="200" />
+    </div>
+
+    <div class="mb-3">
+        <label>Yeni şəkil</label>
+        <input asp-for="Image" type="file" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Səhifə</label>
+        <select asp-for="Page" class="form-control">
+            <option value="About">About</option>
+            <option value="Contact">Contact</option>
+            <option value="Blog">Blog</option>
+            <option value="Courses">Courses</option>
+            <option value="Teacher">Teacher</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Yenilə</button>
+</form>

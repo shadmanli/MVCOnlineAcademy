@@ -46,5 +46,22 @@ namespace Academy.Services
             
             return data;
         }
+        public async Task<FeatureEditVM> GetByIdForEditAsync(int id)
+        {
+            var data = await _context.Feature.FindAsync(id);
+            if (data == null) return null;
+
+            return _mapper.Map<FeatureEditVM>(data);
+        }
+        public async Task UpdateAsync(FeatureEditVM model)
+        {
+            var data = await _context.Feature.FindAsync(model.Id);
+            if (data == null) return;
+
+            data.Title = model.Title;
+            data.Description = model.Description;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

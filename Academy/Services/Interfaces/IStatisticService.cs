@@ -9,7 +9,7 @@ namespace Academy.Services.Interfaces
 
         Task< IEnumerable<StatisticVM>>GetAllAsync();
         Task<Statistic> GetByIdAsync(int id);
-
+        Task UpdateAsync(Statistic statistic); 
         Task DeleteAsync(Statistic statistic);
     }
 }

@@ -10,6 +10,7 @@ namespace Academy.Services.Interfaces
 
         public Task<BlogDetailVM> GetByIdAsync(int id);   
         public Task DeleteAsync(int id);
+        Task UpdateAsync(int id, BlogEditVM model);
 
     }
 }
