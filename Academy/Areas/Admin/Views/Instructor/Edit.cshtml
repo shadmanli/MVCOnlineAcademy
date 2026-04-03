@@ -1,17 +1,15 @@
-﻿@using Academy.ViewModels.Language
-@model LanguageEditVM
+﻿@model Academy.ViewModels.Instructor.InstructorEditVM
 
 <div class="container mt-5">
-    <h2 class="mb-4">Edit Language</h2>
+    <h2 class="mb-4">Edit Instructor</h2>
 
     <form asp-action="Edit" method="post">
 
         <input type="hidden" asp-for="Id" />
 
         <div class="mb-3">
-            <label class="form-label">Name</label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <label class="form-label">Full Name</label>
+            <input asp-for="FullName" class="form-control" />
         </div>
 
         <button type="submit" class="btn btn-primary">Yadda saxla</button>

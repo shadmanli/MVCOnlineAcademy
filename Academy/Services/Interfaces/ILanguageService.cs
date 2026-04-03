@@ -8,5 +8,7 @@ namespace Academy.Services.Interfaces
         Task CreateAsync(LanguageCreateVM model);
         Task<LanguageDetailVM> GetByIdAsync(int id);
         Task DeleteAsync(int id);
+        Task<LanguageEditVM> GetEditByIdAsync(int id);
+        Task EditAsync(LanguageEditVM model);
     }
 }

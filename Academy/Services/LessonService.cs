@@ -3,6 +3,7 @@ using Academy.Models;
 using Academy.Services.Interfaces;
 using Academy.ViewModels.Lesson;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academy.Services
@@ -56,6 +57,38 @@ namespace Academy.Services
             if (data == null) return;
 
             _context.Lessons.Remove(data);
+            await _context.SaveChangesAsync();
+        }
+
+
+        public async Task<LessonEditVM> GetEditByIdAsync(int id)
+        {
+            var data = await _context.Lessons.FindAsync(id);
+            if (data == null) return null;
+
+            return new LessonEditVM
+            {
+                Id = data.Id,
+                Title = data.Title,
+                CourseId = data.CourseId,
+                Courses = await _context.Courses
+                    .Select(x => new SelectListItem
+                    {
+                        Text = x.Title,
+                        Value = x.Id.ToString()
+                    }).ToListAsync()
+            };
+        }
+
+        public async Task EditAsync(LessonEditVM model)
+        {
+            var data = await _context.Lessons.FindAsync(model.Id);
+            if (data == null) return;
+
+            data.Title = model.Title;
+            data.CourseId = model.CourseId;
+          
+
             await _context.SaveChangesAsync();
         }
     }

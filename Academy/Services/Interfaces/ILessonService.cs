@@ -9,5 +9,8 @@ namespace Academy.Services.Interfaces
         Task<LessonDetailVM> GetByIdAsync(int id);
 
         Task DeleteAsync(int id);
+
+        Task<LessonEditVM> GetEditByIdAsync(int id);
+        Task EditAsync(LessonEditVM model);
     }
 }

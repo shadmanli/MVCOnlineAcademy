@@ -50,7 +50,7 @@ namespace Academy.Services
                 .Include(c => c.Courses)
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (data == null) return;
-
+            
             if (data.Courses != null && data.Courses.Any())
                 _context.Courses.RemoveRange(data.Courses);
 
@@ -58,6 +58,28 @@ namespace Academy.Services
             await _context.SaveChangesAsync();
         }
 
-     
+        public async Task<CategoryEditVM> GetEditByIdAsync(int id)
+        {
+            var data = await _context.Categories.FindAsync(id);
+            if (data == null) return null;
+
+            return new CategoryEditVM
+            {
+                Id = data.Id,
+                Name = data.Name
+            };
+        }
+
+        public async Task EditAsync(CategoryEditVM model)
+        {
+            var data = await _context.Categories.FindAsync(model.Id);
+            if (data == null) return;
+
+            data.Name = model.Name;
+
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }

@@ -197,7 +197,13 @@ namespace Academy.Helpers
                 .ForMember(d => d.LanguageName, o => o.MapFrom(s => s.Language.Name))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.Name))
                 .ForMember(d => d.InstructorName, o => o.MapFrom(s => s.Instructor.FullName));
+          
+            CreateMap<Course, CourseEditVM>();
 
+            CreateMap<CourseEditVM, Course>()
+                .ForMember(x => x.ImageUrl, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.UpdatedDate, opt => opt.Ignore());
 
             CreateMap<Category, CategoryVM>();
             CreateMap<CategoryCreateVM, Category>();
@@ -206,7 +212,20 @@ namespace Academy.Helpers
             CreateMap<Course, CourseVM>();
 
 
+            CreateMap<Language, LanguageEditVM>();
+            CreateMap<LanguageEditVM, Language>();
 
+            CreateMap<Lesson, LessonEditVM>();
+            CreateMap<LessonEditVM, Lesson>();
+
+
+
+            CreateMap<Category, CategoryEditVM>();
+            CreateMap<CategoryEditVM, Category>();
+
+
+            CreateMap<Instructor, InstructorEditVM>();
+            CreateMap<InstructorEditVM, Instructor>();
         }
 
        

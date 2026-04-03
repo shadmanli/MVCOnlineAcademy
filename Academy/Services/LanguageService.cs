@@ -65,5 +65,29 @@ namespace Academy.Services
             _context.Languages.Remove(data);
             await _context.SaveChangesAsync();
         }
+
+
+
+
+
+
+        public async Task<LanguageEditVM> GetEditByIdAsync(int id)
+        {
+            var data = await _context.Languages.FindAsync(id);
+            if (data == null) return null;
+
+            return _mapper.Map<LanguageEditVM>(data);
+        }
+
+        public async Task EditAsync(LanguageEditVM model)
+        {
+            var data = await _context.Languages.FindAsync(model.Id);
+            if (data == null) return;
+
+            data.Name = model.Name;
+           
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -46,5 +46,21 @@ namespace Academy.Areas.Admin.Controllers
             await _service.DeleteAsync(id);
             return Ok();
         }
+
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var data = await _service.GetEditByIdAsync(id);
+            if (data == null) return NotFound();
+
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CategoryEditVM model)
+        {
+            await _service.EditAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

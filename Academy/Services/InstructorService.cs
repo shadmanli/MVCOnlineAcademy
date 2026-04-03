@@ -63,5 +63,29 @@ namespace Academy.Services
             _context.Instructors.Remove(data);
             await _context.SaveChangesAsync();
         }
+
+
+        public async Task<InstructorEditVM> GetEditByIdAsync(int id)
+        {
+            var data = await _context.Instructors.FindAsync(id);
+            if (data == null) return null;
+
+            return new InstructorEditVM
+            {
+                Id = data.Id,
+                FullName = data.FullName
+            };
+        }
+
+        public async Task EditAsync(InstructorEditVM model)
+        {
+            var data = await _context.Instructors.FindAsync(model.Id);
+            if (data == null) return;
+
+            data.FullName = model.FullName;
+           
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

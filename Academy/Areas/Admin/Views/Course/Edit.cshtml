@@ -1,0 +1,72 @@
+﻿@model Academy.ViewModels.Course.CourseEditVM
+
+<div class="container mt-5">
+    <h2>Edit Course</h2>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ImageUrl" />
+
+    
+        <div class="mb-3">
+            <input asp-for="ImageFile" type="file" class="form-control" id="imgInput" />
+        </div>
+
+        <div class="mb-3">
+            <img id="preview"
+                 src="@(!string.IsNullOrEmpty(Model.ImageUrl)
+                                         ? Url.Content("~/uploads/course/" + Model.ImageUrl)
+                                         : "/images/no-image.png")"
+                 style="width:150px;height:150px;" />
+        </div>
+
+        <div class="mb-3">
+            <input asp-for="Title" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <input asp-for="Price" class="form-control" />
+        </div>
+
+    
+        <div class="mb-3">
+            <input asp-for="Duration" class="form-control" />
+        </div>
+
+        <!-- StudentCount -->
+        <div class="mb-3">
+            <input asp-for="StudentCount" class="form-control" />
+        </div>
+
+        <!-- Dropdownlar -->
+        <div class="mb-3">
+            <select asp-for="LanguageId" asp-items="Model.Languages" class="form-select"></select>
+        </div>
+
+        <div class="mb-3">
+            <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select"></select>
+        </div>
+
+        <div class="mb-3">
+            <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-select"></select>
+        </div>
+
+        <button class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script>
+    const input = document.getElementById("imgInput");
+    const preview = document.getElementById("preview");
+
+    input.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+        }
+    });
+</script>

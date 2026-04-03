@@ -8,6 +8,8 @@ namespace Academy.Services.Interfaces
         Task CreateAsync(CategoryCreateVM model);
         Task<CategoryDetailVM> GetByIdAsync(int id);
         Task DeleteAsync(int id);
-     
+        Task<CategoryEditVM> GetEditByIdAsync(int id);
+        Task EditAsync(CategoryEditVM model);
+
     }
 }

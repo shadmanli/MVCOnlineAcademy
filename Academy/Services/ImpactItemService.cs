@@ -86,9 +86,32 @@ namespace Academy.Services
 
             if (data == null) return;
 
-            _mapper.Map(model, data);
+      
+            if (model.ImageFile != null)
+            {
+                string folderPath = Path.Combine(_env.WebRootPath, "uploads", "impactitem");
 
-            _context.ImpactItems.Update(data);
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string fileName = $"{Guid.NewGuid()}_{model.ImageFile.FileName}";
+                string path = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                data.Image = fileName;
+            }
+
+          
+            data.Title = model.Title;
+            data.Description = model.Description;
+            data.ImpactSectionId = model.ImpactSectionId;
+
             await _context.SaveChangesAsync();
         }
     }
