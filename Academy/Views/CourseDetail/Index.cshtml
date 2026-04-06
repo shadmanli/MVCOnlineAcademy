@@ -1,124 +1,201 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @section css {
     <link rel="stylesheet" href="~/assets/css/courses-detail.css">
 }
 
-
-
 <main>
-    <section id="main-detail">
-        <div class="main-first">
-
-            <div class="word-part">
-
-                <span class="breadcrumb">
-                    <a href="home.html">Home</a> ›
-                    <a href="courses.html">Courses</a> ›
+    <section id="hero-detail">
+        <div class="hero-bg">
+            <div class="hero-inner container">
+                <div class="breadcrumb">
+                    <a href="home.html">Əsas Səhifə</a> ›
+                    <a href="courses.html">Kurslar</a> ›
                     JavaScript Masterclass
-                </span>
-
-                <h1>JavaScript Masterclass: <br> From Zero to Expert</h1>
-
-                <div class="course-meta">
-
-                    <span class="category">Programming</span>
-
-                    <div class="rating">
-                        ⭐⭐⭐⭐⭐
-                        <span>4.8 (1,240 rəy)</span>
+                </div>
+                <div class="hero-layout">
+                    <div class="hero-left">
+                        <div class="badge-row">
+                            <span class="badge badge-cat">Proqramlaşdırma</span>
+                            <span class="badge badge-level">⚡ Başlanğıc → Ekspert</span>
+                        </div>
+                        <h1>JavaScript Masterclass:<br><span class="accent">Sıfırdan Ekspertə</span></h1>
+                        <div class="meta-row">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-txt">4.8 (1,240 rəy)</span>
+                            <span class="students-txt">· 3,500+ tələbə</span>
+                        </div>
+                        <div class="teacher-row">
+                            <div class="teacher-avatar">ML</div>
+                            <div class="teacher-info">
+                                <span>Müəllim</span>
+                                <b>Michael Lee</b>
+                            </div>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat"><span class="stat-num">42</span><span class="stat-lbl">Dərs</span></div>
+                            <div class="stat"><span class="stat-num">18h</span><span class="stat-lbl">Video</span></div>
+                            <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">Giriş</span></div>
+                            <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Layihə</span></div>
+                        </div>
                     </div>
 
-                    <div class="students">
-                        👥 3,500+ tələbə
+                    <div class="enroll-card">
+                        <div class="price-row">
+                            <span class="price-main">₼49</span>
+                            <span class="price-old">₼149</span>
+                            <span class="price-save">67% endirim</span>
+                        </div>
+                        <button class="btn-enroll">Kursa Qeydiyyat Ol</button>
+                        <button class="btn-demo" id="demoPlayBtn">▶ Demo Dərsi İzlə (Pulsuz)</button>
+                        <ul class="card-features">
+                            <li><span>📹</span> 18 saat HD video</li>
+                            <li><span>📁</span> İndirilebilir qaynaqlar</li>
+                            <li><span>🏆</span> Tamamlama sertifikatı</li>
+                            <li><span>📱</span> Mobil & masaüstü giriş</li>
+                            <li><span>♾️</span> Ömürlük giriş hüququ</li>
+                        </ul>
                     </div>
-
                 </div>
-
-                <div class="teacher">
-                    <div class="teacher-img">ML</div>
-                    <span>Müəllim: <b>Michael Lee</b></span>
-                </div>
-
             </div>
-
         </div>
     </section>
 
-
     <div class="container">
-
         <div class="tabs">
             <button class="tab-btn active" data-tab="overview">Ümumi Baxış</button>
             <button class="tab-btn" data-tab="curriculum">Kurikulum</button>
             <button class="tab-btn" data-tab="reviews">Rəylər</button>
         </div>
 
+        <!-- ÜMUMI BAXIŞ TAB -->
+        <div class="tab-content active two-col" id="overview">
+            <div class="tab-main">
+                <h2>Bu kursu bitirdikdə nə öyrənəcəksiniz?</h2>
+                <ul class="learn-grid">
+                    <li><i class="fa-solid fa-check"></i> JavaScript əsasları və sintaksis</li>
+                    <li><i class="fa-solid fa-check"></i> ES6+ müasir xüsusiyyətlər</li>
+                    <li><i class="fa-solid fa-check"></i> REST API ilə işləmək</li>
+                    <li><i class="fa-solid fa-check"></i> DOM manipulyasiyası</li>
+                    <li><i class="fa-solid fa-check"></i> Async/Await & Promises</li>
+                    <li><i class="fa-solid fa-check"></i> React.js-ə giriş</li>
+                    <li><i class="fa-solid fa-check"></i> Node.js ilə backend</li>
+                    <li><i class="fa-solid fa-check"></i> Real layihə hazırlamaq</li>
+                </ul>
 
+                <h2>Kurs haqqında</h2>
+                <p>Bu kurs sıfırdan başlayaraq sizi tam JavaScript developer səviyyəsinə çatdırır...</p>
 
-        <div class="tab-content active" id="overview">
-            <h2>Bu kursu bitirdikdə nə öyrənəcəksiniz?</h2>
+                <h2>Tələblər</h2>
+                <ul class="req-list">
+                    <li>Kompüter istifadəsi barədə əsas bilik</li>
+                    <li>HTML & CSS-nin əsasları (faydalıdır amma vacib deyil)</li>
+                    <li>İnternet bağlantısı</li>
+                </ul>
+            </div>
 
-            <ul class="learn-list">
-                <li><i class="fa-solid fa-check"></i> JavaScript əsasları</li>
-                <li><i class="fa-solid fa-check"></i> ES6 xüsusiyyətləri</li>
-                <li><i class="fa-solid fa-check"></i> REST API ilə işləmək</li>
-                <li><i class="fa-solid fa-check"></i> DOM manipulyasiyası</li>
-            </ul>
+            <div class="tab-side">
+                <h3>Demo Dərs</h3>
+                <div class="video-player" id="videoPlayer">
+                    <div class="video-screen">
+                        <span class="demo-badge">DEMO · PULSUz</span>
+                        <button class="play-btn" id="playBtn"><span class="triangle"></span></button>
+                        <p class="video-label" id="videoLabel">JavaScript nədir? — Giriş Dərsi</p>
+                    </div>
+                    <div class="video-controls">
+                        <button id="playCtrl">▶</button>
+                        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                        <span id="timeTxt">0:00 / 8:24</span>
+                    </div>
+                </div>
 
-            <h2>Kurs haqqında</h2>
+                <div class="now-playing" id="nowPlaying">
+                    <span class="np-label">▶ İndi Oynanır</span>
+                    <strong id="npTitle">JavaScript nədir?</strong>
+                    <span id="npMeta">Bölmə 1 · Dərs 1 · 8:24</span>
+                </div>
 
-            <p>
-                Bu kurs sıfırdan başlayaraq sizi JavaScript developer səviyyəsinə çatdırır.
-            </p>
+                <div class="demo-lessons">
+                    <div class="lesson-item playing" data-name="JavaScript nədir?" data-dur="8:24" data-meta="Bölmə 1 · Dərs 1">
+                        <span class="l-icon">▶</span>
+                        <div class="l-info"><span>JavaScript nədir?</span><small>8:24</small></div>
+                        <span class="badge badge-demo">DEMO</span>
+                    </div>
+                    <div class="lesson-item" data-name="Mühit qurulması" data-dur="12:05" data-meta="Bölmə 1 · Dərs 2">
+                        <span class="l-icon">▶</span>
+                        <div class="l-info"><span>Mühit qurulması (VS Code)</span><small>12:05</small></div>
+                        <span class="badge badge-free">PULSUz</span>
+                    </div>
+                    <div class="lesson-item locked" data-name="Dəyişənlər" data-dur="18:32" data-meta="Bölmə 1 · Dərs 3">
+                        <span class="l-icon">🔒</span>
+                        <div class="l-info"><span>Dəyişənlər: var, let, const</span><small>18:32</small></div>
+                        <span class="badge badge-locked">KİLİDLİ</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-
-        <div class="tab-content" id="curriculum">
-
-            <h2>Kurs Kurikulumu</h2>
-
-            <div class="lesson">
-                <p>JavaScript nədir?</p>
-                <span>08:24</span>
+        <!-- KURİKULUM TAB -->
+        <div class="tab-content two-col" id="curriculum">
+            <div class="tab-main">
+                <h2>Kurs Kurikulumu — 42 dərs, 18 saat</h2>
+                <div class="accordion" id="accordionList">
+                    <!-- JS tərəfindən render edilir -->
+                </div>
             </div>
-
-            <div class="lesson">
-                <p>Mühit qurulması (VS Code)</p>
-                <span>12:05</span>
+            <div class="tab-side">
+                <h3>Video Pleyeri</h3>
+                <div class="video-player" id="videoPlayer2">
+                    <div class="video-screen">
+                        <button class="play-btn"><span class="triangle"></span></button>
+                        <p class="video-label" id="videoLabel2">Sol paneldən dərs seçin</p>
+                    </div>
+                    <div class="video-controls">
+                        <button>▶</button>
+                        <div class="progress-bar"><div class="progress-fill" id="progressFill2"></div></div>
+                        <span id="timeTxt2">0:00 / —</span>
+                    </div>
+                </div>
+                <div class="now-playing">
+                    <span class="np-label">📚 Kurikulum</span>
+                    <strong id="npTitle2">Dərs seçin</strong>
+                    <span id="npMeta2">42 dərs mövcuddur</span>
+                </div>
             </div>
-
-            <div class="lesson">
-                <p>Dəyişənlər: var, let, const</p>
-                <span>18:32</span>
-            </div>
-
         </div>
 
-
-        <div class="tab-content" id="reviews">
-
-            <h2>Tələbə Rəyləri</h2>
-
-            <div class="review">
-                <h4>Elçin Məmmədov</h4>
-                <p>Bu kurs həyatımı dəyişdi!</p>
+        <!-- RƏYLƏR TAB -->
+        <div class="tab-content two-col" id="reviews">
+            <div class="tab-main">
+                <div class="rating-overview">
+                    <div class="big-rating">
+                        <span class="big-num">4.8</span>
+                        <span class="big-stars">★★★★★</span>
+                        <span>Ümumi reytinq</span>
+                    </div>
+                    <div class="rating-bars">
+                        <div class="rbar"><span>5★</span><div class="track"><div class="fill" style="width:78%"></div></div><span>78%</span></div>
+                        <div class="rbar"><span>4★</span><div class="track"><div class="fill" style="width:15%"></div></div><span>15%</span></div>
+                        <div class="rbar"><span>3★</span><div class="track"><div class="fill" style="width:5%"></div></div><span>5%</span></div>
+                        <div class="rbar"><span>2★</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
+                        <div class="rbar"><span>1★</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="reviewer"><div class="rev-avatar" style="background:linear-gradient(135deg,#4F6EF7,#7B5EF8)">EM</div><div><strong>Elçin Məmmədov</strong><span>Mart 2025 · ★★★★★</span></div></div>
+                    <p>Bu kurs həyatımı dəyişdi! 3 ay ərzində ilk iş təklifimi aldım.</p>
+                </div>
+                <div class="review-card">
+                    <div class="reviewer"><div class="rev-avatar" style="background:linear-gradient(135deg,#1DB97A,#0F9A5F)">LA</div><div><strong>Leyla Abbasova</strong><span>Fevral 2025 · ★★★★★</span></div></div>
+                    <p>Layihə hissəsi çox faydalı! REST API bölməsi real iş həyatına birbaşa uyğundur.</p>
+                </div>
+                <div class="review-card">
+                    <div class="reviewer"><div class="rev-avatar" style="background:linear-gradient(135deg,#F5A623,#E8850A)">RH</div><div><strong>Rauf Həsənov</strong><span>Yanvar 2025 · ★★★★☆</span></div></div>
+                    <p>Async/Await çox yaxşı izah olunub. Ümumilikdə mükəmməl kurs!</p>
+                </div>
             </div>
-
-            <div class="review">
-                <h4>Leyla Abbasova</h4>
-                <p>Layihə hissəsi çox faydalıdır.</p>
-            </div>
-
-            <div class="review">
-                <h4>Rauf Həsənov</h4>
-                <p>Async/Await çox yaxşı izah olunub.</p>
-            </div>
-
         </div>
-
     </div>
 </main>
 

@@ -89,7 +89,6 @@ wwwroot\Admin\scss\bootstrap\scss\_variables.scss
 wwwroot\assets\css\about.css
 wwwroot\assets\css\blog.css
 wwwroot\assets\css\contact.css
-wwwroot\assets\css\courses-detail.css
 wwwroot\assets\css\courses.css
 wwwroot\assets\css\home.css
 wwwroot\assets\css\teachers.css
@@ -180,6 +179,7 @@ wwwroot\uploads\blog\63a4cb2a-3713-4712-ab6b-0fe42b3d9603_blog-02-600x486.jpg
 wwwroot\uploads\blog\e38799aa-4aa8-4728-88ac-8368e767ee06_blog-02-600x486.jpg
 wwwroot\uploads\course\74923251-ff95-4c88-9eef-4613fb9de945_4cu user.jpeg
 wwwroot\uploads\course\7c7b3213-3cb8-4a42-9362-0572b8a5e31d_3cu card adam.jpeg
+wwwroot\uploads\course\8061a8e7-3458-4ddf-8659-9c40a8ea27e5_3cu card adam.jpeg
 wwwroot\uploads\course\d13f9de3-c6e9-4394-bf4d-99dd0e1c4e8a_2ci user.jpeg
 wwwroot\uploads\impactitem\3ab4f670-b723-43bb-8175-707c96f5b894_icon-box_01-214x208.png
 wwwroot\uploads\impactitem\508059ba-97fd-42fc-818c-16586896808f_icon-box_01-214x208.png
@@ -189,3 +189,4 @@ wwwroot\uploads\impactitem\e7fbc310-1055-4020-8d6b-515077127cec_icon-box_01-214x
 wwwroot\uploads\mission\d29adf45-c6a7-4778-91ae-54edb30a0cb2_about-us_02-3.png
 wwwroot\uploads\sliders\16c52056-b445-4099-8523-352d03f165c0_home_slider_bg.jpg
 wwwroot\uploads\sliders\3d67f526-b33e-46a4-af51-63e590d7ff37_lauren-davis-380x422.jpg
+wwwroot\assets\css\courses-detail.css

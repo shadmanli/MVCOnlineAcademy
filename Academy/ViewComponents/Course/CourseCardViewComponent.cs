@@ -8,17 +8,53 @@ namespace Academy.ViewComponents.Course
 {
     public class CourseCardViewComponent : ViewComponent
     {
-        private readonly ICourseService _service;
+        private readonly ICourseService _courseService;
+        private readonly ICategoryService _categoryService;
+        private readonly IInstructorService _instructorService;
 
-        public CourseCardViewComponent(ICourseService service)
+        public CourseCardViewComponent(
+            ICourseService courseService,
+            ICategoryService categoryService,
+            IInstructorService instructorService)
         {
-            _service = service;
+            _courseService = courseService;
+            _categoryService = categoryService;
+            _instructorService = instructorService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(
+            int? categoryId,
+            int? instructorId,
+            decimal? minPrice,
+            decimal? maxPrice)
         {
-            var courses = await _service.GetAllAsync(); 
-            return View(courses);
+            var courses = await _courseService.GetAllAsync();
+
+          
+            if (categoryId != null)
+                courses = courses.Where(x => x.CategoryId == categoryId);
+
+            if (instructorId != null)
+                courses = courses.Where(x => x.InstructorId == instructorId);
+
+            if (minPrice != null)
+                courses = courses.Where(x => x.Price >= minPrice);
+
+            if (maxPrice != null)
+                courses = courses.Where(x => x.Price <= maxPrice);
+
+            var model = new CoursePageVM
+            {
+                Courses = courses.ToList(),
+                Categories = (await _categoryService.GetAllAsync()).ToList(),
+                Instructors = (await _instructorService.GetAllAsync()).ToList(),
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                CategoryId = categoryId,
+                InstructorId = instructorId
+            };
+
+            return View(model);
         }
     }
 }

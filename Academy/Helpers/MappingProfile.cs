@@ -226,6 +226,15 @@ namespace Academy.Helpers
 
             CreateMap<Instructor, InstructorEditVM>();
             CreateMap<InstructorEditVM, Instructor>();
+
+
+            CreateMap<Course, CourseVM>()
+    .ForMember(dest => dest.InstructorName,
+        opt => opt.MapFrom(src => src.Instructor.FullName))
+    .ForMember(dest => dest.CategoryName,
+        opt => opt.MapFrom(src => src.Category.Name))
+    .ForMember(dest => dest.LanguageName,
+        opt => opt.MapFrom(src => src.Language.Name));
         }
 
        

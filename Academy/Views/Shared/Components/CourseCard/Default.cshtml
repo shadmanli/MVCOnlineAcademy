@@ -1,43 +1,78 @@
 ﻿@using Academy.ViewModels.Course
-@model List<CourseVM>
+@model CoursePageVM
 
 <section id="courses-common">
     <div class="top-filter">
+        <form method="get" asp-controller="Course" asp-action="Index">
 
-        <div class="search-box">
-            <input type="text" placeholder="Search courses...">
-            <button type="button">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-        </div>
 
-        <div class="sort-box">
-            <select>
-                <option value="">Default Sorting</option>
-                <option value="latest">Sort by latest</option>
-                <option value="low">Price: low to high</option>
-                <option value="high">Price: high to low</option>
-            </select>
-        </div>
+            <div class="search-box">
+                <input type="text" name="search" placeholder="Search courses..."
+                       value="@Context.Request.Query["search"]"
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
 
+
+            <div class="sort-box">
+                <select name="sort">
+                    <option value="">Default Sorting</option>
+                    <option value="latest">Sort by latest</option>
+                    <option value="low">Price: low to high</option>
+                    <option value="high">Price: high to low</option>
+                </select>
+            </div>
+
+
+            <div class="filters">
+
+
+                <select name="categoryId">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        if (Model.CategoryId == cat.Id)
+                        {
+                            <option value="@cat.Id" selected>@cat.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    }
+                </select>
+
+                <!-- INSTRUCTOR -->
+                <select name="instructorId">
+                    <option value="">All Instructors</option>
+                    @foreach (var ins in Model.Instructors)
+                    {
+                        if (Model.InstructorId == ins.Id)
+                        {
+                            <option value="@ins.Id" selected>@ins.FullName</option>
+                        }
+                        else
+                        {
+                            <option value="@ins.Id">@ins.FullName</option>
+                        }
+                    }
+                </select>
+
+            </div>
+        </form>
     </div>
 
+
     <div class="courses-layout">
-
-        <div class="sidebar">
-          
-        </div>
-
         <div class="courses-container">
 
-            @if (Model != null && Model.Any())
+            @if (Model.Courses != null && Model.Courses.Any())
             {
-                @foreach (var course in Model)
+                @foreach (var course in Model.Courses)
                 {
                     <div class="card-courses">
-
                         <a href="/course/detail/@course.Id">
-
                             <div class="courses-img">
 
                                 <span class="img-top">
@@ -45,19 +80,16 @@
                                 </span>
 
                                 <img src="@(string.IsNullOrEmpty(course.ImageUrl)
-                                                                                 ? "/images/default.png"
-                                                                                 : "/uploads/course/" + course.ImageUrl)"
+                                                                                                              ? "/images/default.png"
+                                                                                                              : "/uploads/course/" + course.ImageUrl)"
                              alt="@course.Title" />
 
                                 <div class="card-content">
-
                                     <span class="instructor">
                                         @(course.InstructorName ?? "Unknown Instructor")
                                     </span>
 
-                                    <h3 class="title">
-                                        @course.Title
-                                    </h3>
+                                    <h3 class="title">@course.Title</h3>
 
                                     <div class="rating">
                                         <span>
@@ -68,17 +100,12 @@
                                             <i class="fa-regular fa-star"></i>
                                         </span>
 
-                                        <span class="price">
-                                            $@course.Price
-                                        </span>
+                                        <span class="price">$@course.Price</span>
                                     </div>
-
                                 </div>
 
                             </div>
-
                         </a>
-
                     </div>
                         }
             }
@@ -89,7 +116,7 @@
                 </div>
             }
 
-            
+
             <div class="pagination">
                 <a href="#" class="prev">«</a>
                 <a href="#" class="page active">1</a>

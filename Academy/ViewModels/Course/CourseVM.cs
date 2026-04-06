@@ -10,5 +10,7 @@
         public string LanguageName { get; set; }
         public string CategoryName { get; set; }
         public string InstructorName { get; set; }
+        public int CategoryId { get; set; }      
+        public int InstructorId { get; set; }
     }
 }
