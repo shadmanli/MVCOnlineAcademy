@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Academy.ViewModels.CourseRequirement.CourseRequirementVM>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between mb-4">
+        <h2 style="color:black;">Course Requirements</h2>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Əlavə et
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4" data-id="@item.Id">
+
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+
+                        <h5 style="color:black;">@item.Text</h5>
+
+                        <span class="badge bg-info">
+                            @item.CourseName
+                        </span>
+
+                        <div class="mt-3 d-flex justify-content-center gap-2">
+
+                            <a asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-info btn-sm">
+                                Detail
+                            </a>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-primary btn-sm">
+                                Edit
+                            </a>
+
+                            <button class="btn btn-outline-danger btn-sm delete-btn"
+                                    data-id="@item.Id">
+                                Sil
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            if (!confirm('Silinsin?')) return;
+
+            fetch(`/Admin/CourseRequirement/Delete/${this.dataset.id}`)
+                .then(res => {
+                    if (res.ok) {
+                        this.closest('[data-id]').remove();
+                    }
+                });
+        });
+    });
+</script>

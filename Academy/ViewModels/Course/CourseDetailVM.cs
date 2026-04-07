@@ -1,4 +1,6 @@
-﻿namespace Academy.ViewModels.Course
+﻿using Academy.ViewModels.CourseRequirement;
+
+namespace Academy.ViewModels.Course
 {
     public class CourseDetailVM
     {
@@ -12,6 +14,10 @@
         public string CategoryName { get; set; }
         public string InstructorName { get; set; }
 
+        public List<string> Features { get; set; }
+        public List<CourseRequirementVM> Requirements { get; set; }
         public int Duration { get; set; }
+        public int StudentCount { get; set; }
+        public double Rating { get; set; }
     }
 }

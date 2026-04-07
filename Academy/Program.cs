@@ -24,6 +24,8 @@ builder.Services.AddScoped<IInstructorService, InstructorService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICourseFeatureService, CourseFeatureService>();
+builder.Services.AddScoped<ICourseRequirementService, CourseRequirementService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 

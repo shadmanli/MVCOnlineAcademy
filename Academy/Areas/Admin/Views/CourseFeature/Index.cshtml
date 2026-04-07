@@ -1,0 +1,74 @@
+﻿@using Academy.ViewModels.CourseFeature
+@model IEnumerable<CourseFeatureVM>
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Course Features</h2>
+
+        <!-- ✅ CREATE BUTTON -->
+        <a asp-action="Create" class="btn btn-success px-4">
+            + Əlavə et
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4" data-id="@item.Id">
+
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+
+                        <h5 style="color:black;">@item.Text</h5>
+
+                        <span class="badge bg-info mb-3">
+                            @item.CourseName
+                        </span>
+
+                        <div class="d-flex justify-content-center gap-2">
+
+                            <a asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-info btn-sm">
+                                Detail
+                            </a>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-primary btn-sm">
+                                Edit
+                            </a>
+
+                            <button class="btn btn-outline-danger btn-sm delete-btn"
+                                    data-id="@item.Id">
+                                Sil
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            if (!confirm('Silinsin?')) return;
+
+            fetch(`/Admin/CourseFeature/Delete/${this.dataset.id}`)
+            .then(res => {
+                if (res.ok) {
+                    this.closest('[data-id]').remove();
+                }
+            });
+        });
+    });
+</script>

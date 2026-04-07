@@ -1,0 +1,12 @@
+﻿@model Academy.ViewModels.CourseRequirement.CourseRequirementDetailVM
+
+<div class="container mt-5">
+    <div class="card p-4 shadow-sm">
+        <h3 style="color:black;">Requirement Detail</h3>
+        <hr />
+        <p><b>Requirement Text:</b> @Model.Text</p>
+        <p><b>Course:</b> @Model.CourseName</p>
+
+        <a asp-action="Index" class="btn btn-secondary mt-3">Geri qayıt</a>
+    </div>
+</div>

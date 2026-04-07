@@ -1,0 +1,29 @@
+﻿@model Academy.ViewModels.CourseRequirement.CourseRequirementCreateVM
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">Yeni Tələb əlavə et</h2>
+
+    <form method="post">
+
+       
+        <div class="mb-3">
+            <label class="form-label">Tələb</label>
+            <input asp-for="Text" class="form-control" placeholder="Məs: Basic C# bilikləri" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Course seç</label>
+            <select asp-for="CourseId"
+                    asp-items="Model.Courses"
+                    class="form-control">
+                <option value="">Seç...</option>
+            </select>
+        </div>
+
+        <button class="btn btn-success">Yarat</button>
+        <a asp-action="Index" class="btn btn-secondary">Geri</a>
+
+    </form>
+
+</div>

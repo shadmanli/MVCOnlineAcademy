@@ -319,6 +319,56 @@ namespace Academy.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("Academy.Models.CourseFeature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("CourseFeatures");
+                });
+
+            modelBuilder.Entity("Academy.Models.CourseRequirement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("CourseRequirements");
+                });
+
             modelBuilder.Entity("Academy.Models.Enrollment", b =>
                 {
                     b.Property<int>("Id")
@@ -709,6 +759,28 @@ namespace Academy.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("Academy.Models.CourseFeature", b =>
+                {
+                    b.HasOne("Academy.Models.Course", "Course")
+                        .WithMany("Features")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("Academy.Models.CourseRequirement", b =>
+                {
+                    b.HasOne("Academy.Models.Course", "Course")
+                        .WithMany("Requirements")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
             modelBuilder.Entity("Academy.Models.Enrollment", b =>
                 {
                     b.HasOne("Academy.Models.Course", "Course")
@@ -781,7 +853,11 @@ namespace Academy.Migrations
                 {
                     b.Navigation("Enrollments");
 
+                    b.Navigation("Features");
+
                     b.Navigation("Lessons");
+
+                    b.Navigation("Requirements");
 
                     b.Navigation("Reviews");
                 });

@@ -1,0 +1,14 @@
+﻿@using Academy.ViewModels.CourseFeature
+@model CourseFeatureCreateVM
+
+<form method="post">
+
+    <input asp-for="Text" class="form-control mb-2" placeholder="Feature yaz..." />
+
+    <select asp-for="CourseId" asp-items="Model.Courses" class="form-control mb-2">
+        <option value="">Course seç</option>
+    </select>
+
+    <button class="btn btn-success">Create</button>
+
+</form>

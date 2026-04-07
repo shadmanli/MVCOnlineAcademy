@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Academy.ViewModels.Course.CourseDetailVM
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section css {
@@ -8,85 +10,89 @@
 
 <main>
 
-    <!-- ═══ NAVBAR ═══ -->
-    <div id="top-bar">
-        <div class="navbar">
-            <a href="#" class="nav-logo">
-                <span>Kurs<span style="color:white">Hub</span></span>
-            </a>
-            <nav class="menu-list">
-                <ul>
-                    <li><a href="#">Kurslar</a></li>
-                    <li><a href="#">Müəllimlər</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Haqqımızda</a></li>
-                </ul>
-            </nav>
-            <div class="nav-actions">
-                <button class="btn-nav-login" id="loginBtn">Daxil ol</button>
-                <button class="btn-nav-register" id="registerBtn">Qeydiyyat</button>
-            </div>
-            <button class="hamburger" aria-label="Menu">☰</button>
-        </div>
-    </div>
-
-    <!-- ═══ HERO ═══ -->
     <section id="hero-detail">
         <div class="hero-bg">
             <div class="container">
+
+                <!-- BREADCRUMB -->
                 <div class="breadcrumb">
                     <a href="#">Əsas Səhifə</a>
                     <span>›</span>
                     <a href="#">Kurslar</a>
                     <span>›</span>
-                    <span style="color:rgba(255,255,255,0.65)">JavaScript Masterclass</span>
+                    <span style="color:rgba(255,255,255,0.65)">
+                        @Model.Title
+                    </span>
                 </div>
+
                 <div class="hero-layout">
                     <div class="hero-left">
+
+                        <!-- CATEGORY -->
                         <div class="badge-row">
-                            <span class="badge badge-cat">⚡ Proqramlaşdırma</span>
+                            <span class="badge badge-cat">
+                                ⚡ @Model.CategoryName
+                            </span>
                             <span class="badge badge-level">Başlanğıc → Ekspert</span>
                             <span class="badge badge-live">🔴 CANLI DƏRS VAR</span>
                         </div>
-                        <h1>JavaScript Masterclass:<br><span class="accent">Sıfırdan Ekspertə</span></h1>
+
+                  
+                        <h1>
+                            @Model.Title:<br>
+                            <span class="accent">Sıfırdan Ekspertə</span>
+                        </h1>
+
+            
                         <div class="meta-row">
                             <span class="stars">★★★★★</span>
                             <span class="rating-txt"><strong>4.8</strong> (1,240 rəy)</span>
                             <span class="students-txt">· 3,500+ tələbə qeydiyyatda</span>
                         </div>
+
+               
                         <div class="teacher-row">
-                            <div class="teacher-avatar">ML</div>
+                            <div class="teacher-avatar">
+                                @(Model.InstructorName != null ? Model.InstructorName.Substring(0, 1) : "U")
+                            </div>
                             <div class="teacher-info">
                                 <span>Müəllim</span>
-                                <b>Michael Lee — Senior JS Developer</b>
+                                <b>@Model.InstructorName</b>
                             </div>
                         </div>
+
+                      
                         <div class="hero-stats">
-                            <div class="stat"><span class="stat-num">42</span><span class="stat-lbl">Dərs</span></div>
-                            <div class="stat"><span class="stat-num">18h</span><span class="stat-lbl">Video</span></div>
+
+                            <div class="stat"><span class="stat-num">@Model.Duration</span><span class="stat-lbl">Video</span></div>
                             <div class="stat"><span class="stat-num">6</span><span class="stat-lbl">Canli Zoom</span></div>
                             <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">Giriş</span></div>
                             <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Layihə</span></div>
                         </div>
                     </div>
 
-                    <!-- ENROLL CARD -->
+         
                     <div class="enroll-card">
                         <div class="card-top">
                             <div class="price-row">
-                                <span class="price-main">₼49</span>
+                                <span class="price-main">₼@Model.Price</span>
                                 <span class="price-old">₼149</span>
                                 <span class="price-save">67% endirim!</span>
                             </div>
+
                             <div class="countdown-strip">
                                 <span class="fire">🔥</span>
                                 <span class="cd-text">Bu qiymət bitir:</span>
                                 <span id="countdownTimer">02:47:33</span>
                             </div>
+
                             <button class="btn-enroll">🎓 Kursa Qeydiyyat Ol</button>
                             <button class="btn-demo" id="demoPlayBtn">▶ Demo Dərsi İzlə (Pulsuz)</button>
                         </div>
+
                         <div class="card-divider"></div>
+
+                    
                         <ul class="card-features">
                             <li><span class="feat-icon">📹</span> 18 saat HD video dərs</li>
                             <li><span class="feat-icon">🎥</span> 6 Canlı Zoom sessiyası</li>
@@ -95,498 +101,37 @@
                             <li><span class="feat-icon">📱</span> Mobil & masaüstü giriş</li>
                             <li><span class="feat-icon">♾️</span> Ömürlük giriş hüququ</li>
                         </ul>
+
                         <div class="money-back">
                             <span class="shield">🛡️</span>
                             <span><strong>30 günlük</strong> pulsuz iade zəmanəti</span>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ═══ TABS NAV ═══ -->
-    <div class="tabs-wrapper">
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="overview">📋 Ümumi Baxış</button>
-            <button class="tab-btn" data-tab="curriculum">📚 Kurikulum</button>
-            <button class="tab-btn" data-tab="zoom">🎥 Zoom Dərslər</button>
-            <button class="tab-btn" data-tab="reviews">⭐ Rəylər</button>
-        </div>
-    </div>
-
-    <!-- ═══ TAB CONTENTS ═══ -->
+   
     <div class="content-wrapper container">
-
-        <!-- ── ÜMUMI BAXIŞ ── -->
         <div class="tab-content active" id="overview">
             <div class="tab-main">
 
-                <h2 class="section-title"><span class="s-icon">🎯</span> Bu kursu bitirdikdə nə öyrənəcəksiniz?</h2>
-                <ul class="learn-grid">
-                    <li><span class="learn-check">✓</span> JavaScript əsasları və sintaksis</li>
-                    <li><span class="learn-check">✓</span> ES6+ müasir xüsusiyyətlər</li>
-                    <li><span class="learn-check">✓</span> REST API ilə işləmək</li>
-                    <li><span class="learn-check">✓</span> DOM manipulyasiyası</li>
-                    <li><span class="learn-check">✓</span> Async/Await & Promises</li>
-                    <li><span class="learn-check">✓</span> React.js-ə giriş</li>
-                    <li><span class="learn-check">✓</span> Node.js ilə backend əsasları</li>
-                    <li><span class="learn-check">✓</span> Real layihə hazırlamaq & deploy</li>
-                </ul>
+                <h2 class="section-title">ℹ️ Kurs haqqında</h2>
 
-                <h2 class="section-title"><span class="s-icon">ℹ️</span> Kurs haqqında</h2>
+              
                 <p style="font-size:15px;color:#444;line-height:1.75;margin-bottom:14px">
-                    Bu kurs sıfırdan başlayaraq sizi tam JavaScript developer səviyyəsinə çatdırır. 42 video dərslə yanaşı,
-                    <strong>6 canlı Zoom sessiyası</strong> da daxildir — müəllimlə birbaşa ünsiyyət qurun, suallarınızı soruşun.
-                </p>
-                <p style="font-size:15px;color:#444;line-height:1.75">
-                    Kurs sonunda 5 real layihə tamamlamış olacaqsınız: TODO tətbiqi, hava proqnozu, məhsul kataloqu, REST API
-                    inteqrasiyası və tam React SPA. Portfolio üçün mükəmməl!
+                    @Model.Description
                 </p>
 
-                <h2 class="section-title" style="margin-top:32px"><span class="s-icon">✅</span> Tələblər</h2>
-                <ul class="req-list">
-                    <li>Kompüter istifadəsi barədə əsas bilik</li>
-                    <li>HTML & CSS-nin əsasları (faydalıdır, amma vacib deyil)</li>
-                    <li>İnternet bağlantısı</li>
-                    <li>Öyrənməyə həvəs 🚀</li>
-                </ul>
-
-                <h2 class="section-title" style="margin-top:32px"><span class="s-icon">👨‍🏫</span> Müəllim haqqında</h2>
-                <div class="instructor-card">
-                    <div class="instr-avatar">ML</div>
-                    <div class="instr-info">
-                        <h4>Michael Lee</h4>
-                        <div class="instr-title">Senior JavaScript Developer & Müəllim</div>
-                        <div class="instr-stats">
-                            <span>⭐ 4.9 Reytinq</span>
-                            <span>👥 12,400+ Tələbə</span>
-                            <span>📚 8 Kurs</span>
-                            <span>🏢 10+ İl Təcrübə</span>
-                        </div>
-                        <p>
-                            Google, Uber kimi şirkətlərdə işləmiş experienced engineer. React, Node.js, TypeScript üzrə mütəxəssis.
-                            Azərbaycanda ən çox izlənən proqramlaşdırma müəllimi.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SIDE: VIDEO PLAYER -->
-            <div class="tab-side">
-                <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;font-family:'Playfair Display',serif">
-                    🎬 Demo Dərs
-                </h3>
-                <div class="video-wrap">
-                    <div class="video-screen" id="videoScreen">
-                        <div class="video-thumb-grid"></div>
-                        <span class="demo-badge">DEMO · PULSUZ</span>
-                        <button class="play-btn-big" id="playBtnBig">
-                            <div class="tri"></div>
-                            <div class="pause-icon"><div class="pause-bar"></div><div class="pause-bar"></div></div>
-                        </button>
-                        <div class="video-title-overlay">
-                            <span>📹</span>
-                            <span id="videoLabel">JavaScript nədir? — Giriş Dərsi</span>
-                        </div>
-                    </div>
-                    <div class="video-controls">
-                        <button class="vc-btn" id="playCtrl">
-                            <span class="play-icon">▶</span>
-                        </button>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                        <span class="vc-time" id="timeTxt">0:00 / 8:24</span>
-                        <span class="vc-vol">🔊</span>
-                    </div>
-                </div>
-
-                <div class="now-playing">
-                    <div class="np-indicator">▶</div>
-                    <div class="np-info">
-                        <div class="np-label">İNDİ OYNANIR</div>
-                        <div class="np-title" id="npTitle">JavaScript nədir?</div>
-                        <div class="np-meta" id="npMeta">Bölmə 1 · Dərs 1 · 8:24</div>
-                    </div>
-                </div>
-
-                <div class="demo-lessons">
-                    <div class="lesson-item playing"
-                         data-name="JavaScript nədir?" data-dur="8:24" data-meta="Bölmə 1 · Dərs 1">
-                        <span class="l-icon">▶</span>
-                        <div class="l-info">
-                            <span>JavaScript nədir?</span>
-                            <small>8:24</small>
-                        </div>
-                        <span class="badge badge-demo">DEMO</span>
-                    </div>
-                    <div class="lesson-item"
-                         data-name="Mühit qurulması (VS Code)" data-dur="12:05" data-meta="Bölmə 1 · Dərs 2">
-                        <span class="l-icon">▶</span>
-                        <div class="l-info">
-                            <span>Mühit qurulması (VS Code)</span>
-                            <small>12:05</small>
-                        </div>
-                        <span class="badge badge-free">PULSUZ</span>
-                    </div>
-                    <div class="lesson-item"
-                         data-name="Arrow funksiyalar" data-dur="16:22" data-meta="Bölmə 2 · Dərs 2">
-                        <span class="l-icon">▶</span>
-                        <div class="l-info">
-                            <span>Arrow funksiyalar</span>
-                            <small>16:22</small>
-                        </div>
-                        <span class="badge badge-free">PULSUZ</span>
-                    </div>
-                    <div class="lesson-item locked">
-                        <span class="l-icon">🔒</span>
-                        <div class="l-info">
-                            <span>Dəyişənlər: var, let, const</span>
-                            <small>18:32</small>
-                        </div>
-                        <span class="badge badge-locked">KİLİDLİ</span>
-                    </div>
-                    <div class="lesson-item locked">
-                        <span class="l-icon">🔒</span>
-                        <div class="l-info">
-                            <span>Async/Await dərinlikdə</span>
-                            <small>20:30</small>
-                        </div>
-                        <span class="badge badge-locked">KİLİDLİ</span>
-                    </div>
-                </div>
             </div>
         </div>
-
-        <!-- ── KURİKULUM ── -->
-        <div class="tab-content" id="curriculum">
-            <div class="tab-main">
-                <h2 class="section-title"><span class="s-icon">📚</span> Kurs Kurikulumu — 42 dərs, 18 saat</h2>
-                <div id="accordionList"></div>
-            </div>
-
-            <div class="tab-side">
-                <div class="curr-progress-bar">
-                    <h4>📊 Tərəqqin</h4>
-                    <div class="prog-track">
-                        <div class="prog-fill" id="currProgFill"></div>
-                    </div>
-                    <div class="prog-label" id="currProgLabel">0% tamamlandı</div>
-                </div>
-
-                <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;font-family:'Playfair Display',serif">
-                    🎬 Video Pleyeri
-                </h3>
-                <div class="video-wrap">
-                    <div class="video-screen">
-                        <div class="video-thumb-grid"></div>
-                        <button class="play-btn-big" id="playBtnBig2">
-                            <div class="tri"></div>
-                            <div class="pause-icon"><div class="pause-bar"></div><div class="pause-bar"></div></div>
-                        </button>
-                        <div class="video-title-overlay">
-                            <span>📹</span>
-                            <span id="videoLabel2">Sol paneldən dərs seçin</span>
-                        </div>
-                    </div>
-                    <div class="video-controls">
-                        <button class="vc-btn" id="playCtrl2">▶</button>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill2"></div>
-                        </div>
-                        <span class="vc-time" id="timeTxt2">0:00 / —</span>
-                    </div>
-                </div>
-                <div class="now-playing">
-                    <div class="np-indicator">📚</div>
-                    <div class="np-info">
-                        <div class="np-label">KURIKULUM</div>
-                        <div class="np-title" id="npTitle2">Dərs seçin</div>
-                        <div class="np-meta" id="npMeta2">42 dərs mövcuddur</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ── ZOOM DƏRSLƏR ── -->
-        <div class="tab-content" id="zoom">
-            <div class="tab-main">
-                <h2 class="section-title"><span class="s-icon">🎥</span> Canlı Zoom Sessiyaları</h2>
-
-                <div class="zoom-section">
-                    <div class="zoom-header">
-                        <span class="zoom-live-badge">
-                            <span class="live-dot"></span> CANLI
-                        </span>
-                        <h3>JavaScript Masterclass — Zoom Dərslər</h3>
-                    </div>
-                    <div class="zoom-meta">
-                        <div class="zoom-meta-item"><span class="icon">📅</span><span>Hər <strong>Çərşənbə & Şənbə</strong></span></div>
-                        <div class="zoom-meta-item"><span class="icon">🕗</span><span><strong>20:00 – 21:30</strong> (Bakı vaxtı)</span></div>
-                        <div class="zoom-meta-item"><span class="icon">⏱️</span><span>Növbəti sessiya: <strong id="nextSessionTimer">27s 15d 00s</strong></span></div>
-                        <div class="zoom-meta-item"><span class="icon">👥</span><span>Maks. <strong>50 iştirakçı</strong></span></div>
-                    </div>
-
-                    <div class="zoom-schedule">
-                        <div class="zoom-session next">
-                            <div class="session-left">
-                                <div class="session-num">1</div>
-                                <div class="session-info">
-                                    <span>JavaScript Əsasları — Sual-Cavab</span>
-                                    <small>9 Aprel, Çərşənbə · 20:00 – 21:30</small>
-                                </div>
-                            </div>
-                            <span class="session-badge next-badge">🔥 NÖVBƏTI</span>
-                        </div>
-                        <div class="zoom-session">
-                            <div class="session-left">
-                                <div class="session-num">2</div>
-                                <div class="session-info">
-                                    <span>DOM & Events — Praktik Məşğələ</span>
-                                    <small>12 Aprel, Şənbə · 20:00 – 21:30</small>
-                                </div>
-                            </div>
-                            <span class="session-badge upcoming">Gəlir</span>
-                        </div>
-                        <div class="zoom-session">
-                            <div class="session-left">
-                                <div class="session-num">3</div>
-                                <div class="session-info">
-                                    <span>Async JS — Canlı Kod Yazımı</span>
-                                    <small>16 Aprel, Çərşənbə · 20:00 – 21:30</small>
-                                </div>
-                            </div>
-                            <span class="session-badge upcoming">Gəlir</span>
-                        </div>
-                        <div class="zoom-session">
-                            <div class="session-left">
-                                <div class="session-num">4</div>
-                                <div class="session-info">
-                                    <span>React.js Giriş & Komponentlər</span>
-                                    <small>19 Aprel, Şənbə · 20:00 – 21:30</small>
-                                </div>
-                            </div>
-                            <span class="session-badge upcoming">Gəlir</span>
-                        </div>
-                        <div class="zoom-session">
-                            <div class="session-left">
-                                <div class="session-num">5</div>
-                                <div class="session-info">
-                                    <span>Full-Stack Layihə — Birlikdə Qururuq</span>
-                                    <small>23 Aprel, Çərşənbə · 20:00 – 21:30</small>
-                                </div>
-                            </div>
-                            <span class="session-badge upcoming">Gəlir</span>
-                        </div>
-                        <div class="zoom-session">
-                            <div class="session-left">
-                                <div class="session-num">6</div>
-                                <div class="session-info">
-                                    <span>Final Layihə Müdafiəsi & Sertifikat</span>
-                                    <small>26 Aprel, Şənbə · 20:00 – 21:30</small>
-                                </div>
-                            </div>
-                            <span class="session-badge upcoming">Gəlir</span>
-                        </div>
-                    </div>
-
-                    <button class="btn-join-zoom" id="zoomJoinBtn">
-                        <span class="zoom-icon">📹</span>
-                        Zoom Sessiyasına Qoşul
-                    </button>
-                </div>
-
-                <h2 class="section-title" style="margin-top:32px"><span class="s-icon">❓</span> Zoom haqqında</h2>
-                <ul class="req-list">
-                    <li>Qeydiyyatdan sonra Zoom linkini email ilə alırsınız</li>
-                    <li>Sessiyalar yazılır — buraxsanız sonra izləyə bilərsiniz</li>
-                    <li>Suallarınızı birbaşa müəllimə verə bilərsiniz</li>
-                    <li>Mikrofon/kamera isteğe bağlıdır</li>
-                </ul>
-            </div>
-
-            <!-- SIDE INFO -->
-            <div class="tab-side">
-                <div style="background:white;border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px">
-                    <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;font-family:'Playfair Display',serif">
-                        📅 Bu Həftə
-                    </h3>
-                    <div style="display:flex;flex-direction:column;gap:10px">
-                        <div style="display:flex;align-items:center;gap:10px;padding:12px;background:rgba(255,107,53,0.06);border-radius:10px;border-left:3px solid var(--orange)">
-                            <span style="font-size:22px">🔥</span>
-                            <div>
-                                <div style="font-size:13px;font-weight:700">Çərşənbə, 9 Aprel</div>
-                                <div style="font-size:12px;color:#888">Saat 20:00 · JS Əsasları Sual-Cavab</div>
-                            </div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fafafa;border-radius:10px;border-left:3px solid var(--teal)">
-                            <span style="font-size:22px">📅</span>
-                            <div>
-                                <div style="font-size:13px;font-weight:700">Şənbə, 12 Aprel</div>
-                                <div style="font-size:12px;color:#888">Saat 20:00 · DOM & Events Praktika</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background:linear-gradient(135deg,#0c1f1e,#1a4f49);border-radius:16px;padding:22px;color:white">
-                    <div style="font-size:14px;font-weight:700;margin-bottom:8px">💡 Məsləhət</div>
-                    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6">
-                        Zoom sessiyalarından maksimum faydalanmaq üçün əvvəlcədən o bölmənin video dərslərini izləyin.
-                        Suallarınızı əvvəlcədən hazırlayın!
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ── RƏYLƏR ── -->
-        <div class="tab-content" id="reviews">
-            <div class="tab-main">
-                <div class="rating-overview">
-                    <div class="big-rating">
-                        <span class="big-num">4.8</span>
-                        <span class="big-stars">★★★★★</span>
-                        <span>1,240 rəy</span>
-                    </div>
-                    <div class="rating-bars">
-                        <div class="rbar"><span>5★</span><div class="track"><div class="fill" style="width:78%"></div></div><span>78%</span></div>
-                        <div class="rbar"><span>4★</span><div class="track"><div class="fill" style="width:15%"></div></div><span>15%</span></div>
-                        <div class="rbar"><span>3★</span><div class="track"><div class="fill" style="width:5%"></div></div><span>5%</span></div>
-                        <div class="rbar"><span>2★</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
-                        <div class="rbar"><span>1★</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
-                    </div>
-                </div>
-
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="rev-avatar" style="background:linear-gradient(135deg,#4F6EF7,#7B5EF8)">EM</div>
-                        <div class="reviewer-info">
-                            <strong>Elçin Məmmədov</strong>
-                            <div class="rev-meta"><span class="rev-stars">★★★★★</span> · Mart 2025</div>
-                        </div>
-                    </div>
-                    <p>
-                        Bu kurs həyatımı dəyişdi! 3 ay ərzində ilk iş təklifimi aldım. Zoom sessiyaları xüsusilə əla idi —
-                        Michael müəllim hər soruya cavab verdi.
-                    </p>
-                </div>
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="rev-avatar" style="background:linear-gradient(135deg,#1DB97A,#0F9A5F)">LA</div>
-                        <div class="reviewer-info">
-                            <strong>Leyla Abbasova</strong>
-                            <div class="rev-meta"><span class="rev-stars">★★★★★</span> · Fevral 2025</div>
-                        </div>
-                    </div>
-                    <p>
-                        Layihə hissəsi çox faydalı! REST API bölməsi real iş həyatına birbaşa uyğundur. Canlı Zoom
-                        dərslərini gözləyirdim hər həftə.
-                    </p>
-                </div>
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="rev-avatar" style="background:linear-gradient(135deg,#F5A623,#E8850A)">RH</div>
-                        <div class="reviewer-info">
-                            <strong>Rauf Həsənov</strong>
-                            <div class="rev-meta"><span class="rev-stars">★★★★☆</span> · Yanvar 2025</div>
-                        </div>
-                    </div>
-                    <p>
-                        Async/Await çox yaxşı izah olunub. Ümumilikdə mükəmməl kurs! Bir az daha çox praktik tapşırıq
-                        olsa daha yaxşı olardı.
-                    </p>
-                </div>
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="rev-avatar" style="background:linear-gradient(135deg,#e91e63,#c2185b)">NQ</div>
-                        <div class="reviewer-info">
-                            <strong>Nigar Quliyeva</strong>
-                            <div class="rev-meta"><span class="rev-stars">★★★★★</span> · Dekabr 2024</div>
-                        </div>
-                    </div>
-                    <p>
-                        Heç proqramlaşdırma bilmirdim. İndi React ilə layihə qururum. Müəllim çox səbrlə izah edir.
-                        Zoom sessiyaları bonus kimi gəldi!
-                    </p>
-                </div>
-            </div>
-
-            <div class="tab-side">
-                <div style="background:white;border:1px solid var(--border);border-radius:16px;padding:22px">
-                    <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;font-family:'Playfair Display',serif">
-                        📊 Rəy Statistikası
-                    </h3>
-                    <div style="display:flex;flex-direction:column;gap:12px">
-                        <div style="text-align:center;padding:16px;background:#f8f8f8;border-radius:12px">
-                            <div style="font-size:36px;font-weight:800;color:var(--teal);font-family:'Playfair Display',serif">1,240</div>
-                            <div style="font-size:13px;color:#888">Ümumi rəy</div>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                            <div style="text-align:center;padding:12px;background:#f8f8f8;border-radius:10px">
-                                <div style="font-size:22px;font-weight:700;color:#ffc107">4.8</div>
-                                <div style="font-size:12px;color:#888">Ortalama</div>
-                            </div>
-                            <div style="text-align:center;padding:12px;background:#f8f8f8;border-radius:10px">
-                                <div style="font-size:22px;font-weight:700;color:var(--teal)">93%</div>
-                                <div style="font-size:12px;color:#888">Tövsiyə edir</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div><!-- /content-wrapper -->
+    </div>
 
 </main>
-
-<!-- ═══ TOAST ═══ -->
-<div id="toast">
-    <span class="t-icon">✅</span>
-    <span class="t-msg">Əməliyyat tamamlandı</span>
-</div>
-
-<!-- ═══ LOGIN MODAL ═══ -->
-<div class="modal" id="loginModal">
-    <div class="modal-box">
-        <button class="closeBtn">✕</button>
-        <div class="modal-brand">Kurs<span>Hub</span></div>
-        <p class="modal-sub">Hesabınıza daxil olun</p>
-        <div class="modal-tabs">
-            <button class="modal-tab active" data-target="loginForm">Daxil ol</button>
-            <button class="modal-tab" data-target="registerForm">Qeydiyyat</button>
-        </div>
-        <form class="modal-form modal-form-section active" id="loginForm" onsubmit="return false">
-            <div class="form-field">
-                <label>E-mail</label>
-                <input type="email" placeholder="email@example.com">
-            </div>
-            <div class="form-field">
-                <label>Şifrə</label>
-                <input type="password" placeholder="••••••••">
-            </div>
-            <button class="form-submit">Daxil ol →</button>
-        </form>
-        <form class="modal-form modal-form-section" id="registerForm" onsubmit="return false" style="display:none">
-            <div class="form-field">
-                <label>Ad Soyad</label>
-                <input type="text" placeholder="Adınız">
-            </div>
-            <div class="form-field">
-                <label>E-mail</label>
-                <input type="email" placeholder="email@example.com">
-            </div>
-            <div class="form-field">
-                <label>Şifrə</label>
-                <input type="password" placeholder="••••••••">
-            </div>
-            <button class="form-submit">Qeydiyyatdan keç →</button>
-        </form>
-    </div>
-</div>
 
 @section Scripts {
     <script src="~/assets/js/courses-detail.js"></script>
 }
+ 

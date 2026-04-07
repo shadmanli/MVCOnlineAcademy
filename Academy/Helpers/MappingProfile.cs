@@ -9,6 +9,8 @@ using Academy.ViewModels.Category;
 using Academy.ViewModels.ContactItem;
 using Academy.ViewModels.ContactSection;
 using Academy.ViewModels.Course;
+using Academy.ViewModels.CourseFeature;
+using Academy.ViewModels.CourseRequirement;
 using Academy.ViewModels.Feature;
 using Academy.ViewModels.FeatureVM;
 using Academy.ViewModels.ImpactItem;
@@ -194,10 +196,28 @@ namespace Academy.Helpers
             CreateMap<CourseCreateVM, Course>();
 
             CreateMap<Course, CourseDetailVM>()
-                .ForMember(d => d.LanguageName, o => o.MapFrom(s => s.Language.Name))
-                .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.Name))
-                .ForMember(d => d.InstructorName, o => o.MapFrom(s => s.Instructor.FullName));
-          
+      .ForMember(d => d.LanguageName,
+          o => o.MapFrom(s => s.Language.Name))
+
+      .ForMember(d => d.CategoryName,
+          o => o.MapFrom(s => s.Category.Name))
+
+      .ForMember(d => d.InstructorName,
+          o => o.MapFrom(s => s.Instructor.FullName))
+
+     
+      .ForMember(d => d.Features,
+          o => o.MapFrom(s => s.Features != null
+              ? s.Features.Select(f => f.Text).ToList()
+              : new List<string>()))
+
+     
+      .ForMember(d => d.StudentCount,
+          o => o.MapFrom(s => s.StudentCount))
+
+      .ForMember(d => d.Rating,
+          o => o.MapFrom(s => s.Rating));
+
             CreateMap<Course, CourseEditVM>();
 
             CreateMap<CourseEditVM, Course>()
@@ -235,6 +255,41 @@ namespace Academy.Helpers
         opt => opt.MapFrom(src => src.Category.Name))
     .ForMember(dest => dest.LanguageName,
         opt => opt.MapFrom(src => src.Language.Name));
+
+
+
+
+
+            CreateMap<CourseFeatureCreateVM, CourseFeature>();
+
+   
+            CreateMap<CourseFeatureEditVM, CourseFeature>();
+
+        
+            CreateMap<CourseFeature, CourseFeatureVM>()
+                .ForMember(dest => dest.CourseName,
+                           opt => opt.MapFrom(src => src.Course.Title));
+
+     
+            CreateMap<CourseFeature, CourseFeatureDetailVM>()
+                .ForMember(dest => dest.CourseName,
+                           opt => opt.MapFrom(src => src.Course.Title));
+
+            CreateMap<CourseRequirementCreateVM, CourseRequirement>();
+
+       
+            CreateMap<CourseRequirementEditVM, CourseRequirement>();
+
+
+            CreateMap<CourseRequirement, CourseRequirementVM>()
+                .ForMember(dest => dest.CourseName,
+                    opt => opt.MapFrom(src => src.Course.Title));
+
+
+            CreateMap<CourseRequirement, CourseRequirementDetailVM>()
+                .ForMember(dest => dest.CourseName,
+                    opt => opt.MapFrom(src => src.Course.Title));
+
         }
 
        

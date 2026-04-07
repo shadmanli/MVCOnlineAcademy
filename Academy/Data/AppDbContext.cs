@@ -24,8 +24,10 @@ namespace Academy.Data
         public DbSet<Instructor> Instructors { get; set; }  
         public DbSet<Language> Languages { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<CourseRequirement> CourseRequirements { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<CourseFeature> CourseFeatures { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
        
         

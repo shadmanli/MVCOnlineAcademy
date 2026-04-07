@@ -61,10 +61,12 @@ namespace Academy.Services
         public async Task<CourseDetailVM> GetByIdAsync(int id)
         {
             var data = await _context.Courses
-                .Include(x => x.Language)
-                .Include(x => x.Category)
-                .Include(x => x.Instructor)
-                .FirstOrDefaultAsync(x => x.Id == id);
+     .Include(x => x.Language)
+     .Include(x => x.Category)
+     .Include(x => x.Instructor)
+     .Include(x => x.Features)
+      .Include(x => x.Requirements) 
+     .FirstOrDefaultAsync(x => x.Id == id);
 
             return _mapper.Map<CourseDetailVM>(data);
         }
@@ -85,7 +87,7 @@ namespace Academy.Services
 
             if (data == null) return;
 
-            // Şəkil dəyişilibsə
+           
             if (model.ImageFile != null)
             {
                 string folder = Path.Combine(_env.WebRootPath, "uploads/course");
@@ -93,7 +95,6 @@ namespace Academy.Services
                 if (!Directory.Exists(folder))
                     Directory.CreateDirectory(folder);
 
-                // köhnə şəkili sil
                 if (!string.IsNullOrEmpty(data.ImageUrl))
                 {
                     string oldPath = Path.Combine(folder, data.ImageUrl);
