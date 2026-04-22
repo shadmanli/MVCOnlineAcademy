@@ -1,0 +1,10 @@
+﻿namespace Academy.Helpers
+{
+    public static class EmailTemplateHelper
+    {
+        public static string GetConfirmationEmailTemplate(string confirmationLink, string fullName)
+        {
+            return $"Hörm?tli {fullName}, <br/> <a href='{confirmationLink}'>Hesab?n?z? t?sdiql?m?k üçün buraya klikl?yin.</a>";
+        }
+    }
+}

@@ -1,0 +1,50 @@
+﻿using Academy.Services.Interfaces;
+using System;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
+
+namespace Academy.Services
+{
+    // Gerçək Email Göndərmə Serivisi (SMTP vasitəsilə)
+    public class EmailService : IEmailService
+    {
+        public async Task SendEmailAsync(string to, string subject, string body)
+        {
+            try
+            {
+                // DİQQƏT: Bu məlumatları öz Google hesabınız (və ya başqa SMTP serveri) ilə əvəzləyin.
+                // Gmail üçün hesabınızdan "App Passwords" (Tətbiq şifrələri) yaratmalısınız.
+                string fromMail = "sizin.test.email@gmail.com"; 
+                string fromPassword = "test_app_password_bura_yazin";
+
+                var message = new MailMessage();
+                message.From = new MailAddress(fromMail, "Online Academy Təsdiq"); 
+
+                // Məcburi olaraq intizarbsh@code.edu.az hesabına getməsi təmin olunub (Controller-dən gəlir)
+                message.To.Add(new MailAddress(to)); 
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = true; // HTML dizaynlı template üçün True olmalıdır
+
+                // Gmail SMTP server ayarları
+                using var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(fromMail, fromPassword),
+                    EnableSsl = true, // Təhlükəsizlik üçün mütləqdir
+                };
+
+                // Mesajı göndər
+                await smtpClient.SendMailAsync(message);
+
+                Debug.WriteLine($"[Email Service] Göndəriş uğurludur! Ünvan: {to}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Email Service - XƏTA]: Email göndərilərkən problem yaşandı: {ex.Message}");
+            }
+        }
+    }
+}

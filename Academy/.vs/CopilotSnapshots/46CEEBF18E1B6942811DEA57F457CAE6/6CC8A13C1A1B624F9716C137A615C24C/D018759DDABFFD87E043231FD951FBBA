@@ -1,0 +1,45 @@
+﻿using Academy.Services.Interfaces;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+
+namespace Academy.Services
+{
+    // Həm fayla yazan, həm konsola çıxaran Mock Test Servisi
+    public class EmailService : IEmailService
+    {
+        public async Task SendEmailAsync(string to, string subject, string body)
+        {
+            try
+            {
+                // Qeyd: Real SMTP əlavə etmədən əvvəl lokal olaraq sistemin işləməsi üçün 
+                // göndərilən e-maili lokal layihə qovluğunda "SavedEmails" papkasına yaddaşda saxlayırıq.
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "SavedEmails");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                // Fayl adı kimi emaili təhlükəsiz formata salırıq. 
+                string safeEmail = to.Replace("@", "_at_").Replace(".", "_dot_");
+                string fileName = $"Email_{safeEmail}_{DateTime.Now:yyyyMMdd_HHmmss}.html";
+                string filePath = Path.Combine(folder, fileName);
+
+                string fileContent = $"<!-- KİMƏ: {to} | MÖVZU: {subject} -->\n\n{body}";
+
+                await File.WriteAllTextAsync(filePath, fileContent);
+
+                // Debug konsola yazdırmaq üçün
+                Debug.WriteLine("=============================================");
+                Debug.WriteLine($"EMAIL GÖNDƏRİLDİ. ÜNVAN: {to}");
+                Debug.WriteLine($"Fayl qovluqdadır: {filePath}");
+                Debug.WriteLine("=============================================");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Email Service - XƏTA]: {ex.Message}");
+            }
+        }
+    }
+}

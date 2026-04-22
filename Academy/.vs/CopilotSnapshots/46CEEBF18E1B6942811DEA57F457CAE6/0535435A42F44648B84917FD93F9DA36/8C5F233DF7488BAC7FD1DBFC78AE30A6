@@ -1,0 +1,19 @@
+﻿using Academy.Services.Interfaces;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace Academy.Services
+{
+    // Mock Email Service for demonstration purposes.
+    // Replace with real SMTP implementation (e.g. MailKit) for production.
+    public class EmailService : IEmailService
+    {
+        public Task SendEmailAsync(string to, string subject, string body)
+        {
+            Debug.WriteLine($"SENDING EMAIL TO: {to}");
+            Debug.WriteLine($"SUBJECT: {subject}");
+            Debug.WriteLine($"BODY: {body}");
+            return Task.CompletedTask;
+        }
+    }
+}

@@ -12,6 +12,7 @@ C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\AutoMapper.Extensio
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Humanizer.dll
+C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Microsoft.AspNetCore.Razor.Language.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\Microsoft.Build.dll
@@ -82,7 +83,6 @@ C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\System.Memory.Data.
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\System.Reflection.MetadataLoadContext.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\System.Runtime.Caching.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\System.Text.Json.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\af\Humanizer.resources.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\ar\Humanizer.resources.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\bin\Debug\net8.0\az\Humanizer.resources.dll
@@ -249,10 +249,10 @@ C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\staticwebassets.bui
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.csproj.Up2Date
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\refint\Academy.dll
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.pdb
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\Academy.genruntimeconfig.cache
 C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\ref\Academy.dll
+C:\Users\ASUS\Desktop\AcademyInzara\Academy\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -1,0 +1,125 @@
+﻿using Academy.Data;
+using Academy.Models;
+using Academy.Services.Interfaces;
+using Academy.ViewModels.Basket;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Academy.Services
+{
+    public class BasketService : IBasketService
+    {
+        private readonly AppDbContext _context;
+
+        public BasketService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        private async Task<Basket> GetOrCreateBasketAsync(string userId)
+        {
+            var basket = await _context.Baskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (basket == null)
+            {
+                basket = new Basket { UserId = userId, BasketItems = new System.Collections.Generic.List<BasketItem>() };
+                await _context.Baskets.AddAsync(basket);
+                await _context.SaveChangesAsync();
+            }
+
+            return basket;
+        }
+
+        public async Task AddCourseToBasketAsync(string userId, int courseId)
+        {
+            var basket = await GetOrCreateBasketAsync(userId);
+
+            // Check if course exists in DB
+            var course = await _context.Courses
+                .FirstOrDefaultAsync(c => c.Id == courseId);
+
+            if (course == null) return;
+
+            // Prevent duplication
+            if (!basket.BasketItems.Any(bi => bi.CourseId == courseId))
+            {
+                var basketItem = new BasketItem
+                {
+                    BasketId = basket.Id,
+                    CourseId = courseId,
+                    Price = course.Price
+                };
+                await _context.BasketItems.AddAsync(basketItem);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<BasketVM> GetBasketAsync(string userId)
+        {
+            var basket = await _context.Baskets
+                .Include(b => b.BasketItems)
+                .ThenInclude(bi => bi.Course)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            var basketVM = new BasketVM();
+
+            if (basket != null && basket.BasketItems.Count > 0)
+            {
+                basketVM.Items = basket.BasketItems.Select(bi => new BasketItemVM
+                {
+                    Id = bi.Id,
+                    CourseId = bi.CourseId,
+                    CourseName = bi.Course.Title,
+                    CourseImage = bi.Course.ImageUrl,
+                    Price = bi.Price
+                }).ToList();
+
+                basketVM.TotalPrice = basketVM.Items.Sum(i => i.Price);
+            }
+
+            return basketVM;
+        }
+
+        public async Task<int> GetBasketCountAsync(string userId)
+        {
+            var basket = await _context.Baskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            return basket?.BasketItems.Count ?? 0;
+        }
+
+        public async Task RemoveCourseFromBasketAsync(string userId, int basketItemId)
+        {
+            var basket = await _context.Baskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (basket != null)
+            {
+                var item = basket.BasketItems.FirstOrDefault(bi => bi.Id == basketItemId);
+                if (item != null)
+                {
+                    _context.BasketItems.Remove(item); // Or set SoftDeleted = true depending on BaseEntity implementation
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task ClearBasketAsync(string userId)
+        {
+            var basket = await _context.Baskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (basket != null)
+            {
+                _context.BasketItems.RemoveRange(basket.BasketItems);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+}

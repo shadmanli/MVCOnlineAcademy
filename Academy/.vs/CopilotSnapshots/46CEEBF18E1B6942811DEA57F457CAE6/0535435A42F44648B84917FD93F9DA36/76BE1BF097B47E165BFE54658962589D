@@ -1,0 +1,44 @@
+﻿using Academy.Services.Interfaces;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+
+namespace Academy.Services
+{
+    // Real SMTP qurulana qədər lokal test üçün Mock Email Service.
+    // Göndərilən mailləri 'SavedEmails' daxilində tam .html faylı kimi saxlayır.
+    public class EmailService : IEmailService
+    {
+        public async Task SendEmailAsync(string to, string subject, string body)
+        {
+            try
+            {
+                // Real mühitdə burada MailKit və ya SmtpClient kodu yazılmalıdır.
+                // Test mühiti (mock service) üçün .html formatında saxlayırıq.
+
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "SavedEmails");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                // Random unikal fayl adı yaradırıq (məsələn, admin@gmail.com_20231012_1500.html)
+                string safeEmail = to.Replace("@", "_at_").Replace(".", "_dot_");
+                string fileName = $"Email_{safeEmail}_{DateTime.Now:yyyyMMdd_HHmmss}.html";
+                string filePath = Path.Combine(folder, fileName);
+
+                string fileContent = $"<!-- KİMƏ: {to} | MÖVZU: {subject} -->\n\n{body}";
+
+                await File.WriteAllTextAsync(filePath, fileContent);
+
+                // Həm də Debug konsola yazdırırıq.
+                Debug.WriteLine($"[Mock Email Send] - '{to}' ünvanına '{subject}' başlıqlı email uğurla test qovluğuna yaradıldı: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Mock Email Error] - Email yadda saxlanılarkən xəta baş verdi: {ex.Message}");
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+﻿using Academy.Services.Interfaces;
+using System;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
+
+namespace Academy.Services
+{
+    public class EmailService : IEmailService
+    {
+        public async Task SendEmailAsync(string to, string subject, string body)
+        {
+            try
+            {
+                string fromMail = "inzarasweet@gmail.com"; 
+                string fromPassword = "ciupbpobznnbfcbc";
+
+                var message = new MailMessage();
+                message.From = new MailAddress(fromMail, "Online Academy"); 
+                message.To.Add(new MailAddress(to)); 
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = true;
+
+                using var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(fromMail, fromPassword),
+                    EnableSsl = true,
+                };
+
+                await smtpClient.SendMailAsync(message);
+                Debug.WriteLine($"[Email Service] Gonderis ugurludur! Unvan: {to}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Email Service - Xeta]: {ex.Message}");
+            }
+        }
+    }
+}
