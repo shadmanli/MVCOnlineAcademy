@@ -1,0 +1,107 @@
+﻿@model List<Academy.ViewModels.Basket.BasketVM>
+
+@{
+    ViewData["Title"] = "Mənim Səbətim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css {
+    <link rel="stylesheet" href="~/assets/css/basket.css" />
+}
+
+<div class="basket-container">
+    <div class="basket-header">
+        <h1><i class="fas fa-shopping-cart"></i> Mənim Səbətim</h1>
+        <p>Seçdiyiniz kursları buradan idarə edə və sifarişi tamamlaya bilərsiniz.</p>
+        <div class="custom-heading-hr"></div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-basket-card">
+            <i class="fas fa-shopping-basket empty-icon"></i>
+            <h3>Səbətiniz hal-hazırda boşdur</h3>
+            <p>Bəyəndiyiniz kursları əlavə etmək üçün kurslar bölməsinə keçid edə bilərsiniz.</p>
+            <a asp-controller="Course" asp-action="Index" class="back-course-btn">
+                <i class="fas fa-arrow-left"></i> Kurslara qayıt
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="basket-content">
+            <!-- Basket Items -->
+            <div class="basket-items-list">
+                <div class="basket-items-header">
+                    <h5><i class="fas fa-list-ul"></i> Kurslar (@Model.Count())</h5>
+                </div>
+                <div class="basket-table-wrapper">
+                    <table class="basket-table">
+                        <thead>
+                            <tr>
+                                <th>Kurs Detalları</th>
+                                <th class="text-end">İdarə</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="basket-item-info">
+                                            <div class="img-wrapper">
+                                                <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/default.png" : "/uploads/course/" + item.ImageUrl)" alt="@item.Title" />
+                                            </div>
+                                            <div class="basket-item-text">
+                                                <h4>@item.Title</h4>
+                                                <span class="price-tag">@item.Price AZN</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <form asp-controller="Basket" asp-action="Remove" method="post">
+                                            <input type="hidden" name="courseId" value="@item.CourseId" />
+                                            <button type="submit" class="basket-remove-btn" title="Səbətdən sil">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="continue-shopping">
+                    <a asp-controller="Course" asp-action="Index">
+                        <i class="fas fa-arrow-left transition-icon"></i> Alış-verişə davam et
+                    </a>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="basket-summary">
+                <div class="summary-header">
+                    <h5><i class="fas fa-receipt"></i> Sifariş Xülasəsi</h5>
+                </div>
+                <div class="summary-body">
+                    <div class="summary-row">
+                        <span>Kursların sayı:</span>
+                        <strong>@Model.Count()</strong>
+                    </div>
+                    <hr />
+                    <div class="summary-row total-row">
+                        <span>Ümumi:</span>
+                        <strong class="total-price">@Model.Sum(x => x.Price) <span>AZN</span></strong>
+                    </div>
+
+                    <form asp-controller="Order" asp-action="Checkout" method="post">
+                        <button type="submit" class="checkout-btn">
+                            Sifarişi Tamamla <i class="fas fa-check-circle checkout-icon"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

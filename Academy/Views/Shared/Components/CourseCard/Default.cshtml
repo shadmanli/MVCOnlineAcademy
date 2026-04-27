@@ -102,6 +102,14 @@
 
                                         <span class="price">$@course.Price</span>
                                     </div>
+
+                                    <form asp-controller="Basket" asp-action="Add" method="post" style="margin-top: 15px; width: 100%;">
+                                        <input type="hidden" name="courseId" value="@course.Id" />
+                                        <button type="submit" class="add-to-cart-btn" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 10; position: relative;">
+                                            🛒 Səbətə Əlavə Et
+                                        </button>
+                                    </form>
+
                                 </div>
 
                             </div>

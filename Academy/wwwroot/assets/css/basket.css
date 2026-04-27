@@ -1,0 +1,420 @@
+/* Basket Page Custom Styles - No Bootstrap Dependency */
+
+/* --- Fix Header Visibility & Design for Basket Page --- */
+header, #top-bar {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#top-bar .menu-list li a:hover {
+    color: #ff6d34 !important;
+    transition: 0.3s;
+}
+
+#top-bar {
+    padding: 12px 0;
+}
+/* ------------------------------------------- */
+
+.basket-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    min-height: 60vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+.basket-header {
+    text-center;
+    text-align: center;
+    margin-bottom: 50px;
+    margin-top: 65px;
+}
+
+.basket-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.basket-header h1 i {
+    color: #ff6d34;
+}
+
+.basket-header p {
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.custom-heading-hr {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6d34, #ff8c5a);
+    border: none;
+    border-radius: 4px;
+    margin: 20px auto 0;
+}
+
+/* Empty Basket */
+.empty-basket-card {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 50px;
+    background: #fff;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 2px dashed #e9ecef;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    color: #dee2e6;
+    margin-bottom: 25px;
+}
+
+.empty-basket-card h3 {
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 15px;
+}
+
+.empty-basket-card p {
+    color: #6c757d;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.back-course-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #ff6d34;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 109, 52, 0.3);
+}
+
+.back-course-btn:hover {
+    background-color: #e65c26;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 109, 52, 0.4);
+}
+
+/* Basket Content Grid */
+.basket-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.basket-items-list {
+    flex: 1 1 65%;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.basket-items-header {
+    background: #fff;
+    padding: 20px 25px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.basket-items-header h5 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.basket-items-header h5 i {
+    color: #ff6d34;
+}
+
+.basket-table-wrapper {
+    overflow-x: auto;
+}
+
+.basket-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.basket-table th {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    padding: 15px 25px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.basket-table th.text-end {
+    text-align: right;
+}
+
+.basket-table td {
+    padding: 20px 25px;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: middle;
+}
+
+.basket-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.basket-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.basket-item-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.img-wrapper {
+    width: 120px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.basket-table tbody tr:hover .img-wrapper img {
+    transform: scale(1.08);
+}
+
+.basket-item-text h4 {
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    transition: color 0.2s ease;
+}
+
+.basket-table tbody tr:hover .basket-item-text h4 {
+    color: #ff6d34;
+}
+
+.price-tag {
+    display: inline-block;
+    background: #f1f3f5;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #198754;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: 1px solid #e9ecef;
+}
+
+.text-end {
+    text-align: right;
+}
+
+.basket-remove-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #dc3545;
+    background: transparent;
+    color: #dc3545;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.basket-remove-btn:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: rotate(15deg) scale(1.1);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.continue-shopping {
+    padding: 20px 25px;
+    background: #fff;
+    border-top: 1px solid #e9ecef;
+    display: none; /* Hide on larger screens, show on mobile optionally */
+}
+
+@media (min-width: 992px) {
+    .continue-shopping {
+        display: block;
+    }
+}
+
+.continue-shopping a {
+    color: #ff6d34;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.continue-shopping a .transition-icon {
+    transition: transform 0.3s ease;
+}
+
+.continue-shopping a:hover {
+    color: #e65c26;
+}
+
+.continue-shopping a:hover .transition-icon {
+    transform: translateX(-5px);
+}
+
+/* Summary Box */
+.basket-summary {
+    flex: 1 1 30%;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 25px;
+    overflow: hidden;
+}
+
+.summary-header {
+    background: #ff6d34;
+    color: white;
+    padding: 20px 25px;
+}
+
+.summary-header h5 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.summary-body {
+    padding: 25px;
+    background: #f8f9fa;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+.summary-row strong {
+    color: #343a40;
+}
+
+.summary-body hr {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.total-row {
+    margin-bottom: 25px;
+}
+
+.total-row span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.total-price {
+    font-size: 1.8rem;
+    color: #ff6d34 !important;
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+}
+
+.total-price span {
+    font-size: 1rem;
+    color: #6c757d;
+    font-weight: normal;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #198754;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+}
+
+.checkout-icon {
+    transition: transform 0.3s ease;
+}
+
+.checkout-btn:hover {
+    transform: translateY(-2px);
+    background-color: #157347;
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.4);
+}
+
+.checkout-btn:hover .checkout-icon {
+    transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .basket-content {
+        flex-direction: column;
+    }
+    
+    .basket-items-list, .basket-summary {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    
+    .basket-summary {
+        position: static;
+    }
+
+    .basket-item-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .img-wrapper {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+}

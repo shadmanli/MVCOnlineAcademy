@@ -32,6 +32,13 @@ builder.Services.AddScoped<ICourseRequirementService, CourseRequirementService>(
 builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -74,6 +81,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

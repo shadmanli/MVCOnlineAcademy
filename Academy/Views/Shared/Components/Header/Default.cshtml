@@ -27,7 +27,7 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
 
-                    <a href=""><i class="fa-solid fa-cart-shopping"></i></a>
+                    <a asp-controller="Basket" asp-action="Index"><i class="fa-solid fa-cart-shopping"></i></a>
 
                     <div class="login-register" style="display: flex; align-items: center; gap: 10px;">
                         @if (User.Identity.IsAuthenticated)

@@ -134,6 +134,50 @@
         </script>
     }
 
+    @if (TempData["Warning"] != null)
+    {
+        <div id="custom-toast" class="custom-toast">
+            <span class="t-icon">⚠️</span>
+            <span>@Html.Raw(TempData["Warning"])</span>
+        </div>
+        <style>
+            .custom-toast {
+                position: fixed;
+                bottom: 28px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: #0c2320;
+                color: white;
+                padding: 14px 24px;
+                border-radius: 12px;
+                border: 1px solid rgba(0,196,168,0.3);
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 9999;
+                transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            }
+            .custom-toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var toast = document.getElementById("custom-toast");
+                setTimeout(function() {
+                    toast.classList.add("show");
+                }, 100);
+
+                setTimeout(function() {
+                    toast.classList.remove("show");
+                }, 3000);
+            });
+        </script>
+    }
+
     @RenderSection("Scripts", required: false)
 </body>
 

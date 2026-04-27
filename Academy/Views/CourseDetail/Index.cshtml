@@ -86,8 +86,11 @@
                                 <span id="countdownTimer">02:47:33</span>
                             </div>
 
-                            <button class="btn-enroll">🎓 Kursa Qeydiyyat Ol</button>
-                            <button class="btn-demo" id="demoPlayBtn">▶ Demo Dərsi İzlə (Pulsuz)</button>
+                            <form asp-controller="Basket" asp-action="Add" method="post">
+                                <input type="hidden" name="courseId" value="@Model.Id" />
+                                <button type="submit" class="btn-enroll" style="width:100%; border:none; cursor:pointer;">🛒 Səbətə Əlavə Et</button>
+                            </form>
+                            <button class="btn-demo" id="demoPlayBtn" style="margin-top: 10px;">▶ Demo Dərsi İzlə (Pulsuz)</button>
                         </div>
 
                         <div class="card-divider"></div>
