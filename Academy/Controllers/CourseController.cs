@@ -18,10 +18,9 @@ namespace Academy.Controllers
         }
 
         // Kurs list
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var courses = await _service.GetAllAsync();
-            return View(courses);
+            return View();
         }
 
         // Detail səhifə

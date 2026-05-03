@@ -50,6 +50,14 @@ namespace Academy.Controllers
         [HttpPost]
         public IActionResult Add(int courseId)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData["Warning"] = "S?b?t? m?hsul ?lav? etm?k üçün hesab?n?za daxil olmal?s?n?z.";
+                TempData["OpenLoginModal"] = true;
+                string referer = Request.Headers["Referer"].ToString();
+                return Redirect(string.IsNullOrEmpty(referer) ? "/" : referer);
+            }
+
             var added = _basketService.AddToBasket(courseId, User.Identity.Name); // Veya user id verilebilir
             if (!added)
             {

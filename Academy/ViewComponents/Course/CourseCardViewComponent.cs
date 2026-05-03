@@ -23,6 +23,8 @@ namespace Academy.ViewComponents.Course
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
+            string? search,
+            string? sort,
             int? categoryId,
             int? instructorId,
             decimal? minPrice,
@@ -30,7 +32,9 @@ namespace Academy.ViewComponents.Course
         {
             var courses = await _courseService.GetAllAsync();
 
-          
+            if (!string.IsNullOrEmpty(search))
+                courses = courses.Where(x => x.Title.Contains(search, StringComparison.OrdinalIgnoreCase) || (x.CategoryName != null && x.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+
             if (categoryId != null)
                 courses = courses.Where(x => x.CategoryId == categoryId);
 
@@ -42,6 +46,13 @@ namespace Academy.ViewComponents.Course
 
             if (maxPrice != null)
                 courses = courses.Where(x => x.Price <= maxPrice);
+
+            if (sort == "latest")
+                courses = courses.OrderByDescending(x => x.Id);
+            else if (sort == "low")
+                courses = courses.OrderBy(x => x.Price);
+            else if (sort == "high")
+                courses = courses.OrderByDescending(x => x.Price);
 
             var model = new CoursePageVM
             {

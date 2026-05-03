@@ -9,7 +9,16 @@
 <main>
     @await Component.InvokeAsync("Course")
 
-    @await Component.InvokeAsync("CourseCard")
+    @{
+        string? search = Context.Request.Query["search"];
+        string? sort = Context.Request.Query["sort"];
+        int? categoryId = int.TryParse(Context.Request.Query["categoryId"], out int cid) ? cid : null;
+        int? instructorId = int.TryParse(Context.Request.Query["instructorId"], out int iid) ? iid : null;
+        decimal? minPrice = decimal.TryParse(Context.Request.Query["minPrice"], out decimal minP) ? minP : null;
+        decimal? maxPrice = decimal.TryParse(Context.Request.Query["maxPrice"], out decimal maxP) ? maxP : null;
+    }
+
+    @await Component.InvokeAsync("CourseCard", new { search, sort, categoryId, instructorId, minPrice, maxPrice })
 </main>
 
 @section Scripts {
