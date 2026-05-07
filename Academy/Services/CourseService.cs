@@ -54,6 +54,23 @@ namespace Academy.Services
             data.ImageUrl = fileName;
             data.CreatedDate = DateTime.Now;
 
+            if (model.VideoTitles != null && model.VideoTitles.Count > 0)
+            {
+                data.Videos = new List<Video>();
+                for (int i = 0; i < model.VideoTitles.Count; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(model.VideoTitles[i]))
+                    {
+                        data.Videos.Add(new Video
+                        {
+                            Title = model.VideoTitles[i],
+                            Url = model.VideoUrls != null && model.VideoUrls.Count > i ? model.VideoUrls[i] : null,
+                            Level = model.VideoLevels != null && model.VideoLevels.Count > i ? model.VideoLevels[i] : Academy.Models.VideoLevel.Beginner
+                        });
+                    }
+                }
+            }
+
             await _context.Courses.AddAsync(data);
             await _context.SaveChangesAsync();
         }
@@ -65,7 +82,9 @@ namespace Academy.Services
      .Include(x => x.Category)
      .Include(x => x.Instructor)
      .Include(x => x.Features)
-      .Include(x => x.Requirements) 
+      .Include(x => x.Requirements)
+      .Include(x => x.Lessons)
+      .Include(x => x.Videos)
      .FirstOrDefaultAsync(x => x.Id == id);
 
             return _mapper.Map<CourseDetailVM>(data);

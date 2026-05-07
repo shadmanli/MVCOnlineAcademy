@@ -1,12 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Academy.Services.Interfaces;
 
 namespace Academy.Controllers
 {
     public class CourseDetailController : Controller
     {
-        public IActionResult Index()
+        private readonly ICourseService _courseService;
+
+        public CourseDetailController(ICourseService courseService)
         {
-            return View();
+            _courseService = courseService;
+        }
+
+        public async Task<IActionResult> Index(int id)
+        {
+            var course = await _courseService.GetByIdAsync(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return View(course);
         }
     }
 }

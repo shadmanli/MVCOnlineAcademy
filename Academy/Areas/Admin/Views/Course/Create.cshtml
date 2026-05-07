@@ -16,6 +16,34 @@
 
     <input asp-for="Duration" class="form-control mb-2" placeholder="Duration" />
 
-    <button class="btn btn-success">Create</button>
+    <h4 class="mt-4">Videos</h4>
+    <div id="videos-container">
+        <div class="video-item border p-3 mb-3">
+            <input name="VideoTitles" class="form-control mb-2" placeholder="Video Title" />
+            <input name="VideoUrls" class="form-control mb-2" placeholder="Video URL" />
+            <select name="VideoLevels" class="form-control mb-2">
+                <option value="1">Beginner</option>
+                <option value="2">Intermediate</option>
+                <option value="3">Advanced</option>
+            </select>
+        </div>
+    </div>
+    <button type="button" class="btn btn-info mb-3" onclick="addVideo()">Add Another Video</button>
+
+    <button type="submit" class="btn btn-success mt-3 d-block">Create</button>
 
 </form>
+
+@section Scripts {
+    <script>
+        function addVideo() {
+            var container = document.getElementById('videos-container');
+            var item = document.querySelector('.video-item').cloneNode(true);
+
+            var inputs = item.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+
+            container.appendChild(item);
+        }
+    </script>
+}

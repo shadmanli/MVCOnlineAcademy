@@ -45,9 +45,15 @@
 
             
                         <div class="meta-row">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating-txt"><strong>4.8</strong> (1,240 rəy)</span>
-                            <span class="students-txt">· 3,500+ tələbə qeydiyyatda</span>
+                            <span class="stars">
+                                @for(int i=0; i<5; i++)
+                                {
+                                    if(i < Math.Round(Model.Rating)) { <i class="fa-solid fa-star" style="color: #f1c40f;"></i> }
+                                    else { <i class="fa-regular fa-star" style="color: #f1c40f;"></i> }
+                                }
+                            </span>
+                            <span class="rating-txt"><strong>@Model.Rating</strong> (1,240 rəy)</span>
+                            <span class="students-txt">· @Model.StudentCount+ tələbə qeydiyyatda</span>
                         </div>
 
                
@@ -97,12 +103,21 @@
 
                     
                         <ul class="card-features">
-                            <li><span class="feat-icon">📹</span> 18 saat HD video dərs</li>
-                            <li><span class="feat-icon">🎥</span> 6 Canlı Zoom sessiyası</li>
-                            <li><span class="feat-icon">📁</span> İndirilebilir qaynaqlar</li>
-                            <li><span class="feat-icon">🏆</span> Tamamlama sertifikatı</li>
-                            <li><span class="feat-icon">📱</span> Mobil & masaüstü giriş</li>
-                            <li><span class="feat-icon">♾️</span> Ömürlük giriş hüququ</li>
+                            @if (Model.Features != null && Model.Features.Any())
+                            {
+                                foreach (var feature in Model.Features)
+                                {
+                                    <li><span class="feat-icon">✅</span> @feature</li>
+                                }
+                            }
+                            else
+                            {
+                                <li><span class="feat-icon">📹</span> @Model.Duration HD video dərs</li>
+                                <li><span class="feat-icon">📁</span> İndirilə bilən qaynaqlar</li>
+                                <li><span class="feat-icon">🏆</span> Tamamlama sertifikatı</li>
+                                <li><span class="feat-icon">📱</span> Mobil & masaüstü giriş</li>
+                                <li><span class="feat-icon">♾️</span> Ömürlük giriş hüququ</li>
+                            }
                         </ul>
 
                         <div class="money-back">
@@ -123,10 +138,44 @@
 
                 <h2 class="section-title">ℹ️ Kurs haqqında</h2>
 
-              
-                <p style="font-size:15px;color:#444;line-height:1.75;margin-bottom:14px">
-                    @Model.Description
+                <p style="font-size:15px;color:#444;line-height:1.75;margin-bottom:24px">
+                    @Html.Raw(Model.Description.Replace("\n", "<br/>"))
                 </p>
+
+                @if (Model.Requirements != null && Model.Requirements.Any())
+                {
+                    <h2 class="section-title" style="margin-top: 30px;">📋 Tələblər</h2>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        @foreach (var req in Model.Requirements)
+                        {
+                            <li style="font-size: 15px; color: #444; margin-bottom: 10px; display: flex; align-items: start;">
+                                <i class="fa-solid fa-check" style="color: #00c4a8; margin-right: 10px; margin-top: 3px;"></i>
+                                <span>@req.Text</span>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @if (Model.Videos != null && Model.Videos.Any())
+                {
+                    <h2 class="section-title" style="margin-top: 30px;">🎥 Dərslər (Videolar)</h2>
+
+                    var groupedVideos = Model.Videos.GroupBy(v => v.Level).OrderBy(g => g.Key);
+
+                    foreach (var group in groupedVideos)
+                    {
+                        <h3 style="margin-top: 20px; font-size: 1.2rem; border-bottom: 2px solid #00c4a8; display: inline-block;">@group.Key</h3>
+                        <ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">
+                            @foreach (var video in group)
+                            {
+                                <li style="font-size: 15px; color: #444; margin-bottom: 10px; display: flex; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 5px; border-left: 4px solid #00c4a8;">
+                                    <i class="fa-solid fa-play" style="color: #00c4a8; margin-right: 10px;"></i>
+                                    <span>@video.Title</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
 
             </div>
         </div>
@@ -137,4 +186,3 @@
 @section Scripts {
     <script src="~/assets/js/courses-detail.js"></script>
 }
- 

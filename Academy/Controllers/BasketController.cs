@@ -50,18 +50,10 @@ namespace Academy.Controllers
         [HttpPost]
         public IActionResult Add(int courseId)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                TempData["Warning"] = "S?b?t? m?hsul ?lav? etm?k üçün hesab?n?za daxil olmal?s?n?z.";
-                TempData["OpenLoginModal"] = true;
-                string referer = Request.Headers["Referer"].ToString();
-                return Redirect(string.IsNullOrEmpty(referer) ? "/" : referer);
-            }
-
-            var added = _basketService.AddToBasket(courseId, User.Identity.Name); // Veya user id verilebilir
+            var added = _basketService.AddToBasket(courseId, User.Identity.IsAuthenticated ? User.Identity.Name : null); 
             if (!added)
             {
-                TempData["Warning"] = "Bu kursu artiq elave etmisiniz";
+                TempData["Warning"] = "Bu kursu art?q ?lav? etmisiniz.";
             }
             return RedirectToAction("Index");
         }

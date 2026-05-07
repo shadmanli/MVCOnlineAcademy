@@ -30,6 +30,7 @@ namespace Academy.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<CourseRequirement> CourseRequirements { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Video> Videos { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }

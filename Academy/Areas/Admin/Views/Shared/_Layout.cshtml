@@ -203,6 +203,8 @@
 
     <!-- Template Javascript -->
     <script src="~/admin/js/main.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>
