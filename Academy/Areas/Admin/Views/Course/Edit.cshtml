@@ -55,9 +55,60 @@
             <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-select"></select>
         </div>
 
-        <button class="btn btn-primary">Save</button>
+        <h4 class="mt-4">Existing Videos</h4>
+        @if(Model.ExistingVideos != null && Model.ExistingVideos.Any())
+        {
+            <div class="mb-3">
+                @foreach(var vid in Model.ExistingVideos)
+                {
+                    <div class="border p-2 mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@vid.Title</strong> (@vid.Level)
+                        </div>
+                        @if(!string.IsNullOrEmpty(vid.Url))
+                        {
+                            <video width="150" controls>
+                                <source src="~/uploads/videos/@vid.Url" type="video/mp4">
+                                Your browser does not support HTML video.
+                            </video>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        <h4 class="mt-4">Add New Videos</h4>
+        <div id="videos-container">
+            <div class="video-item border p-3 mb-3">
+                <input name="VideoTitles" class="form-control mb-2" placeholder="Video Title" />
+                <input type="file" name="VideoFiles" accept="video/*" class="form-control mb-2" />
+                <select name="VideoLevels" class="form-control mb-2">
+                    <option value="1">Beginner</option>
+                    <option value="2">Intermediate</option>
+                    <option value="3">Advanced</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="btn btn-info mb-3" onclick="addVideo()">Add Another Video</button>
+
+        <button class="btn btn-primary d-block">Save</button>
     </form>
 </div>
+
+<script>
+    function addVideo() {
+        var container = document.getElementById('videos-container');
+        var item = document.querySelector('.video-item').cloneNode(true);
+
+        var inputs = item.querySelectorAll('input');
+        inputs.forEach(input => {
+            if(input.type !== 'file') input.value = '';
+            else input.value = null;
+        });
+
+        container.appendChild(item);
+    }
+</script>
 
 <script>
     const input = document.getElementById("imgInput");

@@ -64,11 +64,13 @@ namespace Academy.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var data = await _context.Courses
+                .Include(x => x.Videos)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (data == null) return NotFound();
 
             var model = _mapper.Map<CourseEditVM>(data);
+            model.ExistingVideos = data.Videos;
 
             // 🔥 Dropdownları doldur + selected ver
             model.Languages = await _context.Languages

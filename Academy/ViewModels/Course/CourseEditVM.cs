@@ -20,6 +20,11 @@ namespace Academy.ViewModels.Course
         public int CategoryId { get; set; }
         public int InstructorId { get; set; }
 
+        public List<Academy.Models.Video>? ExistingVideos { get; set; }
+        public List<string>? VideoTitles { get; set; }
+        public List<IFormFile>? VideoFiles { get; set; }
+        public List<Academy.Models.VideoLevel>? VideoLevels { get; set; }
+
         public List<SelectListItem> Languages { get; set; }
         public List<SelectListItem> Categories { get; set; }
         public List<SelectListItem> Instructors { get; set; }

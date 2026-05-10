@@ -17,7 +17,7 @@ namespace Academy.ViewModels.Course
         public int Duration { get; set; }
 
         public List<string>? VideoTitles { get; set; }
-        public List<string>? VideoUrls { get; set; }
+        public List<IFormFile>? VideoFiles { get; set; }
         public List<Academy.Models.VideoLevel>? VideoLevels { get; set; }
 
         public List<SelectListItem>? Languages { get; set; }

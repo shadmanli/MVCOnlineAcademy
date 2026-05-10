@@ -216,7 +216,10 @@ namespace Academy.Helpers
           o => o.MapFrom(s => s.StudentCount))
 
       .ForMember(d => d.Rating,
-          o => o.MapFrom(s => s.Rating));
+          o => o.MapFrom(s => s.Rating))
+
+      .ForMember(d => d.Videos,
+          o => o.MapFrom(s => s.Videos));
 
             CreateMap<Course, CourseEditVM>();
 

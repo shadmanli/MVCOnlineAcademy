@@ -19,6 +19,30 @@
 
             <h4 class="text-success">$@Model.Price</h4>
 
+            @if (Model.Videos != null && Model.Videos.Any())
+            {
+                <h4 class="mt-4">Videos</h4>
+                <div class="row">
+                    @foreach (var vid in Model.Videos)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@vid.Title (@vid.Level)</h5>
+                                    @if (!string.IsNullOrEmpty(vid.Url))
+                                    {
+                                        <video width="100%" controls>
+                                            <source src="~/uploads/videos/@vid.Url" type="video/mp4">
+                                            Your browser does not support HTML video.
+                                        </video>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
         </div>
 
     </div>

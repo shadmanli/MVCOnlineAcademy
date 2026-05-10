@@ -61,10 +61,21 @@ namespace Academy.Services
                 {
                     if (!string.IsNullOrWhiteSpace(model.VideoTitles[i]))
                     {
+                        string vidName = null;
+                        if (model.VideoFiles != null && model.VideoFiles.Count > i && model.VideoFiles[i] != null)
+                        {
+                            string vidFolder = Path.Combine(_env.WebRootPath, "uploads/videos");
+                            if (!Directory.Exists(vidFolder)) Directory.CreateDirectory(vidFolder);
+                            vidName = Guid.NewGuid() + "_" + model.VideoFiles[i].FileName;
+                            string vidPath = Path.Combine(vidFolder, vidName);
+                            using var vidStream = new FileStream(vidPath, FileMode.Create);
+                            await model.VideoFiles[i].CopyToAsync(vidStream);
+                        }
+
                         data.Videos.Add(new Video
                         {
                             Title = model.VideoTitles[i],
-                            Url = model.VideoUrls != null && model.VideoUrls.Count > i ? model.VideoUrls[i] : null,
+                            Url = vidName,
                             Level = model.VideoLevels != null && model.VideoLevels.Count > i ? model.VideoLevels[i] : Academy.Models.VideoLevel.Beginner
                         });
                     }
@@ -87,7 +98,12 @@ namespace Academy.Services
       .Include(x => x.Videos)
      .FirstOrDefaultAsync(x => x.Id == id);
 
-            return _mapper.Map<CourseDetailVM>(data);
+            var vm = _mapper.Map<CourseDetailVM>(data);
+            if (data != null && data.Videos != null)
+            {
+                vm.Videos = data.Videos.ToList();
+            }
+            return vm;
         }
 
      
@@ -102,6 +118,7 @@ namespace Academy.Services
         public async Task UpdateAsync(CourseEditVM model)
         {
             var data = await _context.Courses
+                .Include(x => x.Videos)
                 .FirstOrDefaultAsync(x => x.Id == model.Id);
 
             if (data == null) return;
@@ -140,6 +157,34 @@ namespace Academy.Services
             data.LanguageId = model.LanguageId;
             data.CategoryId = model.CategoryId;
             data.InstructorId = model.InstructorId;
+
+            if (model.VideoTitles != null && model.VideoTitles.Count > 0)
+            {
+                if (data.Videos == null) data.Videos = new List<Video>();
+                for (int i = 0; i < model.VideoTitles.Count; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(model.VideoTitles[i]))
+                    {
+                        string vidName = null;
+                        if (model.VideoFiles != null && model.VideoFiles.Count > i && model.VideoFiles[i] != null)
+                        {
+                            string vidFolder = Path.Combine(_env.WebRootPath, "uploads/videos");
+                            if (!Directory.Exists(vidFolder)) Directory.CreateDirectory(vidFolder);
+                            vidName = Guid.NewGuid() + "_" + model.VideoFiles[i].FileName;
+                            string vidPath = Path.Combine(vidFolder, vidName);
+                            using var vidStream = new FileStream(vidPath, FileMode.Create);
+                            await model.VideoFiles[i].CopyToAsync(vidStream);
+                        }
+
+                        data.Videos.Add(new Video
+                        {
+                            Title = model.VideoTitles[i],
+                            Url = vidName,
+                            Level = model.VideoLevels != null && model.VideoLevels.Count > i ? model.VideoLevels[i] : Academy.Models.VideoLevel.Beginner
+                        });
+                    }
+                }
+            }
 
             data.UpdatedDate = DateTime.Now;
 

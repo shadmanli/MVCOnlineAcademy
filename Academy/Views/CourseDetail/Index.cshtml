@@ -158,23 +158,45 @@
 
                 @if (Model.Videos != null && Model.Videos.Any())
                 {
-                    <h2 class="section-title" style="margin-top: 30px;">🎥 Dərslər (Videolar)</h2>
+                    <h2 class="section-title" style="margin-top: 40px; margin-bottom: 20px;">🎥 Dərslər (Mündəricat)</h2>
 
                     var groupedVideos = Model.Videos.GroupBy(v => v.Level).OrderBy(g => g.Key);
 
-                    foreach (var group in groupedVideos)
+                    <div class="curriculum-accordion" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                    @foreach (var group in groupedVideos)
                     {
-                        <h3 style="margin-top: 20px; font-size: 1.2rem; border-bottom: 2px solid #00c4a8; display: inline-block;">@group.Key</h3>
-                        <ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">
-                            @foreach (var video in group)
-                            {
-                                <li style="font-size: 15px; color: #444; margin-bottom: 10px; display: flex; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 5px; border-left: 4px solid #00c4a8;">
-                                    <i class="fa-solid fa-play" style="color: #00c4a8; margin-right: 10px;"></i>
-                                    <span>@video.Title</span>
-                                </li>
-                            }
-                        </ul>
+                        <div class="curriculum-group" style="border-bottom: 1px solid #ddd;">
+                            <div class="group-header" style="background: #f8f9fa; padding: 15px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="margin: 0; font-size: 1.1rem; color: #333;">@group.Key Dərsləri</h3>
+                                <span style="font-size: 0.9rem; color: #666;">@group.Count() dərs</span>
+                            </div>
+                            <div class="group-body" style="background: #fff; padding: 0;">
+                                <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                                    @foreach (var video in group)
+                                    {
+                                        <li style="padding: 15px 20px; border-top: 1px solid #eee;">
+                                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <i class="fa-solid fa-circle-play" style="color: #00c4a8; margin-right: 12px; font-size: 1.2rem;"></i>
+                                                    <span style="font-weight: 500; font-size: 15px; color: #333;">@video.Title</span>
+                                                </div>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(video.Url))
+                                            {
+                                                <div style="margin-left: 30px; margin-top: 10px;">
+                                                    <video style="width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background-color: #000;" controls preload="metadata">
+                                                        <source src="/uploads/videos/@video.Url" type="video/mp4">
+                                                        Sizin brauzeriniz video dəstəkləmir.
+                                                    </video>
+                                                </div>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     }
+                    </div>
                 }
 
             </div>
