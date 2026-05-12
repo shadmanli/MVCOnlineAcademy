@@ -1,0 +1,333 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = ViewBag.User;
+}
+
+@section css {
+    <style>
+        .profile-wrapper { padding: 80px 0; background-color: #f9fbfb; min-height: 80vh; font-family: 'Poppins', sans-serif; }
+        .profile-container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
+        .profile-title { font-size: 26px; font-weight: 700; margin-bottom: 25px; color: #232d39; }
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @@media(max-width: 768px){ .profile-grid { grid-template-columns: 1fr; } }
+        .profile-card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #eee; margin-bottom: 30px; }
+        .profile-card h4 { font-size: 18px; font-weight: 600; margin-bottom: 25px; color: #333; border-bottom: 2px solid #f5f5f5; padding-bottom: 10px; }
+
+        .profile-form-group { margin-bottom: 18px; }
+        .profile-form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #555; }
+        .profile-form-control { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fdfdfd; }
+        .profile-form-control:focus { border-color: #00c4a8; background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 196, 168, 0.1); }
+        .profile-form-control:disabled { background: #f0f0f0; cursor: not-allowed; color: #888; }
+
+        .profile-btn { width: 100%; padding: 14px; background: #00c4a8; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; }
+        .profile-btn:hover { background: #00a58d; transform: translateY(-2px); }
+        .profile-btn-danger { background: #ff4d4f; }
+        .profile-btn-danger:hover { background: #e04445; }
+
+        .notif-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; font-size: 14px; color: #444; line-height: 1.4; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; margin-top: 2px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #dcdcdc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #00c4a8; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .pass-wrap { position: relative; }
+        .pass-wrap i { position: absolute; right: 15px; top: 40px; cursor: pointer; color: #888; transition: 0.2s; }
+        .pass-wrap i:hover { color: #00c4a8; }
+
+        .profile-img-wrap { text-align: center; margin-bottom: 25px; }
+        .profile-img-wrap img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #00c4a8; padding: 3px; margin-bottom: 15px; background: #fff;}
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
+        .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+        .btn-file-upload { background: #f0f4f4; color: #00c4a8; font-weight: 500; font-size: 12px; padding: 6px 12px; border-radius: 20px; border: 1px solid #00c4a8; }
+
+        .text-response { font-size: 13px; color: #00c4a8; margin-top: 10px; display: inline-block; font-weight: 500; }
+        .text-error { font-size: 13px; color: #ff4d4f; margin-top: 5px; display: block; font-weight: 500; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(12, 26, 25, 0.7); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        @@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .profile-modal { background: #fff; padding: 30px; border-radius: 16px; width: 90%; max-width: 450px; box-shadow: 0 15px 50px rgba(0,0,0,0.1); }
+        .profile-modal h3 { color: #ff4d4f; margin-top: 0; margin-bottom: 15px; font-size: 22px; font-weight: 700; }
+        .profile-modal p { font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.6; }
+        .modal-actions { display: flex; gap: 15px; margin-top: 25px; }
+    </style>
+}
+
+<main class="profile-wrapper">
+    <div class="profile-container">
+        <h2 class="profile-title">Profil Parametrləri</h2>
+
+        <div class="profile-grid">
+            <!-- 1. PROFIL MELUMATLARI -->
+            <div class="profile-card">
+                <h4><i class="fa-solid fa-user-pen" style="color:#00c4a8;margin-right:8px;"></i> Profil Məlumatları</h4>
+                <form id="profileForm">
+                    <div class="profile-img-wrap">
+                        <img id="profilePreview" src="@(!string.IsNullOrEmpty(user.ProfilePicture) ? "/uploads/profile/" + user.ProfilePicture : "/assets/images/default-avatar.png")" />
+                        <div>
+                            <div class="file-input-wrapper">
+                                <span class="btn-file-upload"><i class="fa-solid fa-camera"></i> Şəkil Yenilə</span>
+                                <input type="file" id="ProfilePicture" accept=".png,.jpg,.jpeg" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:15px;">
+                        <div class="profile-form-group" style="flex:1;">
+                            <label>Adınız</label>
+                            <input type="text" id="FirstName" class="profile-form-control" value="@ViewBag.FirstName" required />
+                        </div>
+                        <div class="profile-form-group" style="flex:1;">
+                            <label>Soyadınız</label>
+                            <input type="text" id="LastName" class="profile-form-control" value="@ViewBag.LastName" required />
+                        </div>
+                    </div>
+
+                    <div class="profile-form-group">
+                        <label>E-poçt ünvanı <span style="font-size:11px;color:#aaa;">(Dəyişdirilə bilməz)</span></label>
+                        <input type="email" class="profile-form-control" value="@user.Email" disabled />
+                    </div>
+
+                    <div class="profile-form-group">
+                        <label>Əlaqə nömrəsi</label>
+                        <input type="text" id="Phone" class="profile-form-control" value="@user.PhoneNumber" placeholder="+994 (__) ___ __ __" />
+                    </div>
+
+                    <div class="profile-form-group">
+                        <label>Özünüz haqqında qısa bio <span style="font-size:11px;color:#aaa;">(Max. 300 simvol)</span></label>
+                        <textarea id="Bio" class="profile-form-control" rows="3" maxlength="300" placeholder="Karyeranız, ixtisasınız və maraqlarınız barədə məlumat verin...">@user.Bio</textarea>
+                    </div>
+
+                    <button type="submit" class="profile-btn"><i class="fa-solid fa-floppy-disk"></i> Yadda Saxla</button>
+                    <div style="text-align:center;"><span id="profResponse" class="text-response"></span></div>
+                </form>
+            </div>
+
+            <!-- 2. SIFRE DEYISME -->
+            <div class="profile-card">
+                <h4><i class="fa-solid fa-lock" style="color:#00c4a8;margin-right:8px;"></i> Şifrə Təhlükəsizliyi</h4>
+                <form id="passwordForm">
+                    <div class="profile-form-group pass-wrap">
+                        <label>Cari Şifrəniz</label>
+                        <input type="password" id="OldPassword" class="profile-form-control" placeholder="Mövcud şifrəni daxil edin" required />
+                        <i class="fa fa-eye toggle-password"></i>
+                    </div>
+
+                    <div class="profile-form-group pass-wrap">
+                        <label>Yeni Şifrə <span style="font-size:11px;color:#888;font-weight:normal;">(Min 8 simvol, 1 böyük hərf, 1 rəqəm)</span></label>
+                        <input type="password" id="NewPassword" class="profile-form-control" placeholder="Yeni mürəkkəb şifrə" required />
+                        <i class="fa fa-eye toggle-password"></i>
+                    </div>
+
+                    <div class="profile-form-group pass-wrap">
+                        <label>Yeni Şifrə (Təkrar)</label>
+                        <input type="password" id="ConfirmPassword" class="profile-form-control" placeholder="Yeni şifrəni bir daha daxil edin" required />
+                        <i class="fa fa-eye toggle-password"></i>
+                        <span id="pwdMatchErr" class="text-error" style="display:none;"><i class="fa-solid fa-circle-exclamation"></i> Şifrələr eyni deyil!</span>
+                    </div>
+
+                    <button type="submit" class="profile-btn" style="margin-top:10px;"><i class="fa-solid fa-key"></i> Şifrəni Yenilə</button>
+                    <div style="text-align:center;"><span id="pwdResponse" class="text-response"></span></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 3. BILDIRIS TERC?HLERI -->
+        <div class="profile-card">
+            <h4><i class="fa-solid fa-bell" style="color:#00c4a8;margin-right:8px;"></i> Bildiriş Tərcihləri</h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">
+                <div class="notif-item">
+                    <label class="switch">
+                        <input type="checkbox" class="notif-toggle" id="NotifyNewLesson" @(user.NotifyNewLesson ? "checked" : "")>
+                        <span class="slider"></span>
+                    </label>
+                    <span style="padding-top:2px;">Abunə olduğum kurslara yeni dərs yükləndikdə xəbərdar et</span>
+                </div>
+                <div class="notif-item">
+                    <label class="switch">
+                        <input type="checkbox" class="notif-toggle" id="NotifyDiscounts" @(user.NotifyDiscounts ? "checked" : "")>
+                        <span class="slider"></span>
+                    </label>
+                    <span style="padding-top:2px;">Endirimlər, xüsusi təkliflər və kampaniyalar barədə email göndər</span>
+                </div>
+                <div class="notif-item">
+                    <label class="switch">
+                        <input type="checkbox" class="notif-toggle" id="NotifyCertificate" @(user.NotifyCertificate ? "checked" : "")>
+                        <span class="slider"></span>
+                    </label>
+                    <span style="padding-top:2px;">Kursu tam bitirdikdə mənim fərdi sertifikatımı hazırlayıb göndər</span>
+                </div>
+            </div>
+            <span id="notifResponse" class="text-response" style="opacity:0; transition:0.5s;"><i class="fa-solid fa-check"></i> Seçimlər avtomatik yadda saxlanıldı</span>
+        </div>
+
+        <!-- 4. HESABI SIL -->
+        <div class="profile-card" style="border-color:#ff4d4f; background-color:#fffcfc;">
+            <h4 style="color:#ff4d4f; border-bottom: 2px solid #ffe5e5;"><i class="fa-solid fa-triangle-exclamation"></i> Təhlükəli Zona: Hesabı Sil</h4>
+            <p style="font-size:14px; color:#555; margin-bottom:20px;">
+                Diqqət! Bu əməliyyat həmişəlikdir və geri dönüşü yoxdur! Hesabınızı sildiyiniz təqdirdə Inzara Academy-dəki bütün kurslarınız, təhsil irəliləyişləriniz, nailiyyətləriniz və sertifikatlarınız məlumat bazasından birdəfəlik silinəcəkdir.
+            </p>
+            <button type="button" class="profile-btn profile-btn-danger" style="width:auto; padding:12px 30px; border-radius: 30px;" id="openModalBtn"><i class="fa-solid fa-trash"></i> Hesabımı Bütünlüklə Sil</button>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Overlay -->
+<div class="modal-overlay" id="delModalOverlay">
+    <div class="profile-modal">
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Son qərarınızdır?</h3>
+        <p>Hesabınızın həmişəlik silinməsini təsdiqləmək üçün zəhmət olmasa ləğv ediləcək email ünvanınızı <b>(@user.Email)</b> aşağıdakı qutuya daxil edin.</p>
+        <input type="email" id="deleteEmailInput" class="profile-form-control" placeholder="Məsələn: @user.Email" autocomplete="off" />
+
+        <div class="modal-actions">
+            <button class="profile-btn" style="background:#e0e0e0; color:#333;" id="closeModalBtn">Geri Qayıt</button>
+            <button class="profile-btn profile-btn-danger" id="confirmDeleteBtn">Təsdiqləyirəm, Sil</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Profile Image Preview Mechanism
+        document.getElementById("ProfilePicture").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if(file && file.size > 2 * 1024 * 1024) { 
+                alert("Uyarı: Sistemə yüklədiyiniz şəkil maksimum 2MB ölçüsündə olmalıdır!"); 
+                this.value = ""; 
+                return;
+            }
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = e => document.getElementById("profilePreview").src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 1. Profile Update Submission
+        document.getElementById("profileForm").addEventListener("submit", async e => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Yüklənir...';
+            btn.disabled = true;
+
+            const fd = new FormData();
+            fd.append("FirstName", document.getElementById("FirstName").value);
+            fd.append("LastName", document.getElementById("LastName").value);
+            fd.append("Phone", document.getElementById("Phone").value);
+            fd.append("Bio", document.getElementById("Bio").value);
+            const p = document.getElementById("ProfilePicture").files[0];
+            if(p) fd.append("ProfilePicture", p);
+
+            try {
+                const res = await fetch("/api/user/profile", { method:"PATCH", body:fd });
+                const r = document.getElementById("profResponse");
+                if(res.ok) {
+                    r.innerHTML = '<i class="fa-solid fa-check"></i> Məlumatlarınız uğurla yeniləndi.'; 
+                    setTimeout(() => r.innerHTML="", 4000);
+                } else alert("Xəta baş verdi. Zəhmət olmasa yenidən yoxlayın.");
+            } catch(e) { console.error(e); }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+
+        // 2. Password Show/Hide Toggle & Checking
+        document.querySelectorAll(".toggle-password").forEach(icon => {
+            icon.addEventListener("click", function() {
+                const inp = this.previousElementSibling;
+                if(inp.type === "password"){ 
+                    inp.type="text"; 
+                    this.classList.replace("fa-eye", "fa-eye-slash");
+                } else { 
+                    inp.type="password"; 
+                    this.classList.replace("fa-eye-slash", "fa-eye");
+                }
+            });
+        });
+
+        const np = document.getElementById("NewPassword"), cp = document.getElementById("ConfirmPassword"), err = document.getElementById("pwdMatchErr");
+        cp.addEventListener("input", () => err.style.display = (np.value!==cp.value && cp.value.length > 0) ? "block" : "none");
+        np.addEventListener("input", () => err.style.display = (np.value!==cp.value && cp.value.length > 0) ? "block" : "none");
+
+        document.getElementById("passwordForm").addEventListener("submit", async e => {
+            e.preventDefault();
+            if(np.value !== cp.value) return;
+
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Yoxlanılır...';
+            btn.disabled = true;
+
+            const res = await fetch("/api/user/change-password", {
+                method: "POST", headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ OldPassword: document.getElementById("OldPassword").value, NewPassword: np.value, ConfirmPassword: cp.value })
+            });
+
+            if(res.ok) {
+                const pr = document.getElementById("pwdResponse");
+                pr.innerHTML = '<i class="fa-solid fa-check-circle"></i> Şifrəniz Təhlükəsiz Şəkildə Yeniləndi!'; 
+                e.target.reset(); 
+                err.style.display="none";
+                setTimeout(()=> pr.innerHTML="", 4000);
+            } else {
+                alert("Xəta: Yeni şifrə qaydalara cavab vermir (Minimum 8 simvol, bir rəqəm, bir böyük hərf olmalıdır) və ya cari şifrəniz yanlışdır.");
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+
+        // 3. Notification Toggles (Debounce API Calls)
+        let to;
+        document.querySelectorAll(".notif-toggle").forEach(el => {
+            el.addEventListener("change", () => {
+                clearTimeout(to);
+                to = setTimeout(async () => {
+                    await fetch("/api/user/notifications", {
+                        method: "PATCH", headers: {"Content-Type":"application/json"},
+                        body: JSON.stringify({
+                            NotifyNewLesson: document.getElementById("NotifyNewLesson").checked,
+                            NotifyDiscounts: document.getElementById("NotifyDiscounts").checked,
+                            NotifyCertificate: document.getElementById("NotifyCertificate").checked
+                        })
+                    });
+                    const nr = document.getElementById("notifResponse"); 
+                    nr.style.opacity=1; 
+                    setTimeout(() => nr.style.opacity=0, 2500);
+                }, 600);
+            });
+        });
+
+        // 4. Delete Account Modals & Call
+        const modal = document.getElementById("delModalOverlay");
+        const body = document.querySelector("body");
+
+        document.getElementById("openModalBtn").onclick = () => { modal.classList.add("active"); body.style.overflow = "hidden"; };
+        document.getElementById("closeModalBtn").onclick = () => { modal.classList.remove("active"); body.style.overflow = "auto"; };
+
+        document.getElementById("confirmDeleteBtn").onclick = async () => {
+            const em = document.getElementById("deleteEmailInput").value;
+            if(!em) return alert("Zəhmət olmasa təsdiq üçün email adresinizi yazın.");
+
+            const btn = document.getElementById("confirmDeleteBtn");
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Silinir...';
+            btn.disabled = true;
+
+            const res = await fetch("/api/user/account", {
+                method:"DELETE", headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({Email:em})
+            });
+
+            if(res.ok) {
+                window.location.href="/"; 
+            } else {
+                alert("Yazdığınız email ünvanı yanlışdır. Proses rədd edildi.");
+                btn.innerHTML = 'Təsdiqləyirəm, Sil';
+                btn.disabled = false;
+            }
+        };
+    </script>
+}

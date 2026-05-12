@@ -38,7 +38,9 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             var user = await UserManager.GetUserAsync(User);
-                            <span style="color: white; font-weight: 500;">@user?.FullName</span>
+                            <a href="/Profile" style="color: white; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-user-circle"></i> @user?.FullName
+                            </a>
                             <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
                                 <button type="submit" class="log-first" style="background: none; border: none; cursor: pointer; color: white;">
                                     <i class="fa-solid fa-sign-out-alt"></i> Çıxış
