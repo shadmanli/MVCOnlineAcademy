@@ -1,240 +1,382 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null; // We create a standalone premium UI layout for this specific page
     var user = ViewBag.User;
 }
-
-@section css {
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guru - Profil Parametrləri</title>
+    <!-- Premium Google Fonts: Sora (Headings) & DM Sans (Body) -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .profile-wrapper { padding: 80px 0; background-color: #f9fbfb; min-height: 80vh; font-family: 'Poppins', sans-serif; }
-        .profile-container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
-        .profile-title { font-size: 26px; font-weight: 700; margin-bottom: 25px; color: #232d39; }
-        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        @@media(max-width: 768px){ .profile-grid { grid-template-columns: 1fr; } }
-        .profile-card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #eee; margin-bottom: 30px; }
-        .profile-card h4 { font-size: 18px; font-weight: 600; margin-bottom: 25px; color: #333; border-bottom: 2px solid #f5f5f5; padding-bottom: 10px; }
+        :root {
+            --nav-bg: #0F0F0F;
+            --brand: #00C896;
+            --brand-hover: #00A67D;
+            --bg: #F7F7F5;
+            --card: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border: #E5E5E5;
+            --danger-bg: #FFF5F5;
+            --danger: #FF4D4F;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-main); -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Sora', sans-serif; }
+        a { text-decoration: none; color: inherit; }
+        
+        /* SAAS TOPBAR */
+        .guru-topbar { height: 72px; background: var(--nav-bg); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: sticky; top: 0; z-index: 100;}
+        .logo { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -1px; }
+        .logo span { color: var(--brand); }
+        .search-box { position: relative; width: 340px; }
+        .search-box input { width: 100%; height: 44px; border-radius: 22px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.05); color: #fff; padding: 0 20px 0 48px; outline: none; font-family: 'DM Sans'; transition: 0.2s ease; font-size: 15px;}
+        .search-box input:focus { background: rgba(255,255,255,0.15); border-color: var(--brand); }
+        .search-box input::placeholder { color: rgba(255,255,255,0.5); }
+        .search-box i { position: absolute; left: 20px; top: 14px; color: rgba(255,255,255,0.6); }
+        .nav-actions { display: flex; align-items: center; gap: 24px; color: #fff; }
+        .nav-actions i { font-size: 20px; cursor: pointer; transition: 0.2s; color: rgba(255,255,255,0.7); }
+        .nav-actions i:hover { color: #fff; transform: translateY(-1px); }
+        .nav-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--brand); object-fit: cover; cursor: pointer; }
 
-        .profile-form-group { margin-bottom: 18px; }
-        .profile-form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #555; }
-        .profile-form-control { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fdfdfd; }
-        .profile-form-control:focus { border-color: #00c4a8; background-color: #fff; box-shadow: 0 0 0 4px rgba(0, 196, 168, 0.1); }
-        .profile-form-control:disabled { background: #f0f0f0; cursor: not-allowed; color: #888; }
+        /* LAYOUT */
+        .app-wrapper { display: flex; max-width: 1440px; margin: 0 auto; width: 100%; flex: 1; }
+        
+        /* SIDEBAR NAVIGATION */
+        .sidebar { width: 280px; padding: 48px 24px; border-right: 1px solid var(--border); background: #fff; min-height: calc(100vh - 72px); position: sticky; top: 72px; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; }
+        .nav-item { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-radius: 12px; font-weight: 500; font-size: 15px; color: var(--text-muted); cursor: pointer; transition: 0.2s ease; }
+        .nav-item i { font-size: 20px; width: 24px; text-align: center; }
+        .nav-item:hover { background: rgba(0, 200, 150, 0.05); color: var(--brand); transform: translateX(4px); }
+        .nav-item.active { background: rgba(0, 200, 150, 0.1); color: var(--brand); font-weight: 600; }
 
-        .profile-btn { width: 100%; padding: 14px; background: #00c4a8; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; }
-        .profile-btn:hover { background: #00a58d; transform: translateY(-2px); }
-        .profile-btn-danger { background: #ff4d4f; }
-        .profile-btn-danger:hover { background: #e04445; }
+        /* MAIN CONTENT AREA */
+        .main-content { flex: 1; padding: 56px 64px; max-width: 1000px; }
+        .page-title { font-size: 32px; font-weight: 700; margin-bottom: 40px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 16px; color: var(--text-main); }
+        
+        /* SAAS CARDS */
+        .guru-card { background: var(--card); border-radius: 24px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 32px; transition: transform 0.2s ease; }
+        .guru-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.05); }
+        .guru-card h3 { font-size: 20px; display: flex; align-items: center; gap: 12px; margin-bottom: 28px; color: var(--text-main); font-weight: 600; }
+        .guru-card h3 i { color: var(--brand); font-size: 22px; }
 
-        .notif-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; font-size: 14px; color: #444; line-height: 1.4; }
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; margin-top: 2px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #dcdcdc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: #00c4a8; }
-        input:checked + .slider:before { transform: translateX(20px); }
+        /* FORMS */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .form-group { margin-bottom: 24px; position: relative; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+        .form-control { width: 100%; height: 48px; border: 1px solid #E5E5E5; border-radius: 12px; padding: 0 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-main); transition: 0.2s ease; outline: none; background: #fff; }
+        .form-control:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(0, 200, 150, 0.1); }
+        .form-control:disabled { background: #F9FAFB; color: #9CA3AF; cursor: not-allowed; border-color: transparent;}
+        textarea.form-control { height: auto; padding: 16px; resize: vertical; }
 
-        .pass-wrap { position: relative; }
-        .pass-wrap i { position: absolute; right: 15px; top: 40px; cursor: pointer; color: #888; transition: 0.2s; }
-        .pass-wrap i:hover { color: #00c4a8; }
+        .pass-wrap i { position: absolute; right: 16px; top: 43px; cursor: pointer; color: #9CA3AF; transition: 0.2s; }
+        .pass-wrap i:hover { color: var(--brand); }
 
-        .profile-img-wrap { text-align: center; margin-bottom: 25px; }
-        .profile-img-wrap img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #00c4a8; padding: 3px; margin-bottom: 15px; background: #fff;}
-        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
-        .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
-        .btn-file-upload { background: #f0f4f4; color: #00c4a8; font-weight: 500; font-size: 12px; padding: 6px 12px; border-radius: 20px; border: 1px solid #00c4a8; }
+        /* BUTTONS */
+        .btn-guru { background: var(--brand); color: #fff; height: 48px; padding: 0 32px; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 10px; justify-content: center; }
+        .btn-guru:hover { background: var(--brand-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 200, 150, 0.2); }
+        .btn-guru-danger { background: var(--danger); box-shadow: 0 4px 12px rgba(255, 77, 79, 0.15); }
+        .btn-guru-danger:hover { background: #E03E3E; box-shadow: 0 6px 16px rgba(255, 77, 79, 0.25); }
 
-        .text-response { font-size: 13px; color: #00c4a8; margin-top: 10px; display: inline-block; font-weight: 500; }
-        .text-error { font-size: 13px; color: #ff4d4f; margin-top: 5px; display: block; font-weight: 500; }
+        /* AVATAR */
+        .avatar-section { display: flex; align-items: center; gap: 24px; margin-bottom: 32px; }
+        .avatar-preview { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .file-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .file-wrapper input { position: absolute; left: 0; top: 0; font-size: 100px; opacity: 0; cursor: pointer; }
+        .btn-outline { background: #fff; border: 1px solid var(--border); font-weight: 600; font-family: 'DM Sans'; padding: 0 20px; height: 40px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; color: var(--text-main); }
+        .btn-outline:hover { border-color: var(--brand); color: var(--brand); background: rgba(0,200,150,0.03); }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(12, 26, 25, 0.7); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        /* TOGGLES */
+        .toggle-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
+        .toggle-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .toggle-text strong { display: block; font-size: 16px; color: var(--text-main); margin-bottom: 4px; font-weight: 600; }
+        .toggle-text span { font-size: 14px; color: var(--text-muted); }
+        
+        .guru-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+        .guru-switch input { opacity: 0; width: 0; height: 0; }
+        .guru-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E5E5E5; transition: .3s; border-radius: 34px; }
+        .guru-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input:checked + .guru-slider { background-color: var(--brand); }
+        input:checked + .guru-slider:before { transform: translateX(20px); }
+
+        /* DANGER ZONE */
+        .card-danger { background: var(--danger-bg); border-left: 4px solid var(--danger); padding: 32px; border-radius: 16px; border-top: 1px solid var(--danger-bg); border-right: 1px solid var(--danger-bg); border-bottom: 1px solid var(--danger-bg); }
+        .card-danger h3 { color: var(--danger); margin-bottom: 16px;}
+        .card-danger p { color: #555; margin-bottom: 24px; line-height: 1.6; font-size: 15px;}
+
+        /* COURSES TABS & CARDS */
+        .guru-tabs { display: flex; gap: 32px; border-bottom: 1px solid #E5E5E5; margin-bottom: 32px; position: relative; }
+        .g-tab { background: none; border: none; padding-bottom: 16px; font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-muted); cursor: pointer; position: relative; transition: 0.2s ease; }
+        .g-tab:hover { color: var(--text-main); }
+        .g-tab.active { color: var(--text-main); }
+        .g-tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: var(--brand); border-radius: 3px 3px 0 0; }
+
+        .course-card { display: flex; gap: 24px; padding: 20px; border: 1px solid var(--border); border-radius: 20px; background: #fff; transition: 0.2s ease; align-items: center; margin-bottom: 16px; }
+        .course-card:hover { border-color: rgba(0,200,150,0.3); box-shadow: 0 8px 30px rgba(0,0,0,0.04); transform: translateX(4px); }
+        .cc-img { width: 160px; height: 110px; border-radius: 12px; object-fit: cover; }
+        .cc-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .cc-cat { display: inline-block; font-size: 12px; font-weight: 700; color: var(--brand); text-transform: uppercase; letter-spacing: 0.05em; }
+        .cc-title { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 600; color: var(--text-main); margin-bottom: 4px;}
+        .cc-meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 16px; align-items: center;}
+        
+        .cc-progress { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+        .cc-bar { flex: 1; height: 8px; background: #F3F4F6; border-radius: 4px; overflow: hidden; }
+        .cc-fill { height: 100%; background: var(--brand); border-radius: 4px; transition: width 0.5s ease;}
+        .cc-progress-text { font-size: 14px; font-weight: 600; color: var(--text-main); width: 45px;}
+        
+        .btn-course { padding: 10px 20px; background: rgba(0, 200, 150, 0.1); color: var(--brand); font-weight: 600; border-radius: 10px; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 8px; font-size: 14px;}
+        .btn-course:hover { background: var(--brand); color: #fff; }
+
+        .text-response { color: var(--brand); font-weight: 500; font-size: 14px; margin-top: 12px; display: inline-block;}
+        .text-error { color: var(--danger); font-weight: 500; font-size: 14px; margin-top: 8px; display: inline-block;}
+
+        /* MODAL */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 15, 15, 0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .overlay.active { display: flex; animation: fadeIn 0.2s; }
         @@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .profile-modal { background: #fff; padding: 30px; border-radius: 16px; width: 90%; max-width: 450px; box-shadow: 0 15px 50px rgba(0,0,0,0.1); }
-        .profile-modal h3 { color: #ff4d4f; margin-top: 0; margin-bottom: 15px; font-size: 22px; font-weight: 700; }
-        .profile-modal p { font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.6; }
-        .modal-actions { display: flex; gap: 15px; margin-top: 25px; }
+        .saas-modal { background: #fff; padding: 40px; border-radius: 24px; width: 100%; max-width: 480px; box-shadow: 0 24px 48px rgba(0,0,0,0.1); }
+        .saas-modal h3 { margin-bottom: 16px; font-size: 24px; color: var(--text-main); display: flex; align-items: center; gap: 12px;}
+        .saas-modal p { margin-bottom: 24px; color: var(--text-muted); line-height: 1.6; font-size: 15px;}
+        .modal-actions { display: flex; gap: 16px; justify-content: flex-end; margin-top: 32px; }
+        
+        #emptyCourses { display: none; text-align: center; padding: 60px 20px; border: 1px dashed var(--border); border-radius: 20px; color: var(--text-muted); }
+        #emptyCourses i { font-size: 40px; color: #E5E5E5; margin-bottom: 16px; }
     </style>
-}
+</head>
+<body>
 
-<main class="profile-wrapper">
-    <div class="profile-container">
-        <h2 class="profile-title">Profil Parametrləri</h2>
+    <!-- TOP NAVIGATION BAR -->
+    <header class="guru-topbar">
+        <a href="/" class="logo">Guru<span>.</span></a>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Gələcəyinizi kəşf edin...">
+        </div>
+        <div class="nav-actions">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <i class="fa-regular fa-bell"></i>
+            <img src="@(!string.IsNullOrEmpty(user.ProfilePicture) ? "/uploads/profile/" + user.ProfilePicture : "/assets/images/default-avatar.png")" class="nav-avatar" alt="Avatar"/>
+        </div>
+    </header>
 
-        <div class="profile-grid">
+    <!-- MAIN APP LAYOUT -->
+    <div class="app-wrapper">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <a href="#" class="nav-item"><i class="fa-solid fa-border-all"></i> İdarə paneli</a>
+                <a href="#courses-sec" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Kurslarım</a>
+                <a href="#" class="nav-item active"><i class="fa-regular fa-user"></i> Profil</a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-sliders"></i> Parametrlər</a>
+                <a href="#" class="nav-item" style="color: var(--danger); margin-top: 40px;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıxış</a>
+            </nav>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="main-content">
+            <div class="page-title">
+                Profil Parametrləri
+            </div>
+
             <!-- 1. PROFIL MELUMATLARI -->
-            <div class="profile-card">
-                <h4><i class="fa-solid fa-user-pen" style="color:#00c4a8;margin-right:8px;"></i> Profil Məlumatları</h4>
+            <div class="guru-card">
+                <h3><i class="fa-regular fa-id-badge"></i> Şəxsi Məlumatlar</h3>
                 <form id="profileForm">
-                    <div class="profile-img-wrap">
-                        <img id="profilePreview" src="@(!string.IsNullOrEmpty(user.ProfilePicture) ? "/uploads/profile/" + user.ProfilePicture : "/assets/images/default-avatar.png")" />
+                    <div class="avatar-section">
+                        <img id="profilePreview" src="@(!string.IsNullOrEmpty(user.ProfilePicture) ? "/uploads/profile/" + user.ProfilePicture : "/assets/images/default-avatar.png")" class="avatar-preview" alt="Avatar" />
                         <div>
-                            <div class="file-input-wrapper">
-                                <span class="btn-file-upload"><i class="fa-solid fa-camera"></i> Şəkil Yenilə</span>
+                            <div class="file-wrapper">
+                                <button type="button" class="btn-outline"><i class="fa-solid fa-camera"></i> Şəkli Yenilə</button>
                                 <input type="file" id="ProfilePicture" accept=".png,.jpg,.jpeg" />
                             </div>
+                            <p style="font-size:13px; color:var(--text-muted); margin-top:8px;">JPG, PNG və ya JPEG. Max 2MB.</p>
                         </div>
                     </div>
 
-                    <div style="display:flex; gap:15px;">
-                        <div class="profile-form-group" style="flex:1;">
+                    <div class="form-grid">
+                        <div class="form-group">
                             <label>Adınız</label>
-                            <input type="text" id="FirstName" class="profile-form-control" value="@ViewBag.FirstName" required />
+                            <input type="text" id="FirstName" class="form-control" value="@ViewBag.FirstName" placeholder="Adınızı daxil edin" required />
                         </div>
-                        <div class="profile-form-group" style="flex:1;">
+                        <div class="form-group">
                             <label>Soyadınız</label>
-                            <input type="text" id="LastName" class="profile-form-control" value="@ViewBag.LastName" required />
+                            <input type="text" id="LastName" class="form-control" value="@ViewBag.LastName" placeholder="Soyadınızı daxil edin" required />
+                        </div>
+                        <div class="form-group">
+                            <label>E-poçt ünvanı</label>
+                            <input type="email" class="form-control" value="@user.Email" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label>Əlaqə Nömrəsi</label>
+                            <input type="text" id="Phone" class="form-control" value="@user.PhoneNumber" placeholder="+994 (__) ___ __ __" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Özünüz haqqında qısa bio</label>
+                        <textarea id="Bio" class="form-control" rows="3" maxlength="300" placeholder="Karyeranız, ixtisasınız və maraqlarınız barədə məlumat verin...">@user.Bio</textarea>
+                    </div>
+
+                    <button type="submit" class="btn-guru"><i class="fa-solid fa-check"></i> Yadda Saxla</button>
+                    <span id="profResponse" class="text-response" style="margin-left: 16px;"></span>
+                </form>
+            </div>
+
+            <!-- 2. SIFRE TEHLUKESIZLIYI -->
+            <div class="guru-card">
+                <h3><i class="fa-solid fa-shield-halved"></i> Şifrə Təhlükəsizliyi</h3>
+                <form id="passwordForm">
+                    <div class="form-group pass-wrap" style="max-width: 468px;">
+                        <label>Cari Şifrəniz</label>
+                        <input type="password" id="OldPassword" class="form-control" placeholder="Mövcud şifrəni daxil edin" required />
+                        <i class="fa fa-eye toggle-password"></i>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group pass-wrap">
+                            <label>Yeni Şifrə <span style="text-transform:none; font-weight:normal; color:#888;">(Min 8, 1 Böyük hərf, 1 rəqəm)</span></label>
+                            <input type="password" id="NewPassword" class="form-control" placeholder="Yeni mürəkkəb şifrə" required />
+                            <i class="fa fa-eye toggle-password"></i>
+                        </div>
+                        <div class="form-group pass-wrap">
+                            <label>Yeni Şifrə (Təkrar)</label>
+                            <input type="password" id="ConfirmPassword" class="form-control" placeholder="Təkrar daxil edin" required />
+                            <i class="fa fa-eye toggle-password"></i>
+                            <span id="pwdMatchErr" class="text-error" style="display:none; position:absolute; bottom:-25px;"><i class="fa-solid fa-circle-exclamation"></i> Şifrələr eyni deyil!</span>
                         </div>
                     </div>
 
-                    <div class="profile-form-group">
-                        <label>E-poçt ünvanı <span style="font-size:11px;color:#aaa;">(Dəyişdirilə bilməz)</span></label>
-                        <input type="email" class="profile-form-control" value="@user.Email" disabled />
-                    </div>
-
-                    <div class="profile-form-group">
-                        <label>Əlaqə nömrəsi</label>
-                        <input type="text" id="Phone" class="profile-form-control" value="@user.PhoneNumber" placeholder="+994 (__) ___ __ __" />
-                    </div>
-
-                    <div class="profile-form-group">
-                        <label>Özünüz haqqında qısa bio <span style="font-size:11px;color:#aaa;">(Max. 300 simvol)</span></label>
-                        <textarea id="Bio" class="profile-form-control" rows="3" maxlength="300" placeholder="Karyeranız, ixtisasınız və maraqlarınız barədə məlumat verin...">@user.Bio</textarea>
-                    </div>
-
-                    <button type="submit" class="profile-btn"><i class="fa-solid fa-floppy-disk"></i> Yadda Saxla</button>
-                    <div style="text-align:center;"><span id="profResponse" class="text-response"></span></div>
+                    <button type="submit" class="btn-guru" style="margin-top:16px;"><i class="fa-solid fa-key"></i> Şifrəni Yenilə</button>
+                    <span id="pwdResponse" class="text-response" style="margin-left: 16px;"></span>
                 </form>
             </div>
 
-            <!-- 2. SIFRE DEYISME -->
-            <div class="profile-card">
-                <h4><i class="fa-solid fa-lock" style="color:#00c4a8;margin-right:8px;"></i> Şifrə Təhlükəsizliyi</h4>
-                <form id="passwordForm">
-                    <div class="profile-form-group pass-wrap">
-                        <label>Cari Şifrəniz</label>
-                        <input type="password" id="OldPassword" class="profile-form-control" placeholder="Mövcud şifrəni daxil edin" required />
-                        <i class="fa fa-eye toggle-password"></i>
+            <!-- 3. BILDIRIS TERCIHLERI -->
+            <div class="guru-card">
+                <h3><i class="fa-regular fa-bell"></i> Bildiriş Tərcihləri</h3>
+                <div class="toggle-list">
+                    <div class="toggle-item">
+                        <div class="toggle-text">
+                            <strong>Dərs Yenilikləri</strong>
+                            <span>Abunə olduğum kurslara yeni dərs yükləndikdə xəbərdar et.</span>
+                        </div>
+                        <label class="guru-switch">
+                            <input type="checkbox" class="notif-toggle" id="NotifyNewLesson" @(user.NotifyNewLesson ? "checked" : "")>
+                            <span class="guru-slider"></span>
+                        </label>
                     </div>
-
-                    <div class="profile-form-group pass-wrap">
-                        <label>Yeni Şifrə <span style="font-size:11px;color:#888;font-weight:normal;">(Min 8 simvol, 1 böyük hərf, 1 rəqəm)</span></label>
-                        <input type="password" id="NewPassword" class="profile-form-control" placeholder="Yeni mürəkkəb şifrə" required />
-                        <i class="fa fa-eye toggle-password"></i>
+                    <div class="toggle-item">
+                        <div class="toggle-text">
+                            <strong>Endirim & Kampaniyalar</strong>
+                            <span>Xüsusi təkliflər və kampaniyalar barədə eksklüziv email göndər.</span>
+                        </div>
+                        <label class="guru-switch">
+                            <input type="checkbox" class="notif-toggle" id="NotifyDiscounts" @(user.NotifyDiscounts ? "checked" : "")>
+                            <span class="guru-slider"></span>
+                        </label>
                     </div>
-
-                    <div class="profile-form-group pass-wrap">
-                        <label>Yeni Şifrə (Təkrar)</label>
-                        <input type="password" id="ConfirmPassword" class="profile-form-control" placeholder="Yeni şifrəni bir daha daxil edin" required />
-                        <i class="fa fa-eye toggle-password"></i>
-                        <span id="pwdMatchErr" class="text-error" style="display:none;"><i class="fa-solid fa-circle-exclamation"></i> Şifrələr eyni deyil!</span>
+                    <div class="toggle-item">
+                        <div class="toggle-text">
+                            <strong>Sertifikat Bildirişləri</strong>
+                            <span>Kursu tam bitirdikdə fərdi sertifikatımı hazırlayıb göndər.</span>
+                        </div>
+                        <label class="guru-switch">
+                            <input type="checkbox" class="notif-toggle" id="NotifyCertificate" @(user.NotifyCertificate ? "checked" : "")>
+                            <span class="guru-slider"></span>
+                        </label>
                     </div>
+                </div>
+                <span id="notifResponse" class="text-response" style="opacity:0; transition:0.5s;"><i class="fa-solid fa-check"></i> Tərcihlər avtomatik yadda saxlanıldı</span>
+            </div>
 
-                    <button type="submit" class="profile-btn" style="margin-top:10px;"><i class="fa-solid fa-key"></i> Şifrəni Yenilə</button>
-                    <div style="text-align:center;"><span id="pwdResponse" class="text-response"></span></div>
-                </form>
+            <!-- 4. TEHLUKELI ZONA -->
+            <div class="guru-card card-danger">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> Təhlükəli Zona</h3>
+                <p>
+                    <strong>Diqqət!</strong> Bu əməliyyat həmişəlikdir və geri dönüşü yoxdur! Hesabınızı sildiyiniz təqdirdə Guru platformasındakı bütün kurslarınız, irəliləyişləriniz, nailiyyətləriniz və sertifikatlarınız birdəfəlik silinəcək.
+                </p>
+                <button type="button" class="btn-guru btn-guru-danger" id="openModalBtn"><i class="fa-solid fa-trash-can"></i> Hesabımı Daimi Olaraq Sil</button>
+            </div>
+
+            <!-- 5. KURSLARIM -->
+            <div id="courses-sec" style="margin-top:64px;">
+                <div class="page-title" style="margin-bottom: 24px;">
+                    Kurslarım
+                </div>
+                
+                <div class="guru-tabs">
+                    <button class="g-tab" data-filter="all">Hamısı</button>
+                    <button class="g-tab active" data-filter="pinned">Davam edənlər</button>
+                    <button class="g-tab" data-filter="completed">Tamamlananlar</button>
+                </div>
+
+                <div class="course-list">
+                    <!-- Course 1 -->
+                    <div class="course-card" data-status="pinned">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop" class="cc-img" alt="Course" />
+                        <div class="cc-body">
+                            <span class="cc-cat">Proqramlaşdırma</span>
+                            <div class="cc-title">C# & .NET 8 ilə Sıfırdan Peşəkar Backend Proqramlaşdırma</div>
+                            <div class="cc-meta">
+                                <span><i class="fa-solid fa-graduation-cap"></i> Anar Qasımov</span>
+                                <span><i class="fa-regular fa-clock"></i> Son izləmə: 2 gün əvvəl</span>
+                            </div>
+                            <div class="cc-progress">
+                                <div class="cc-bar"><div class="cc-fill" style="width: 68%;"></div></div>
+                                <div class="cc-progress-text">68%</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-course">Davam et <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <!-- Course 2 -->
+                    <div class="course-card" data-status="completed">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format&fit=crop" class="cc-img" alt="Course" />
+                        <div class="cc-body">
+                            <span class="cc-cat">Dizayn</span>
+                            <div class="cc-title">UI/UX Masterclass: Figma ilə Premium Dizaynlar</div>
+                            <div class="cc-meta">
+                                <span><i class="fa-solid fa-graduation-cap"></i> Kənan Məmmədov</span>
+                                <span style="color: var(--brand);"><i class="fa-solid fa-check-circle"></i> Tamamlanıb</span>
+                            </div>
+                            <div class="cc-progress">
+                                <div class="cc-bar"><div class="cc-fill" style="width: 100%;"></div></div>
+                                <div class="cc-progress-text">100%</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-course" style="background:#fff; border:1px solid #E5E5E5; color:var(--text-main);">Sertifikata Bax</a>
+                    </div>
+                </div>
+                
+                <div id="emptyCourses">
+                    <i class="fa-solid fa-book-open"></i>
+                    <p style="font-size: 18px; font-weight:600; color:var(--text-main); margin-bottom:8px;">Hələ heç bir kurs almamısınız</p>
+                    <p>Kataloga daxil olaraq yeni biliklərə yiyələnməyə başlayın.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- DANGER MODAL -->
+    <div class="overlay" id="delModalOverlay">
+        <div class="saas-modal">
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> Son qərarınızdır?</h3>
+            <p>Hesabınızın həmişəlik silinməsini təsdiqləmək üçün zəhmət olmasa ləğv ediləcək email ünvanınızı <b>(@user.Email)</b> aşağıdakı qutuya daxil edin.</p>
+            <input type="email" id="deleteEmailInput" class="form-control" placeholder="Məsələn: @user.Email" autocomplete="off" />
+
+            <div class="modal-actions">
+                <button class="btn-outline" id="closeModalBtn" style="height:48px;">Ləğv Et</button>
+                <button class="btn-guru btn-guru-danger" id="confirmDeleteBtn">Təsdiqləyirəm, Sil</button>
             </div>
         </div>
-
-        <!-- 3. BILDIRIS TERC?HLERI -->
-        <div class="profile-card">
-            <h4><i class="fa-solid fa-bell" style="color:#00c4a8;margin-right:8px;"></i> Bildiriş Tərcihləri</h4>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">
-                <div class="notif-item">
-                    <label class="switch">
-                        <input type="checkbox" class="notif-toggle" id="NotifyNewLesson" @(user.NotifyNewLesson ? "checked" : "")>
-                        <span class="slider"></span>
-                    </label>
-                    <span style="padding-top:2px;">Abunə olduğum kurslara yeni dərs yükləndikdə xəbərdar et</span>
-                </div>
-                <div class="notif-item">
-                    <label class="switch">
-                        <input type="checkbox" class="notif-toggle" id="NotifyDiscounts" @(user.NotifyDiscounts ? "checked" : "")>
-                        <span class="slider"></span>
-                    </label>
-                    <span style="padding-top:2px;">Endirimlər, xüsusi təkliflər və kampaniyalar barədə email göndər</span>
-                </div>
-                <div class="notif-item">
-                    <label class="switch">
-                        <input type="checkbox" class="notif-toggle" id="NotifyCertificate" @(user.NotifyCertificate ? "checked" : "")>
-                        <span class="slider"></span>
-                    </label>
-                    <span style="padding-top:2px;">Kursu tam bitirdikdə mənim fərdi sertifikatımı hazırlayıb göndər</span>
-                </div>
-            </div>
-            <span id="notifResponse" class="text-response" style="opacity:0; transition:0.5s;"><i class="fa-solid fa-check"></i> Seçimlər avtomatik yadda saxlanıldı</span>
-        </div>
-
-        <!-- 4. HESABI SIL -->
-        <div class="profile-card" style="border-color:#ff4d4f; background-color:#fffcfc;">
-            <h4 style="color:#ff4d4f; border-bottom: 2px solid #ffe5e5;"><i class="fa-solid fa-triangle-exclamation"></i> Təhlükəli Zona: Hesabı Sil</h4>
-            <p style="font-size:14px; color:#555; margin-bottom:20px;">
-                Diqqət! Bu əməliyyat həmişəlikdir və geri dönüşü yoxdur! Hesabınızı sildiyiniz təqdirdə Inzara Academy-dəki bütün kurslarınız, təhsil irəliləyişləriniz, nailiyyətləriniz və sertifikatlarınız məlumat bazasından birdəfəlik silinəcəkdir.
-            </p>
-            <button type="button" class="profile-btn profile-btn-danger" style="width:auto; padding:12px 30px; border-radius: 30px;" id="openModalBtn"><i class="fa-solid fa-trash"></i> Hesabımı Bütünlüklə Sil</button>
-        </div>
     </div>
-</main>
 
-<!-- Modal Overlay -->
-<div class="modal-overlay" id="delModalOverlay">
-    <div class="profile-modal">
-        <h3><i class="fa-solid fa-circle-exclamation"></i> Son qərarınızdır?</h3>
-        <p>Hesabınızın həmişəlik silinməsini təsdiqləmək üçün zəhmət olmasa ləğv ediləcək email ünvanınızı <b>(@user.Email)</b> aşağıdakı qutuya daxil edin.</p>
-        <input type="email" id="deleteEmailInput" class="profile-form-control" placeholder="Məsələn: @user.Email" autocomplete="off" />
-
-        <div class="modal-actions">
-            <button class="profile-btn" style="background:#e0e0e0; color:#333;" id="closeModalBtn">Geri Qayıt</button>
-            <button class="profile-btn profile-btn-danger" id="confirmDeleteBtn">Təsdiqləyirəm, Sil</button>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
+    <!-- VANILLA JS LOGIC -->
     <script>
-        // Profile Image Preview Mechanism
-        document.getElementById("ProfilePicture").addEventListener("change", function(e) {
-            const file = e.target.files[0];
-            if(file && file.size > 2 * 1024 * 1024) { 
-                alert("Uyarı: Sistemə yüklədiyiniz şəkil maksimum 2MB ölçüsündə olmalıdır!"); 
-                this.value = ""; 
-                return;
-            }
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = e => document.getElementById("profilePreview").src = e.target.result;
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // 1. Profile Update Submission
-        document.getElementById("profileForm").addEventListener("submit", async e => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Yüklənir...';
-            btn.disabled = true;
-
-            const fd = new FormData();
-            fd.append("FirstName", document.getElementById("FirstName").value);
-            fd.append("LastName", document.getElementById("LastName").value);
-            fd.append("Phone", document.getElementById("Phone").value);
-            fd.append("Bio", document.getElementById("Bio").value);
-            const p = document.getElementById("ProfilePicture").files[0];
-            if(p) fd.append("ProfilePicture", p);
-
-            try {
-                const res = await fetch("/api/user/profile", { method:"PATCH", body:fd });
-                const r = document.getElementById("profResponse");
-                if(res.ok) {
-                    r.innerHTML = '<i class="fa-solid fa-check"></i> Məlumatlarınız uğurla yeniləndi.'; 
-                    setTimeout(() => r.innerHTML="", 4000);
-                } else alert("Xəta baş verdi. Zəhmət olmasa yenidən yoxlayın.");
-            } catch(e) { console.error(e); }
-
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        });
-
-        // 2. Password Show/Hide Toggle & Checking
+        // 1. Password Visibility Toggles
         document.querySelectorAll(".toggle-password").forEach(icon => {
             icon.addEventListener("click", function() {
                 const inp = this.previousElementSibling;
@@ -248,14 +390,52 @@
             });
         });
 
+        // Password Matches feedback
         const np = document.getElementById("NewPassword"), cp = document.getElementById("ConfirmPassword"), err = document.getElementById("pwdMatchErr");
-        cp.addEventListener("input", () => err.style.display = (np.value!==cp.value && cp.value.length > 0) ? "block" : "none");
-        np.addEventListener("input", () => err.style.display = (np.value!==cp.value && cp.value.length > 0) ? "block" : "none");
+        const checkPwd = () => err.style.display = (np.value !== cp.value && cp.value.length > 0) ? "block" : "none";
+        cp.addEventListener("input", checkPwd);
+        np.addEventListener("input", checkPwd);
+
+        // Thumbnail preview restriction
+        document.getElementById("ProfilePicture").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if(file && file.size > 2 * 1024 * 1024) { 
+                alert("Sistemə yüklədiyiniz şəkil max 2MB ölçüsündə olmalıdır!"); 
+                this.value = ""; return;
+            }
+            if(file) document.getElementById("profilePreview").src = URL.createObjectURL(file);
+        });
+
+        // 2. Fetch API Mocks/Real calls (Preserving backend connection paths)
+        document.getElementById("profileForm").addEventListener("submit", async e => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gözləyin...';
+            btn.disabled = true;
+
+            try {
+                let formData = new FormData();
+                formData.append("FirstName", document.getElementById("FirstName").value);
+                formData.append("LastName", document.getElementById("LastName").value);
+                formData.append("Phone", document.getElementById("Phone").value);
+                formData.append("Bio", document.getElementById("Bio").value);
+                let pfile = document.getElementById("ProfilePicture").files[0];
+                if(pfile) formData.append("ProfilePicture", pfile);
+
+                const res = await fetch("/api/user/profile", { method: "PUT", body: formData });
+                const pr = document.getElementById("profResponse");
+                if(res.ok) {
+                    pr.innerHTML = '<i class="fa-solid fa-check"></i> Məlumatlar saxlanıldı';
+                    setTimeout(() => pr.innerHTML="", 3000);
+                } else alert("Xəta baş verdi. Zəhmət olmasa yenidən yoxlayın.");
+            } catch(e) { console.error(e); }
+            btn.innerHTML = originalText; btn.disabled = false;
+        });
 
         document.getElementById("passwordForm").addEventListener("submit", async e => {
             e.preventDefault();
             if(np.value !== cp.value) return;
-
             const btn = e.target.querySelector('button');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Yoxlanılır...';
@@ -268,19 +448,16 @@
 
             if(res.ok) {
                 const pr = document.getElementById("pwdResponse");
-                pr.innerHTML = '<i class="fa-solid fa-check-circle"></i> Şifrəniz Təhlükəsiz Şəkildə Yeniləndi!'; 
-                e.target.reset(); 
-                err.style.display="none";
+                pr.innerHTML = '<i class="fa-solid fa-check"></i> Şifrə yeniləndi'; 
+                e.target.reset(); err.style.display="none";
                 setTimeout(()=> pr.innerHTML="", 4000);
             } else {
-                alert("Xəta: Yeni şifrə qaydalara cavab vermir (Minimum 8 simvol, bir rəqəm, bir böyük hərf olmalıdır) və ya cari şifrəniz yanlışdır.");
+                alert("Xəta: Şifrə qaydalara cavab vermir və ya cari şifrə yanlışdır.");
             }
-
-            btn.innerHTML = originalText;
-            btn.disabled = false;
+            btn.innerHTML = originalText; btn.disabled = false;
         });
 
-        // 3. Notification Toggles (Debounce API Calls)
+        // 3. Modals & Toggles
         let to;
         document.querySelectorAll(".notif-toggle").forEach(el => {
             el.addEventListener("change", () => {
@@ -295,39 +472,50 @@
                         })
                     });
                     const nr = document.getElementById("notifResponse"); 
-                    nr.style.opacity=1; 
-                    setTimeout(() => nr.style.opacity=0, 2500);
+                    nr.style.opacity=1; setTimeout(() => nr.style.opacity=0, 2500);
                 }, 600);
             });
         });
 
-        // 4. Delete Account Modals & Call
         const modal = document.getElementById("delModalOverlay");
-        const body = document.querySelector("body");
-
-        document.getElementById("openModalBtn").onclick = () => { modal.classList.add("active"); body.style.overflow = "hidden"; };
-        document.getElementById("closeModalBtn").onclick = () => { modal.classList.remove("active"); body.style.overflow = "auto"; };
-
+        document.getElementById("openModalBtn").onclick = () => { modal.classList.add("active"); document.body.style.overflow = "hidden"; };
+        document.getElementById("closeModalBtn").onclick = () => { modal.classList.remove("active"); document.body.style.overflow = "auto"; };
         document.getElementById("confirmDeleteBtn").onclick = async () => {
             const em = document.getElementById("deleteEmailInput").value;
             if(!em) return alert("Zəhmət olmasa təsdiq üçün email adresinizi yazın.");
-
             const btn = document.getElementById("confirmDeleteBtn");
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Silinir...';
-            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Silinir...'; btn.disabled = true;
 
             const res = await fetch("/api/user/account", {
                 method:"DELETE", headers: {"Content-Type":"application/json"},
                 body: JSON.stringify({Email:em})
             });
-
-            if(res.ok) {
-                window.location.href="/"; 
-            } else {
-                alert("Yazdığınız email ünvanı yanlışdır. Proses rədd edildi.");
-                btn.innerHTML = 'Təsdiqləyirəm, Sil';
-                btn.disabled = false;
-            }
+            if(res.ok) window.location.href="/"; 
+            else { alert("Email yanlışdır. Proses rədd edildi."); btn.innerHTML = 'Təsdiqləyirəm, Sil'; btn.disabled = false; }
         };
+
+        // 4. Custom Minimal Tabs for Courses
+        const tabs = document.querySelectorAll(".g-tab");
+        const cards = document.querySelectorAll(".course-card");
+        const empty = document.getElementById("emptyCourses");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                // Update active tab UI
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                
+                // Filter logic
+                const filter = tab.getAttribute("data-filter");
+                let count = 0;
+                cards.forEach(card => {
+                    const status = card.getAttribute("data-status");
+                    if(filter === "all" || filter === status) { card.style.display = "flex"; count++; }
+                    else card.style.display = "none";
+                });
+                empty.style.display = count === 0 ? "block" : "none";
+            });
+        });
     </script>
-}
+</body>
+</html>
