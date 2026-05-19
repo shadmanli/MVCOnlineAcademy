@@ -1,0 +1,108 @@
+@model Academy.Models.AssessmentQuestion
+@{
+    ViewData["Title"] = "Sual? Redakt? Et";
+    var optionsList = Model.Options.ToList();
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Quiz Sual?n? Redakt? Et</h6>
+
+        <form asp-action="Edit" method="post" id="questionForm">
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">Kurs / F?nn</label>
+                <select name="categoryId" id="categoryId" class="form-select bg-dark text-white" required>
+                    <option value="">-- F?nn Seçin --</option>
+                    @if (ViewBag.Categories != null)
+                    {
+                        foreach (var cat in ViewBag.Categories)
+                        {
+                            if(Model.CategoryId == cat.Id)
+                            {
+                                <option value="@cat.Id" selected>@cat.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@cat.Id">@cat.Name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="DefaultText" class="form-label">Sual M?tni</label>
+                <input type="text" class="form-control bg-dark" name="DefaultText" id="DefaultText" value="@Model.Text" required placeholder="M?s?l?n: C#-da 'readonly' v? 'const' f?rqi n?dir?">
+            </div>
+
+            <h6 class="mb-3 mt-4">Cavab Variantlar?</h6>
+            <div id="optionsWrap">
+                @for (int i = 0; i < optionsList.Count; i++)
+                {
+                    <div class="d-flex align-items-center mb-2 option-row">
+                        <div class="form-check me-3">
+                            <input class="form-check-input correct-radio" type="radio" name="correctOptionIndex" value="@i" required @(optionsList[i].IsCorrect ? "checked" : "")>
+                        </div>
+                        <input type="text" class="form-control bg-dark" name="optionTexts" placeholder="Variant @(i+1)" value="@optionsList[i].Text" required>
+                        <button type="button" class="btn btn-sm btn-outline-danger ms-2 remove-btn" @(optionsList.Count <= 2 && i == 0 ? "style=display:none;" : "")><i class="fa fa-times"></i></button>
+                    </div>
+                }
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-success mt-2 mb-4" id="addOptionBtn"><i class="fa fa-plus"></i> Variant ?lav? Et</button>
+            <br />
+
+            <button type="submit" class="btn btn-primary d-inline-flex"><i class="fa fa-save me-2"></i> Yenil?</button>
+            <a asp-action="Index" class="btn btn-outline-light ms-2">Geri Qay?t</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrap = document.getElementById('optionsWrap');
+            const addBtn = document.getElementById('addOptionBtn');
+            let optionCount = @optionsList.Count; 
+
+            // Function to add a row
+            addBtn.addEventListener('click', () => {
+                const div = document.createElement('div');
+                div.className = 'd-flex align-items-center mb-2 option-row';
+                div.innerHTML = `
+                    <div class="form-check me-3">
+                        <input class="form-check-input correct-radio" type="radio" name="correctOptionIndex" value="${optionCount}" required>
+                    </div>
+                    <input type="text" class="form-control bg-dark" name="optionTexts" placeholder="Variant ${optionCount + 1}" required>
+                    <button type="button" class="btn btn-sm btn-outline-danger ms-2 remove-btn"><i class="fa fa-times"></i></button>
+                `;
+                wrap.appendChild(div);
+                optionCount++;
+                bindRemoveButtons();
+                updateRadioValues();
+            });
+
+            // Rebind removes
+            function bindRemoveButtons() {
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.onclick = function() {
+                        this.parentElement.remove();
+                        updateRadioValues();
+                    };
+                });
+            }
+
+            // Keep radio index values synced with exact loop index
+            function updateRadioValues() {
+                const radios = document.querySelectorAll('.correct-radio');
+                radios.forEach((r, idx) => {
+                    r.value = idx;
+                });
+            }
+
+            bindRemoveButtons();
+        });
+    </script>
+}

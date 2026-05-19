@@ -1,0 +1,54 @@
+@model List<Academy.Models.AssessmentQuestion>
+@{
+    ViewData["Title"] = "Quiz Suallar? (Assessment)";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Süni ?ntellekt D?st?kli S?viyy? Suallar? (Assessment)</h6>
+
+        <a asp-action="Create" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Yeni Sual ?lav? Et</a>
+
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col">#</th>
+                        <th scope="col">Sual</th>
+                        <th scope="col">Variant Say?</th>
+                        <th scope="col">Düzgün Cavab</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int rowIndex = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        var correctOpt = item.Options.FirstOrDefault(x => x.IsCorrect)?.Text ?? "Mövcud deyil";
+                        <tr>
+                            <td class="row-index font-monospace fw-bold">@(rowIndex++)</td>
+                            <td>@item.Text</td>
+                            <td>@item.Options.Count</td>
+                            <td class="text-success fw-bold">@correctOpt</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-2"><i class="fa fa-pen"></i> Edit</a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Silm?k ist?diyiniz? ?minsiniz?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                    @if(!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">H?l? heç bir sual yoxdur.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div></div>

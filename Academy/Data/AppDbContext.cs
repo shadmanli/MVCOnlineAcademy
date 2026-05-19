@@ -36,5 +36,8 @@ namespace Academy.Data
         public DbSet<BasketItem> BasketItems { get; set; }
         public DbSet<CourseFeature> CourseFeatures { get; set; }
 
+        public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
+        public DbSet<AssessmentOption> AssessmentOptions { get; set; }
+        public DbSet<UserAssessmentResult> UserAssessmentResults { get; set; }
     }
 }

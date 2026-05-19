@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Linq;
 
 namespace Academy.Controllers
 {
@@ -22,7 +24,7 @@ namespace Academy.Controllers
             _env = env;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromServices] Data.AppDbContext context)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
@@ -31,9 +33,15 @@ namespace Academy.Controllers
             string firstName = names != null && names.Length > 0 ? names[0] : "";
             string lastName = names != null && names.Length > 1 ? string.Join(" ", names.Skip(1)) : "";
 
+            var assessmentResults = await context.UserAssessmentResults
+                .Include(r => r.Category)
+                .Where(r => r.AppUserId == user.Id)
+                .ToListAsync();
+
             ViewBag.User = user;
             ViewBag.FirstName = firstName;
             ViewBag.LastName = lastName;
+            ViewBag.AssessmentResults = assessmentResults;
 
             return View();
         }

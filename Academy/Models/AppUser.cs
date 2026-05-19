@@ -13,5 +13,8 @@ namespace Academy.Models
         public bool NotifyNewLesson { get; set; } = true;
         public bool NotifyDiscounts { get; set; } = true;
         public bool NotifyCertificate { get; set; } = true;
+
+        // Assessment Properties
+        public ICollection<UserAssessmentResult> AssessmentResults { get; set; } = new List<UserAssessmentResult>();
     }
 }
