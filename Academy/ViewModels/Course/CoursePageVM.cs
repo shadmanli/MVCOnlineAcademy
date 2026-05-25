@@ -14,7 +14,9 @@ namespace Academy.ViewModels.Course
         public int? CategoryId { get; set; }
         public int? InstructorId { get; set; }
 
-
-
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
+        public string? Search { get; set; }
+        public string? Sort { get; set; }
     }
 }

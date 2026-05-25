@@ -1,0 +1,721 @@
+@model Academy.Models.LiveClass
+@{
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Room | @Model.Title</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #022c22;       /* Dark Emerald */
+            --panel-dark: #064e3b;    /* Deeper Emerald */
+            --border-dark: #047857;   /* Emerald 700 */
+            --accent: #00ff87;        /* Neon Cyan / Green */
+            --accent-glow: rgba(0, 255, 135, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #a7f3d0;    /* Muted green */
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 135, 0.05), transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 255, 135, 0.1), transparent 40%);
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loadingOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 44, 34, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(0, 255, 135, 0.1);
+            border-left-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        #loadingOverlay h2 { font-weight: 600; font-size: 24px; letter-spacing: 0.5px; text-shadow: 0 0 10px var(--accent-glow); }
+        #loadingOverlay p { color: var(--text-muted); font-size: 15px; margin-top: 8px; }
+
+        @@keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- HEADER --- */
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: rgba(6, 78, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,255,135,0.1);
+            height: 70px;
+            z-index: 10;
+        }
+
+        .header-info { display: flex; align-items: center; gap: 16px; }
+        .header-info .shield { color: var(--accent); font-size: 20px; filter: drop-shadow(0 0 8px var(--accent-glow)); }
+        .header-info h2 { font-size: 18px; font-weight: 600; margin: 0; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        .header-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
+        .course-badge { background: rgba(0,255,135,0.1); color:#00ff87; padding: 6px 12px; border-radius: 8px; font-size: 12px; border: 1px solid rgba(0,255,135,0.3); font-weight: 600;}
+
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+
+        .badge-rec {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: pulse-red 2s infinite;
+        }
+
+        @@keyframes pulse-red {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .room-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* VIDEO AREA */
+        .video-container {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* Speaker View (Main) */
+        .speaker-view {
+            flex: 1;
+            background: #000;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(0,255,135,0.2);
+        }
+
+        .speaker-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(6, 78, 59, 1), rgba(4, 120, 87, 1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+            animation: pulse-avatar 2s infinite ease-in-out;
+        }
+        
+        @@keyframes pulse-avatar {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 135, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 255, 135, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 135, 0); }
+        }
+
+        .name-tag {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(2, 44, 34, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            border: 1px solid rgba(0,255,135,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .mic-status { color: var(--success); }
+        .mic-status.muted { color: var(--danger); }
+
+        /* Grid View (Others) */
+        .participants-grid {
+            display: flex;
+            gap: 12px;
+            height: 140px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .participants-grid::-webkit-scrollbar { height: 6px; }
+        .participants-grid::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
+
+        .grid-video {
+            min-width: 220px;
+            height: 100%;
+            background: var(--panel-dark);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-dark);
+        }
+
+        /* --- SIDE PANEL --- */
+        .side-panel {
+            width: 320px;
+            background-color: var(--panel-dark);
+            border-left: 1px solid var(--border-dark);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin 0.3s;
+        }
+
+        .side-panel.hidden {
+            transform: translateX(100%);
+            margin-right: -320px;
+        }
+
+        .panel-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-dark);
+            background: var(--bg-dark);
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 16px 0;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .panel-tab:hover { color: var(--text-main); }
+        .panel-tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+        .panel-body { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; }
+
+        /* Chat */
+        .chat-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; }
+        .msg { display: flex; flex-direction: column; gap: 4px; }
+        .msg-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+        .msg-bubble { background: var(--bg-dark); padding: 10px 14px; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 13px; line-height: 1.5; border: 1px solid var(--border-dark); }
+        .msg.me { align-items: flex-end; }
+        .msg.me .msg-bubble { background: var(--accent); color: white; border-color: transparent; border-bottom-left-radius: 12px; border-bottom-right-radius: 4px; }
+
+        .chat-input-wrapper { display: flex; gap: 8px; }
+        .chat-input { flex: 1; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 8px; padding: 10px 14px; color: white; outline: none; font-size: 13px; transition: border 0.3s; }
+        .chat-input:focus { border-color: var(--accent); }
+        .btn-send { background: var(--accent); color: white; border: none; width: 40px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-send:hover { background: #2563eb; }
+
+        .typing-indicator { font-size: 11px; color: var(--accent); margin-top: 4px; display: none; }
+        .system-msg { text-align: center; font-size: 11px; color: var(--text-muted); opacity: 0.7; margin: 8px 0; }
+
+        .chat-scroll-to-bottom {
+            position: absolute; bottom: 60px; right: 10px; background: rgba(0,255,135,0.2); border: 1px solid var(--accent); color: var(--accent); border-radius: 50%; width: 30px; height: 30px; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+        }
+
+        .chat-badge {
+            position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; font-size: 10px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s;
+        }
+        .chat-badge.show { opacity: 1; }
+
+        /* Participants List */
+        .user-list { display: none; flex-direction: column; gap: 12px; }
+        .user-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg-dark); padding: 10px 12px; border-radius: 8px; }
+        .user-info { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .user-avatar { width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .user-controls { display: flex; gap: 12px; color: var(--text-muted); font-size: 14px; }
+
+        /* --- BOTTOM CONTROLS --- */
+        .bottom-bar {
+            height: 80px;
+            background-color: var(--panel-dark);
+            border-top: 1px solid var(--border-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            z-index: 10;
+        }
+
+        .control-group { display: flex; gap: 10px; align-items: center; }
+
+        .ctrl-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-main);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+
+        .ctrl-btn:hover { background: rgba(255,255,255,0.05); }
+        .ctrl-btn.active { color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+
+        .ctrl-btn.danger {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .ctrl-btn.danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+        .ctrl-btn-text {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            height: 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ctrl-btn-text:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+
+        /* Screen Share Specific */
+        .share-btn { color: var(--success); }
+        .share-btn:hover { background: rgba(16, 185, 129, 0.1); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loadingOverlay">
+        <div class="loader-ring"></div>
+        <h2>Ota?a Qo?ulur...</h2>
+        <p>T?hlük?siz ba?lant? qurulur, z?hm?t olmasa gözl?yin.</p>
+    </div>
+
+    <!-- Header -->
+    <header class="room-header">
+        <div class="header-info">
+            <i class="fa-solid fa-shield-halved shield"></i>
+            <div>
+                <h2>@Model.Title</h2>
+                <p>Mü?llim: @Model.Instructor.FullName &bull; <span id="timer">00:00:00</span></p>
+            </div>
+            <span class="course-badge">@Model.Course.Title</span>
+        </div>
+        <div class="header-actions">
+            <div class="badge-rec"><i class="fa-solid fa-circle"></i> REC</div>
+            <button class="ctrl-btn" style="width:auto; height:36px; padding: 0 12px; font-size: 14px; border:1px solid var(--border-dark);">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="room-main">
+
+        <!-- Video Grid -->
+        <div class="video-container">
+            <!-- Main Speaker -->
+            <div class="speaker-view">
+                <div class="speaker-avatar">
+                    @(Model.Instructor.FullName.Substring(0, 1))
+                </div>
+                <div class="name-tag">
+                    <i class="fa-solid fa-microphone mic-status"></i> 
+                    @Model.Instructor.FullName (Host)
+                </div>
+            </div>
+
+            <!-- Other Participants Grid -->
+            <div class="participants-grid">
+                <div class="grid-video">
+                    <div class="speaker-avatar" style="width:60px; height:60px; font-size:24px;">S?n</div>
+                    <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
+                        <i class="fa-solid fa-microphone-slash mic-status muted"></i> S?n
+                    </div>
+                </div>
+                <div class="grid-video">
+                    <div class="speaker-avatar" style="width:60px; height:60px; font-size:24px;">N</div>
+                    <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
+                        <i class="fa-solid fa-microphone mic-status"></i> N?rgiz
+                    </div>
+                </div>
+                <div class="grid-video">
+                    <div class="speaker-avatar" style="width:60px; height:60px; font-size:24px;">R</div>
+                    <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
+                        <i class="fa-solid fa-microphone-slash mic-status muted"></i> R?sul
+                    </div>
+                </div>
+                <!-- Feel free to add more to see scroll -->
+            </div>
+        </div>
+
+        <!-- Chat / Participants Panel -->
+        <aside class="side-panel" id="sidePanel">
+            <div class="panel-header">
+                <button class="panel-tab active" onclick="switchTab('chat')"><i class="fa-regular fa-comment-dots"></i> Chat</button>
+                <button class="panel-tab" onclick="switchTab('users')"><i class="fa-solid fa-user-group"></i> ??tirakç?lar (4)</button>
+            </div>
+
+            <div class="panel-body">
+                <!-- Chat Window -->
+                <div id="tabChat" style="display: flex; flex-direction: column; height: 100%;">
+                    <div class="chat-list">
+                        <div class="msg">
+                            <div class="msg-header"><span>N?rgiz M.</span> <span>10:05</span></div>
+                            <div class="msg-bubble">Salam mü?llim, s?s g?lir?</div>
+                        </div>
+                        <div class="msg">
+                            <div class="msg-header"><span style="color:var(--accent)">@Model.Instructor.FullName</span> <span>10:05</span></div>
+                            <div class="msg-bubble">B?li N?rgiz, ?la g?lir. D?rs? ba?lay?r?q.</div>
+                        </div>
+                        <div class="msg me">
+                            <div class="msg-header"><span>S?n</span> <span>10:12</span></div>
+                            <div class="msg-bubble">Ekran? gör? bilmir?m, n?s? problem var?</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <input type="text" class="chat-input" placeholder="Mesaj yaz...">
+                        <button class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                    <div class="typing-indicator">N?rgiz M. yaz?r...</div>
+                    <div class="system-msg">Siz? qo?ulmaq üçün icaz? gözl?nilir...</div>
+                </div>
+
+                <!-- Users Window -->
+                <div id="tabUsers" class="user-list">
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="user-avatar">@(Model.Instructor.FullName.Substring(0,1))</div>
+                            <span>@Model.Instructor.FullName (Host)</span>
+                        </div>
+                        <div class="user-controls">
+                            <i class="fa-solid fa-microphone"></i>
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                    </div>
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="user-avatar">S</div>
+                            <span>S?n</span>
+                        </div>
+                        <div class="user-controls">
+                            <i class="fa-solid fa-microphone-slash" style="color:var(--danger)"></i>
+                            <i class="fa-solid fa-video-slash" style="color:var(--danger)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Bottom Controls -->
+    <footer class="bottom-bar">
+
+        <div class="control-group">
+            <button class="ctrl-btn danger" id="micBtn" onclick="toggleState(this, 'fa-microphone', 'fa-microphone-slash')" title="Mikrofonu Aç/Ba?la">
+                <i class="fa-solid fa-microphone-slash"></i>
+            </button>
+            <button class="ctrl-btn danger" id="camBtn" onclick="toggleState(this, 'fa-video', 'fa-video-slash')" title="Kameran? Aç/Ba?la">
+                <i class="fa-solid fa-video-slash"></i>
+            </button>
+        </div>
+
+        <div class="control-group">
+            <button class="ctrl-btn share-btn" title="Ekran Payla?">
+                <i class="fa-solid fa-display"></i>
+            </button>
+            <button class="ctrl-btn" title="?l Qald?r">
+                <i class="fa-regular fa-hand"></i>
+            </button>
+            <button class="ctrl-btn active" id="chatBtn" onclick="togglePanel()" title="Paneli Aç/Ba?la" style="position:relative;">
+                <i class="fa-solid fa-message"></i>
+                <div class="chat-badge" id="unreadBadge">0</div>
+            </button>
+        </div>
+
+        <div class="control-group">
+            <form action="/CourseDetail/Index/@Model.CourseId" method="get" style="margin:0;">
+                <button type="submit" class="ctrl-btn-text">
+                    T?rk Et
+                </button>
+            </form>
+        </div>
+
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        // 1. Smooth Loading
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.style.display = 'none'; }, 600);
+            }, 1500); // Süni gecikm? (ba?lant? qurulur hissi üçün)
+        });
+
+        // 2. Timer Logic
+        let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const secs = String(seconds % 60).padStart(2, '0');
+            document.getElementById('timer').innerText = `${hrs}:${mins}:${secs}`;
+        }, 1000);
+
+        // 3. UI Toggles
+        function toggleState(btn, iconOn, iconOff) {
+            const icon = btn.querySelector('i');
+            if (btn.classList.contains('danger')) {
+                // Turn ON
+                btn.classList.remove('danger');
+                icon.classList.remove(iconOff);
+                icon.classList.add(iconOn);
+            } else {
+                // Turn OFF
+                btn.classList.add('danger');
+                icon.classList.remove(iconOn);
+                icon.classList.add(iconOff);
+            }
+        }
+
+        // Toggle Panel
+        function togglePanel() {
+            const panel = document.getElementById('sidePanel');
+            const btn = document.getElementById('chatBtn');
+            panel.classList.toggle('hidden');
+            btn.classList.toggle('active');
+        }
+
+        // Switch Tabs (Chat / Users)
+        function switchTab(tab) {
+            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tabChat').style.display = (tab === 'chat') ? 'flex' : 'none';
+            document.getElementById('tabUsers').style.display = (tab === 'users') ? 'flex' : 'none';
+
+            if(tab === 'chat') {
+                unreadCount = 0;
+                document.getElementById('unreadBadge').classList.remove('show');
+                document.getElementById('unreadBadge').innerText = '0';
+                scrollToBottom();
+            }
+
+            event.currentTarget.classList.add('active');
+        }
+
+        // ==========================================
+        // REALTIME CHAT SYSTEM (SignalR)
+        // ==========================================
+        const roomId = "@Model.RoomId";
+        const fullName = "T?l?b? (Anonim)"; // In real scenario, get from User.Identity.Name
+        const isTeacher = false; 
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/liveclasshub")
+            .withAutomaticReconnect([0, 2000, 5000, 10000, 20000])
+            .build();
+
+        const chatList = document.querySelector('.chat-list');
+        const chatInput = document.querySelector('.chat-input');
+        const btnSend = document.querySelector('.btn-send');
+        const typingIndicator = document.querySelector('.typing-indicator');
+        let unreadCount = 0;
+        let typingTimeout;
+
+        // Auto Scroll
+        function scrollToBottom() {
+            chatList.scrollTop = chatList.scrollHeight;
+        }
+
+        // Add Message to UI
+        function appendMessage(sender, text, time, isMe, isTeacherMsg) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg ${isMe ? 'me' : ''}`;
+            
+            const headerColor = isTeacherMsg ? 'color:var(--accent); font-weight:bold;' : 'color:var(--text-muted);';
+            const badge = isTeacherMsg ? ' <i class="fa-solid fa-graduation-cap" style="font-size:10px; margin-left:4px;" title="Mü?llim"></i>' : '';
+
+            msgDiv.innerHTML = `
+                <div class="msg-header"><span style="${headerColor}">${sender}${badge}</span> <span>${time}</span></div>
+                <div class="msg-bubble" style="animation: slideIn 0.3s ease;">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+            `;
+            chatList.appendChild(msgDiv);
+            scrollToBottom();
+
+            // Unread count
+            const panelHidden = document.getElementById('sidePanel').classList.contains('hidden');
+            const chatNotActive = document.getElementById('tabChat').style.display === 'none';
+            if (!isMe && (panelHidden || chatNotActive)) {
+                unreadCount++;
+                const badgeEl = document.getElementById('unreadBadge');
+                badgeEl.innerText = unreadCount > 9 ? '9+' : unreadCount;
+                badgeEl.classList.add('show');
+                
+                // Play notification sound if needed
+            }
+        }
+
+        function appendSystemMessage(text, time) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'system-msg';
+            msgDiv.style.animation = "fadeIn 0.5s ease";
+            msgDiv.innerHTML = `<span>${text}</span> <span style="font-size:9px; opacity:0.5; margin-left:4px;">${time}</span>`;
+            chatList.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        // Send Message
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            chatInput.value = '';
+            
+            try {
+                // Optimistic UI update can go here, but since SignalR is fast, we rely on server loopback for exact sync
+                // Or we handle loopback on server and filter. The server currently broadcasts to the group.
+                await connection.invoke("SendMessage", roomId, text, fullName, isTeacher);
+            } catch (err) {
+                console.error("X?ta ba? verdi: ", err);
+                appendSystemMessage("Mesaj gönd?ril? bilm?di. Ba?lant?n? yoxlay?n.", "");
+            }
+        }
+
+        // Listeners
+        btnSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            } else {
+                connection.invoke("UserTyping", roomId, fullName, true);
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    connection.invoke("UserTyping", roomId, fullName, false);
+                }, 2000);
+            }
+        });
+
+        // Socket Events
+        connection.on("ReceiveMessage", (msgId, sender, text, time, senderIsTeacher) => {
+            const isMe = sender === fullName; // simple check
+            appendMessage(sender, text, time, isMe, senderIsTeacher);
+        });
+
+        connection.on("ReceiveSystemMessage", (text, time) => {
+            appendSystemMessage(text, time);
+        });
+
+        connection.on("UserTypingStatus", (connId, typerName, isTyping) => {
+            if (typerName === fullName) return;
+            if (isTyping) {
+                typingIndicator.innerText = `${typerName} yaz?r...`;
+                typingIndicator.style.display = 'block';
+            } else {
+                typingIndicator.style.display = 'none';
+            }
+        });
+
+        connection.on("ParticipantJoined", (user) => {
+            // Update online users list... (mock logic for now)
+            console.log("Joined: ", user);
+        });
+
+        connection.on("ParticipantLeft", (connId) => {
+            // Remove from list
+            console.log("Left: ", connId);
+        });
+
+        // Connection Handling
+        connection.onreconnecting(error => {
+            appendSystemMessage("Ba?lant? qopdu. Yenid?n qo?ulma c?hdi...", "");
+        });
+
+        connection.onreconnected(connectionId => {
+            appendSystemMessage("Ba?lant? b?rpa edildi.", "");
+        });
+
+        connection.onclose(error => {
+            appendSystemMessage("Ba?lant? tamamil? k?sildi. S?hif?ni yenil?yin.", "");
+        });
+
+        // Start Connection
+        connection.start()
+            .then(() => {
+                // Remove hardcoded UI initial messages
+                chatList.innerHTML = '';
+                appendSystemMessage("Çata qo?uldunuz. Söhb?t ?ifr?l?nib.", "");
+                // Join room
+                return connection.invoke("JoinRoom", roomId, "user-" + Math.floor(Math.random() * 1000), fullName, isTeacher);
+            })
+            .catch(err => console.error(err));
+
+        // Inject simple keyframes dynamically
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            @@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        `;
+        document.head.appendChild(style);
+
+    </script>
+</body>
+</html>

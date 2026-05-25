@@ -1,0 +1,100 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #022c22;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 255, 135, 0.05), transparent 60%);
+        }
+        .container {
+            text-align: center;
+            padding: 50px 40px;
+            background: rgba(6, 78, 59, 0.4);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(0, 255, 135, 0.2);
+            border: 1px solid rgba(0, 255, 135, 0.1);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 0.6s ease-out;
+        }
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); box-shadow: 0 0 0 rgba(0,0,0,0); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .icon-container {
+            width: 100px;
+            height: 100px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px auto;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+        }
+        .icon {
+            font-size: 40px;
+            color: #ef4444;
+        }
+        h1 {
+            font-size: 26px;
+            margin: 0 0 12px 0;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        p {
+            color: #a7f3d0;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 32px 0;
+        }
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 135, 0.1);
+            color: #00ff87;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid #00ff87;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+            transition: all 0.3s;
+        }
+        .btn-back:hover {
+            background: rgba(0, 255, 135, 0.2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 135, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon-container">
+            <i class="fa-solid fa-link-slash icon"></i>
+        </div>
+        <h1>Sessiya Tap?lmad?</h1>
+        <p>Qo?ulma?a çal??d???n?z Canl? D?rs mövcud deyil, vaxt? bitib v? ya art?q l??v edilib. Z?hm?t olmasa linki qrupdan yenid?n yoxlay?n.</p>
+        <a href="/Course" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Kurslara Qay?t</a>
+    </div>
+</body>
+</html>

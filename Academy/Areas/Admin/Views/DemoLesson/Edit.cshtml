@@ -1,0 +1,58 @@
+@model Academy.ViewModels.DemoLesson.DemoLessonEditVM
+
+@{
+    ViewData["Title"] = "Demo D?rsi Yenil?";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Demo D?rsi Redakt? Et</h6>
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ExistingVideoUrl" />
+            <input type="hidden" asp-for="ExistingThumbnailUrl" />
+
+            <div class="mb-3">
+                <label class="form-label">Ba?l?q</label>
+                <input asp-for="Title" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Aç?qlama</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Müdd?t (d?qiq?)</label>
+                <input asp-for="Duration" class="form-control" type="number" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Kurs Seçin</label>
+                <select asp-for="CourseId" asp-items="Model.Courses" class="form-select" required></select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cari Thumbnail (D?yi?m?s?niz bel? qalacaq)</label><br />
+                @if(!string.IsNullOrEmpty(Model.ExistingThumbnailUrl)){
+                    <img src="~/uploads/demothumbnails/@Model.ExistingThumbnailUrl" style="max-width: 200px; border-radius: 8px; margin-bottom:10px;" />
+                }
+                <input asp-for="ThumbnailFile" type="file" class="form-control bg-dark" accept="image/*" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">D?rs Videosu (Yeni video yükl?s?niz ?vv?lki silin?c?k)</label><br />
+                @if(!string.IsNullOrEmpty(Model.ExistingVideoUrl)){
+                    <video width="300" controls style="margin-bottom:10px; border-radius:8px;">
+                        <source src="~/uploads/demovideos/@Model.ExistingVideoUrl" />
+                    </video>
+                }
+                <input asp-for="VideoFile" type="file" class="form-control bg-dark" accept="video/*" />
+            </div>
+
+            <button type="submit" class="btn btn-warning">Yenil?</button>
+            <a asp-action="Index" class="btn btn-dark">Geri Qay?t</a>
+        </form>
+    </div>
+</div>

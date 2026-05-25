@@ -6,6 +6,61 @@
 @section css {
     <link rel="stylesheet" href="~/assets/css/courses-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .live-indicator-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #00ff87;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px #00ff87, 0 0 20px #00ff87;
+            animation: pulse-neon 1.5s infinite;
+        }
+
+        @@keyframes pulse-neon {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px #00ff87; }
+            50% { transform: scale(1.3); opacity: 0.7; box-shadow: 0 0 20px #00ff87, 0 0 30px #00ff87; }
+            100% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px #00ff87; }
+        }
+
+        .neon-btn-live {
+            position: relative;
+            background: rgba(0, 255, 135, 0.1);
+            color: #00ff87;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid #00ff87;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2), inset 0 0 10px rgba(0, 255, 135, 0.1);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .neon-btn-live:hover {
+            background: rgba(0, 255, 135, 0.2);
+            color: #fff;
+            box-shadow: 0 0 25px rgba(0, 255, 135, 0.5), inset 0 0 15px rgba(0, 255, 135, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .neon-btn-live::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 135, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .neon-btn-live:hover::before {
+            left: 100%;
+        }
+    </style>
 }
 
 <main>
@@ -78,51 +133,98 @@
                     </div>
 
          
-                    <div class="enroll-card">
-                        <div class="card-top">
-                            <div class="price-row">
-                                <span class="price-main">₼@Model.Price</span>
-                                <span class="price-old">₼149</span>
-                                <span class="price-save">67% endirim!</span>
+                    <div style="width: 340px; flex-shrink: 0; position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; z-index: 10;">
+                        <div class="enroll-card" style="width: 100%; position: static;">
+                            <div class="card-top">
+                                <div class="price-row">
+                                    <span class="price-main">₼@Model.Price</span>
+                                    <span class="price-old">₼149</span>
+                                    <span class="price-save">67% endirim!</span>
+                                </div>
+
+                                <div class="countdown-strip">
+                                    <span class="fire">🔥</span>
+                                    <span class="cd-text">Bu qiymət bitir:</span>
+                                    <span id="countdownTimer">02:47:33</span>
+                                </div>
+
+                                <form asp-controller="Basket" asp-action="Add" method="post">
+                                    <input type="hidden" name="courseId" value="@Model.Id" />
+                                    <button type="submit" class="btn-enroll" style="width:100%; border:none; cursor:pointer;">🛒 Səbətə Əlavə Et</button>
+                                </form>
+                                <button class="btn-demo" id="demoPlayBtn" style="margin-top: 10px;">▶ Demo Dərsi İzlə (Pulsuz)</button>
                             </div>
 
-                            <div class="countdown-strip">
-                                <span class="fire">🔥</span>
-                                <span class="cd-text">Bu qiymət bitir:</span>
-                                <span id="countdownTimer">02:47:33</span>
-                            </div>
+                            <div class="card-divider"></div>
 
-                            <form asp-controller="Basket" asp-action="Add" method="post">
-                                <input type="hidden" name="courseId" value="@Model.Id" />
-                                <button type="submit" class="btn-enroll" style="width:100%; border:none; cursor:pointer;">🛒 Səbətə Əlavə Et</button>
-                            </form>
-                            <button class="btn-demo" id="demoPlayBtn" style="margin-top: 10px;">▶ Demo Dərsi İzlə (Pulsuz)</button>
+
+                            <ul class="card-features">
+                                @if (Model.Features != null && Model.Features.Any())
+                                {
+                                    foreach (var feature in Model.Features)
+                                    {
+                                        <li><span class="feat-icon">✅</span> @feature</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li><span class="feat-icon">📹</span> @Model.Duration HD video dərs</li>
+                                    <li><span class="feat-icon">📁</span> İndirilə bilən qaynaqlar</li>
+                                    <li><span class="feat-icon">🏆</span> Tamamlama sertifikatı</li>
+                                    <li><span class="feat-icon">📱</span> Mobil & masaüstü giriş</li>
+                                    <li><span class="feat-icon">♾️</span> Ömürlük giriş hüququ</li>
+                                }
+                            </ul>
+
+                            <div class="money-back">
+                                <span class="shield">🛡️</span>
+                                <span><strong>30 günlük</strong> pulsuz iade zəmanəti</span>
+                            </div>
                         </div>
 
-                        <div class="card-divider"></div>
-
-                    
-                        <ul class="card-features">
-                            @if (Model.Features != null && Model.Features.Any())
+                        <!-- LIVE CLASS CARD (PREMIUM DARK GREEN UI) -->
+                        <div class="live-class-card" style="background: rgba(4, 47, 46, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 135, 0.2); border-radius: 20px; padding: 24px; box-shadow: 0 16px 40px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,255,135,0.05); color: #fff;">
+                            @if (Model.LiveClasses != null && Model.LiveClasses.Any())
                             {
-                                foreach (var feature in Model.Features)
+                                <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 16px;">
+                                    <span class="live-indicator-dot"></span>
+                                    <h4 style="margin:0; font-size: 18px; font-weight: 700; color: #fff;">Canlı Dərs</h4>
+                                </div>
+                                var lc = Model.LiveClasses.FirstOrDefault();
+                                if (lc != null)
                                 {
-                                    <li><span class="feat-icon">✅</span> @feature</li>
+                                    bool isLive = lc.Status == Academy.Models.LiveSessionStatus.Live;
+                                    bool isScheduled = lc.Status == Academy.Models.LiveSessionStatus.Scheduled;
+
+                                    <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+                                        <h5 style="margin: 0 0 4px 0; font-size: 15px; color: #e2e8f0;">@lc.Title</h5>
+                                        <p style="margin: 0; font-size: 13px; color: #94a3b8;"><i class="fa-regular fa-clock"></i> @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</p>
+                                    </div>
+                                    @if(isLive)
+                                    {
+                                        <a href="/meeting/@lc.RoomId" class="neon-btn-live w-100" style="display:flex; justify-content:center;">
+                                            <i class="fa-solid fa-video"></i> Canlı Dərsə Qoşul
+                                        </a>
+                                    }
+                                    else if(isScheduled)
+                                    {
+                                        <button disabled class="w-100" style="background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid rgba(255,255,255,0.1); padding: 12px; border-radius:8px; font-weight:600; font-size: 14px; cursor:not-allowed;">
+                                            <i class="fa-solid fa-calendar-days"></i> Vaxtı Gözlənilir
+                                        </button>
+                                    }
                                 }
                             }
                             else
                             {
-                                <li><span class="feat-icon">📹</span> @Model.Duration HD video dərs</li>
-                                <li><span class="feat-icon">📁</span> İndirilə bilən qaynaqlar</li>
-                                <li><span class="feat-icon">🏆</span> Tamamlama sertifikatı</li>
-                                <li><span class="feat-icon">📱</span> Mobil & masaüstü giriş</li>
-                                <li><span class="feat-icon">♾️</span> Ömürlük giriş hüququ</li>
+                                <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 12px;">
+                                    <i class="fa-solid fa-video" style="color: rgba(255,255,255,0.4); font-size:18px;"></i>
+                                    <h4 style="margin:0; font-size: 18px; font-weight: 700; color: #cbd5e1;">Canlı Dərs</h4>
+                                </div>
+                                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.5;">Hazırda bu kurs üçün təyin edilmiş canlı dərs yoxdur.</p>
+                                <a href="/meeting/index" class="w-100" style="display:flex; justify-content:center; background:rgba(255,255,255,0.05); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1); padding: 10px; border-radius:8px; font-weight:600; font-size: 14px; text-decoration:none; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                    Bütün Görüşlər
+                                </a>
                             }
-                        </ul>
-
-                        <div class="money-back">
-                            <span class="shield">🛡️</span>
-                            <span><strong>30 günlük</strong> pulsuz iade zəmanəti</span>
                         </div>
                     </div>
 
@@ -154,6 +256,39 @@
                             </li>
                         }
                     </ul>
+                }
+
+                @if (Model.DemoLessons != null && Model.DemoLessons.Any())
+                {
+                    <div id="demoSection">
+                        <h2 class="section-title" style="margin-top: 40px; margin-bottom: 20px;">🎬 Demo Dərslər (Ödənişsiz)</h2>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                            @foreach (var demo in Model.DemoLessons)
+                            {
+                                <div style="background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                                    <video controls preload="none" poster="/uploads/demothumbnails/@demo.ThumbnailUrl" style="width: 100%; aspect-ratio: 16/9; background: #000; object-fit: cover;">
+                                        <source src="/uploads/demovideos/@demo.VideoUrl">
+                                        Sizin brauzeriniz video dəstəkləmir.
+                                    </video>
+                                    <div style="padding: 15px;">
+                                        <h4 style="font-size: 16px; margin-bottom: 8px; color: #222;">@demo.Title</h4>
+                                        <p style="font-size: 13px; color: #666; margin-bottom: 12px; line-height: 1.4;">
+                                            @demo.Description
+                                        </p>
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <span style="font-size: 12px; font-weight: 600; color: #00c4a8; background: #e0f7f4; padding: 4px 10px; border-radius: 20px;">
+                                                ⏱ @demo.Duration Dəqiqə
+                                            </span>
+                                            <span style="font-size: 12px; font-weight: 500; color: #fff; background: var(--orange); padding: 4px 10px; border-radius: 20px;">
+                                                Pulsuz İzlə
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 }
 
                 @if (Model.Videos != null && Model.Videos.Any())
@@ -201,10 +336,69 @@
 
             </div>
         </div>
+
+        <div class="tab-content" id="instructor">
+            <div class="tab-main">
+                <!-- Instructor Info Section (Similar to the original but might include improvements) -->
+                <h2 class="section-title" style="margin-bottom: 24px;">👨‍🏫 Müəllim haqdında</h2>
+
+                <div style="display: flex; align-items: flex-start; gap: 20px;">
+                    <div class="teacher-avatar">
+                        @(Model.InstructorName != null ? Model.InstructorName.Substring(0, 1) : "U")
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 18px; color: #333;">@Model.InstructorName</h3>
+                        <p style="font-size: 14px; color: #666; margin: 4px 0 12px;"></p>
+                        <div class="social-links" style="display: flex; gap: 12px;">
+                            <a href="https://twitter.com" target="_blank" class="social-link" style="font-size: 16px; color: #1da1f2;">
+                                <i class="fa-brands fa-twitter"></i>
+                            </a>
+                            <a href="https://www.facebook.com" target="_blank" class="social-link" style="font-size: 16px; color: #1877f2;">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            <a href="https://www.linkedin.com" target="_blank" class="social-link" style="font-size: 16px; color: #0077b5;">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; font-size: 16px; color: #333;">📚 Müəllimin Digər Kursları</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-top: 12px;">
+                    @if (Model.OtherCourses != null)
+                    {
+                        @foreach (var otherCourse in Model.OtherCourses)
+                        {
+                            <div style="background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                                <a href="/course-detail/@otherCourse.Id" style="text-decoration: none; color: #333;">
+                                    <div style="position: relative;">
+                                        <img src="/uploads/coursecovers/@otherCourse.ImageUrl" alt="@otherCourse.Title" style="width: 100%; height: 150px; object-fit: cover; border-bottom: 1px solid #eee;">
+                                        <div style="padding: 15px;">
+                                            <h4 style="font-size: 15px; margin: 0 0 8px;"></h4>
+                                            <p style="font-size: 14px; color: #777; margin: 0;"></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 
 </main>
 
 @section Scripts {
     <script src="~/assets/js/courses-detail.js"></script>
+    <script>
+        document.getElementById('demoPlayBtn')?.addEventListener('click', function() {
+            var demoSection = document.getElementById('demoSection');
+            if (demoSection) {
+                demoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                alert('Bu kurs üçün hazırda demo dərs yoxdur.');
+            }
+        });
+    </script>
 }

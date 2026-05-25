@@ -1,0 +1,40 @@
+@model IEnumerable<Academy.Models.LiveClass>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Görü?l?r (Meetings)";
+}
+
+<div class="container" style="padding-top: 100px; padding-bottom: 50px;">
+    <h2>Bütün Canl? Görü?l?r</h2>
+    <p>A?a??da olan görü?l?r? keçid ed? bil?rsiniz.</p>
+
+    <div class="row mt-4">
+        @if (!Model.Any())
+        {
+            <div class="col-12">
+                <div class="alert alert-warning">Haz?rda heç bir canl? görü? yoxdur.</div>
+            </div>
+        }
+        else
+        {
+            @foreach (var lc in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@lc.Title</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Kurs: @lc.Course?.Title</h6>
+                            <p class="card-text">
+                                <small><strong>Mü?llim:</strong> @lc.Instructor?.FullName</small><br />
+                                <small><strong>Mövzu:</strong> @lc.Topic</small><br />
+                                <small><strong>Vaxt:</strong> @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</small>
+                            </p>
+                            <a href="/meeting/@lc.RoomId" class="btn btn-success w-100">Görü?? Qo?ul</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

@@ -9,7 +9,9 @@
         #courses-common {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
-            padding: 40px 0;
+            padding: 40px 20px;
+            max-width: 1300px;
+            margin: 0 auto;
         }
 
         /* Modern Filter Section */
@@ -614,14 +616,23 @@
     </div>
 
     <!-- Modern Pagination -->
-    @if (Model.Courses != null && Model.Courses.Any())
+    @if (Model.TotalPages > 1)
     {
         <div class="modern-pagination">
-            <a href="#" class="prev"><i class="fa-solid fa-chevron-left"></i></a>
-            <a href="#" class="page active">1</a>
-            <a href="#" class="page">2</a>
-            <a href="#" class="page">3</a>
-            <a href="#" class="next"><i class="fa-solid fa-chevron-right"></i></a>
+            @if (Model.CurrentPage > 1)
+            {
+                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage - 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="prev"><i class="fa-solid fa-chevron-left"></i></a>
+            }
+            
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a href="@Url.Action("Index", "Course", new { page = i, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="page @(i == Model.CurrentPage ? "active" : "")">@i</a>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage + 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="next"><i class="fa-solid fa-chevron-right"></i></a>
+            }
         </div>
     }
 </section>

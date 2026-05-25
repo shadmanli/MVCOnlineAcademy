@@ -1,0 +1,72 @@
+@model Academy.ViewModels.LiveClass.LiveClassCreateVM
+
+@{
+    ViewData["Title"] = "Yeni Canl? D?rs";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Yeni Canl? D?rs Yarat</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Title" class="form-label text-dark">Ba?l?q</label>
+                    <input asp-for="Title" class="form-control" placeholder="M?s: C# Masterclass - D?rs 1" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Topic" class="form-label text-dark">Mövzu (?xtiyari)</label>
+                    <input asp-for="Topic" class="form-control" placeholder="M?s: LINQ v? Entity Framework" />
+                    <span asp-validation-for="Topic" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CourseId" class="form-label text-dark">Kurs Seçin</label>
+                    <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
+                        <option value="">-- Kurs Seçin --</option>
+                    </select>
+                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="InstructorId" class="form-label text-dark">Mü?llim Seçin</label>
+                    <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-select">
+                        <option value="">-- Mü?llim Seçin --</option>
+                    </select>
+                    <span asp-validation-for="InstructorId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ScheduledDate" class="form-label text-dark">Ba?lama Tarixi v? Vaxt?</label>
+                    <input asp-for="ScheduledDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="ScheduledDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DurationMinutes" class="form-label text-dark">Müdd?t (d?qiq?)</label>
+                    <input asp-for="DurationMinutes" type="number" class="form-control" min="1" />
+                    <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Yarat</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2"><i class="fas fa-arrow-left"></i> Geri Qay?t</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

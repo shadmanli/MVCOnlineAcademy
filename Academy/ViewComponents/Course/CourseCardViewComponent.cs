@@ -28,7 +28,8 @@ namespace Academy.ViewComponents.Course
             int? categoryId,
             int? instructorId,
             decimal? minPrice,
-            decimal? maxPrice)
+            decimal? maxPrice,
+            int page = 1)
         {
             var courses = await _courseService.GetAllAsync();
 
@@ -54,15 +55,26 @@ namespace Academy.ViewComponents.Course
             else if (sort == "high")
                 courses = courses.OrderByDescending(x => x.Price);
 
+            int pageSize = 6;
+            int totalItems = courses.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            // Pagination execution
+            var pagedCourses = courses.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
             var model = new CoursePageVM
             {
-                Courses = courses.ToList(),
+                Courses = pagedCourses,
                 Categories = (await _categoryService.GetAllAsync()).ToList(),
                 Instructors = (await _instructorService.GetAllAsync()).ToList(),
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,
                 CategoryId = categoryId,
-                InstructorId = instructorId
+                InstructorId = instructorId,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Search = search,
+                Sort = sort
             };
 
             return View(model);

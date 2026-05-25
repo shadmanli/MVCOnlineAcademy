@@ -16,9 +16,10 @@
         int? instructorId = int.TryParse(Context.Request.Query["instructorId"], out int iid) ? iid : null;
         decimal? minPrice = decimal.TryParse(Context.Request.Query["minPrice"], out decimal minP) ? minP : null;
         decimal? maxPrice = decimal.TryParse(Context.Request.Query["maxPrice"], out decimal maxP) ? maxP : null;
+        int pageNumber = int.TryParse(Context.Request.Query["page"], out int p) && p > 0 ? p : 1;
     }
 
-    @await Component.InvokeAsync("CourseCard", new { search, sort, categoryId, instructorId, minPrice, maxPrice })
+    @await Component.InvokeAsync("CourseCard", new { search, sort, categoryId, instructorId, minPrice, maxPrice, page = pageNumber })
 </main>
 
 @section Scripts {

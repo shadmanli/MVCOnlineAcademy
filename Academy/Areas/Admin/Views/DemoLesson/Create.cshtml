@@ -1,0 +1,50 @@
+@model Academy.ViewModels.DemoLesson.DemoLessonCreateVM
+
+@{
+    ViewData["Title"] = "Yeni Demo D?rs";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Yeni Demo D?rs ?lav? Et</h6>
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Ba?l?q</label>
+                <input asp-for="Title" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Aç?qlama</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Müdd?t (d?qiq?)</label>
+                <input asp-for="Duration" class="form-control" type="number" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Kurs Seçin</label>
+                <select asp-for="CourseId" asp-items="Model.Courses" class="form-select" required>
+                    <option value="">-- Seç --</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Thumbnail ??kli (File)</label>
+                <input asp-for="ThumbnailFile" type="file" class="form-control bg-dark" accept="image/*" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">D?rs Videosu (File)</label>
+                <input asp-for="VideoFile" type="file" class="form-control bg-dark" accept="video/*" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Yadda Saxla</button>
+            <a asp-action="Index" class="btn btn-dark">Geri Qay?t</a>
+        </form>
+    </div>
+</div>

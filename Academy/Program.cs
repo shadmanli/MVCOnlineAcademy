@@ -65,6 +65,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.AddSignalR();
 
 
 var app = builder.Build();
@@ -87,15 +88,12 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<Academy.Hubs.LiveClassHub>("/liveclasshub");
 
-    app.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=DashBoard}/{action=Index}/{id?}"
-    );
-
-
-
-
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=DashBoard}/{action=Index}/{id?}"
+);
 
 app.MapControllerRoute(
     name: "default",

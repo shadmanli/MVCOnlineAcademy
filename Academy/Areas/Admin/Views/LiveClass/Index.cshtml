@@ -1,0 +1,72 @@
+@model IEnumerable<Academy.Models.LiveClass>
+
+@{
+    ViewData["Title"] = "Canl? D?rsl?r";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Canl? D?rsl?r (Live Classes)</h6>
+        <a asp-action="Create" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Yeni Canl? D?rs Yarat</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center align-middle" width="100%" cellspacing="0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ba?l?q</th>
+                        <th>Kurs</th>
+                        <th>Mü?llim</th>
+                        <th>Tarix</th>
+                        <th>Müdd?t</th>
+                        <th>Status</th>
+                        <th>?m?liyyatlar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@(item.Course != null ? item.Course.Title : "Yoxdur")</td>
+                            <td>@(item.Instructor != null ? item.Instructor.FullName : "Yoxdur")</td>
+                            <td>@item.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</td>
+                            <td>@item.DurationMinutes d?q.</td>
+                            <td>
+                                @if (item.Status == Academy.Models.LiveSessionStatus.Scheduled)
+                                {
+                                    <span class="badge bg-info text-white">Gözl?nilir</span>
+                                }
+                                else if (item.Status == Academy.Models.LiveSessionStatus.Live)
+                                {
+                                    <span class="badge bg-success">Canl?d?r</span>
+                                }
+                                else if (item.Status == Academy.Models.LiveSessionStatus.Ended)
+                                {
+                                    <span class="badge bg-secondary">Bitib</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">@item.Status.ToString()</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/meeting/@item.RoomId" target="_blank" class="btn btn-info btn-sm" title="Ota?a Bax"><i class="fas fa-video"></i></a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline-block;" onsubmit="return confirm('Bu canl? d?rsi silm?k ist?diyiniz? ?minsiniz?');">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Sil"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Heç bir canl? d?rs tap?lmad?.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -96,12 +96,18 @@ namespace Academy.Services
       .Include(x => x.Requirements)
       .Include(x => x.Lessons)
       .Include(x => x.Videos)
+      .Include(x => x.DemoLessons)
      .FirstOrDefaultAsync(x => x.Id == id);
 
             var vm = _mapper.Map<CourseDetailVM>(data);
-            if (data != null && data.Videos != null)
+            if (data != null)
             {
-                vm.Videos = data.Videos.ToList();
+                if (data.Videos != null) vm.Videos = data.Videos.ToList();
+                if (data.DemoLessons != null) vm.DemoLessons = data.DemoLessons.ToList();
+                
+                // Fetch scheduled Live Classes for this course
+                var liveClasses = await _context.LiveClasses.Where(l => l.CourseId == id && l.Status != LiveSessionStatus.Ended && l.Status != LiveSessionStatus.Canceled).ToListAsync();
+                vm.LiveClasses = liveClasses;
             }
             return vm;
         }

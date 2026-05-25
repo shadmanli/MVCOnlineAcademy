@@ -33,11 +33,12 @@ namespace Academy.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Courses = await _context.Courses.ToListAsync();
             return View("~/Areas/Admin/Views/AssessmentQuestion/Create.cshtml");
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(string DefaultText, int categoryId, List<string> optionTexts, int correctOptionIndex)
+        public async Task<IActionResult> Create(string DefaultText, int categoryId, int? courseId, DifficultyLevel difficulty, int points, List<string> optionTexts, int correctOptionIndex)
         {
             if (string.IsNullOrWhiteSpace(DefaultText) || optionTexts == null || optionTexts.Count == 0 || categoryId == 0)
                 return BadRequest("Invalid question data or mapping");
@@ -46,7 +47,7 @@ namespace Academy.Areas.Admin.Controllers
             var validOptions = optionTexts.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if(validOptions.Count < 2) return BadRequest("At least 2 options are required.");
 
-            var question = new AssessmentQuestion { Text = DefaultText, CategoryId = categoryId };
+            var question = new AssessmentQuestion { Text = DefaultText, CategoryId = categoryId, CourseId = courseId, Difficulty = difficulty, Points = points };
 
             for(int i = 0; i < validOptions.Count; i++)
             {
@@ -67,6 +68,7 @@ namespace Academy.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Courses = await _context.Courses.ToListAsync();
             var question = await _context.AssessmentQuestions
                 .Include(q => q.Options)
                 .FirstOrDefaultAsync(q => q.Id == id);
@@ -77,7 +79,7 @@ namespace Academy.Areas.Admin.Controllers
         }
 
         [HttpPost("edit/{id}")]
-        public async Task<IActionResult> Edit(int id, string DefaultText, int categoryId, List<string> optionTexts, int correctOptionIndex)
+        public async Task<IActionResult> Edit(int id, string DefaultText, int categoryId, int? courseId, DifficultyLevel difficulty, int points, List<string> optionTexts, int correctOptionIndex)
         {
             var question = await _context.AssessmentQuestions
                 .Include(q => q.Options)
@@ -93,6 +95,9 @@ namespace Academy.Areas.Admin.Controllers
 
             question.Text = DefaultText;
             question.CategoryId = categoryId;
+            question.CourseId = courseId;
+            question.Difficulty = difficulty;
+            question.Points = points;
 
             // Remove old options and insert new
             _context.AssessmentOptions.RemoveRange(question.Options);

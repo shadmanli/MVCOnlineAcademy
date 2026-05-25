@@ -409,9 +409,42 @@
         }
         @@keyframes spin { 100% { transform: rotate(360deg); } }
 
+        /* ANTI-CHEAT & WARNINGS */
+        .warning-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 50, 50, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 9999;
+        }
+        .warning-toast.show {
+            transform: translateX(0);
+        }
+
+        /* MOBILE RESPONSIVE */
+        @@media (max-width: 768px) {
+            .container { padding: 20px; }
+            .glass-card { padding: 30px 20px; border-radius: 20px; }
+            .question-title { font-size: 22px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 15px; }
+            .onboarding-wrap h1 { font-size: 32px; }
+            .level-badge { font-size: 36px; }
+        }
     </style>
 </head>
 <body>
+    <div id="cheat-warning" class="warning-toast">
+        <i class="fa-solid fa-triangle-exclamation"></i> Diqqət: Səhifədən çıxış aşkar edildi!
+    </div>
 
     <div class="container">
         <div class="glass-card">
@@ -523,11 +556,26 @@
                     </p>
                 </div>
 
-                <div class="slide-up-fade" style="animation-delay: 1.2s;">
-                    <button class="btn-premium" style="width: 100%; justify-content: center; background: linear-gradient(90deg, var(--brand-purple), var(--accent));">
+                <div class="slide-up-fade" style="animation-delay: 1.2s;" id="recommendation-btn-container">
+                    <button class="btn-premium" style="width: 100%; justify-content: center; background: linear-gradient(90deg, var(--brand-purple), var(--accent));" onclick="document.getElementById('ai-courses-section').style.display='block'; document.getElementById('recommendation-btn-container').style.display='none';">
                         Tövsiyə Edilən Kurslara Bax <i class="fa-solid fa-rocket"></i>
                     </button>
                 </div>
+
+                <!-- DYNAMIC COURSES INJECTION CONTAINER -->
+                <div id="ai-courses-section" class="slide-up-fade" style="display: none; margin-top: 40px; animation-delay: 0.2s;">
+                    <h3 style="font-family: 'Sora'; font-size: 20px; font-weight: 600; margin-bottom: 16px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+                        <i class="fa-solid fa-robot" style="color: var(--accent);"></i> AI Xüsusi Tövsiyə
+                    </h3>
+                    <div id="dynamic-courses-grid" style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                        <!-- JS WILL INJECT COURSES -->
+                    </div>
+                    
+                    <button class="btn-premium" style="margin-top:20px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border-color); width: 100%; justify-content:center;" onclick="window.location.href='/Course'">
+                        Bütün Kurslara Keçid
+                    </button>
+                </div>
+
             </div>
 
         </div>
@@ -540,10 +588,38 @@
         let answersData = [];
         let timerInterval = null;
         let timeLeft = 300; // 5 minutes
+        let cheatAttempts = 0;
+        let questionStartTime = 0;
 
         const setView = (viewId) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
+        };
+
+        // ANTI-CHEAT: TAB SWITCH DETECTION
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'hidden' && document.getElementById('view-quiz').classList.contains('active')) {
+                cheatAttempts++;
+                showWarning(`Diqqət: Səhifədən çıxış aşkar edildi! (Cəhd: ${cheatAttempts}/3)`);
+                if (cheatAttempts >= 3) {
+                    finishQuiz(); // Auto submit on 3rd violation
+                }
+            }
+        });
+
+        const showWarning = (msg) => {
+            const toast = document.getElementById('cheat-warning');
+            toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${msg}`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        };
+
+        // FULLSCREEN SUPPORT
+        const requestFullScreen = () => {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) { elem.requestFullscreen(); }
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); } // IE11
         };
 
         const fetchQuestions = async () => {
@@ -591,6 +667,8 @@
                 return;
             }
 
+            requestFullScreen();
+
             setView('view-quiz');
             startTimer();
             loadQuestion();
@@ -599,6 +677,7 @@
         const loadQuestion = () => {
             selectedOptionId = null;
             document.getElementById('btn-next').disabled = true;
+            questionStartTime = Date.now(); // Track start time for speed bonus
 
             const q = questions[currentQIndex];
             document.getElementById('question-text').innerText = q.text;
@@ -631,7 +710,12 @@
 
         const nextQuestion = (skipped) => {
             if(!skipped && selectedOptionId !== null) {
-                answersData.push({ questionId: questions[currentQIndex].id, optionId: selectedOptionId });
+                let timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
+                answersData.push({ 
+                    questionId: questions[currentQIndex].id, 
+                    optionId: selectedOptionId,
+                    timeTakenSeconds: timeTaken
+                });
             }
 
             currentQIndex++;
@@ -697,7 +781,10 @@
                     const response = await fetch('/Assessment/SubmitAssessment', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ Answers: answersData })
+                        body: JSON.stringify({ 
+                            Answers: answersData,
+                            CheatAttempts: cheatAttempts
+                        })
                     });
                     
                     if(response.ok) {
@@ -715,10 +802,56 @@
                         document.getElementById('res-roadmap').innerText = resultData.roadmap;
                         document.getElementById('res-strengths').innerText = resultData.strengths || "Yoxlanılır...";
                         document.getElementById('res-weak').innerText = resultData.weaknesses || "Yoxlanılır...";
+
+                        // BUILD AI RECOMMENDED COURSES UI
+                        const coursesGrid = document.getElementById('dynamic-courses-grid');
+                        coursesGrid.innerHTML = '';
+                        if (resultData.recommendedCourses && resultData.recommendedCourses.length > 0) {
+                            resultData.recommendedCourses.forEach((c) => {
+                                const levelColor = c.level === 'Beginner' ? '#10B981' : c.level === 'Intermediate' ? '#00F0FF' : '#FF8C00';
+                                
+                                const html = `
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; text-align: left; transition: 0.3s; position:relative; overflow:hidden;" class="course-rec-card">
+                                        <div style="display:flex; justify-content: space-between; align-items:flex-start; margin-bottom:12px;">
+                                            <span style="font-size: 11px; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; color:#ddd; font-weight:600;"><i class="fa-solid fa-folder-tree"></i> ${c.category}</span>
+                                            <span style="font-size: 11px; border: 1px solid ${levelColor}; padding: 4px 8px; border-radius: 6px; color:${levelColor}; font-weight:600;"><i class="fa-solid fa-layer-group"></i> ${c.level}</span>
+                                        </div>
+                                        <h4 style="font-family:'Sora'; margin-bottom:8px; font-size:16px;">${c.title}</h4>
+                                        <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:12px;">${c.shortDescription || 'Məlumat yoxdur'}</p>
+                                        <div style="background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--accent); padding: 8px 12px; font-size: 12px; color:#fff;">
+                                            <strong><i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> Niyə biz bunu seçdik?</strong><br/>
+                                            <span style="color: rgba(255,255,255,0.8);">${c.reason}</span>
+                                        </div>
+                                    </div>
+                                `;
+                                coursesGrid.insertAdjacentHTML('beforeend', html);
+                            });
+                        } else {
+                            coursesGrid.innerHTML = `
+                                <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 40px 20px; text-align: center; margin-top: 10px;">
+                                    <i class="fa-solid fa-folder-open" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));"></i>
+                                    <h4 style="font-family:'Sora'; margin-bottom:8px; font-size:20px; color: var(--text-main);">Xüsusi Kurs Tapılmadı</h4>
+                                    <p style="color:var(--text-muted); font-size:14px; line-height: 1.6; max-width: 400px; margin: 0 auto;">Hal-hazırda sistemdə sizin nəticələrinizə və səviyyənizə tamamilə uyğun gələn spesifik bir kurs mövcud deyil. Aşağıdakı düymədən istifadə edərək ümumi kataloqa göz ata bilərsiniz.</p>
+                                </div>
+                            `;
+                        }
                         
                         const glassCard = document.querySelector('.glass-card');
 
-                        if(resultData.level === "Advanced") {
+                        if(resultData.percentage === 100) {
+                            // ULTRA PREMIUM CELEBRATION
+                            document.getElementById('result-message').innerText = "KUSURSUZ NƏTİCƏ! Siz bir dahisiniz!";
+                            document.getElementById('result-level').style.background = "linear-gradient(135deg, #00FF87, #60EFFF)";
+                            document.getElementById('achievement-unlocked').style.display = "inline-flex";
+                            document.getElementById('achievement-unlocked').innerHTML = '<div class="achievement-icon" style="background: linear-gradient(135deg, #00FF87, #60EFFF)"><i class="fa-solid fa-crown"></i></div><div class="achievement-text"><span>Yeni Nişan Açıldı</span><strong>Kusursuz Tələbə</strong></div>';
+                            
+                            glassCard.classList.add('victory-glow');
+                            setTimeout(() => { 
+                                fireConfetti(); 
+                                setTimeout(fireConfetti, 1000); 
+                                setTimeout(fireConfetti, 2000); 
+                            }, 600);
+                        } else if(resultData.level === "Advanced") {
                             document.getElementById('result-message').innerText = "Möhtəşəm nəticə! Siz tam hazırsınız.";
                             document.getElementById('result-level').style.background = "linear-gradient(135deg, #FFD700, #FF8C00)";
                             document.getElementById('achievement-unlocked').style.display = "inline-flex";

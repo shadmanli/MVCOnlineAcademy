@@ -1,0 +1,48 @@
+@model IEnumerable<Academy.Models.DemoLesson>
+
+@{
+    ViewData["Title"] = "Demo Lessons";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Bütün Demo D?rsl?r</h6>
+            <a asp-action="Create" class="btn btn-primary"><i class="fa fa-plus me-2"></i>Yeni Yarat</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col">Thumbnail</th>
+                        <th scope="col">Ba?l?q</th>
+                        <th scope="col">Kurs</th>
+                        <th scope="col">Müdd?t</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if(!string.IsNullOrEmpty(item.ThumbnailUrl)){
+                                    <img src="~/uploads/demothumbnails/@item.ThumbnailUrl" style="width: 80px; height: 50px; object-fit: cover;" />
+                                }
+                            </td>
+                            <td>@item.Title</td>
+                            <td>@item.Course.Title</td>
+                            <td>@item.Duration d?qiq?</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Edit</a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline-block;" onsubmit="return confirm('Silm?k ist?diyiniz? ?minsiniz?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

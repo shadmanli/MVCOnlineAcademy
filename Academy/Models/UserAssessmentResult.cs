@@ -10,6 +10,9 @@ namespace Academy.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
+        public int? CourseId { get; set; }
+        public Course Course { get; set; }
+
         public string Level { get; set; } // Beginner, Intermediate, Advanced
         public int Score { get; set; }
         public int TotalQuestions { get; set; }

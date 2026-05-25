@@ -31,6 +31,7 @@ namespace Academy.Data
         public DbSet<CourseRequirement> CourseRequirements { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Video> Videos { get; set; }
+        public DbSet<DemoLesson> DemoLessons { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
@@ -39,5 +40,32 @@ namespace Academy.Data
         public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
         public DbSet<AssessmentOption> AssessmentOptions { get; set; }
         public DbSet<UserAssessmentResult> UserAssessmentResults { get; set; }
+
+        public DbSet<LiveClass> LiveClasses { get; set; }
+        public DbSet<LiveClassAttendance> LiveClassAttendances { get; set; }
+        public DbSet<LiveClassEventLog> LiveClassEventLogs { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<LiveClass>()
+                .HasOne(l => l.Instructor)
+                .WithMany()
+                .HasForeignKey(l => l.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<LiveClass>()
+                .HasOne(l => l.Course)
+                .WithMany()
+                .HasForeignKey(l => l.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<LiveClassAttendance>()
+                .HasOne(a => a.AppUser)
+                .WithMany()
+                .HasForeignKey(a => a.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

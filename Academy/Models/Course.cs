@@ -27,6 +27,7 @@
       
             public List<Lesson> Lessons { get; set; }
             public List<Video> Videos { get; set; }
+            public List<DemoLesson> DemoLessons { get; set; }
             public List<Review> Reviews { get; set; }
             public List<Enrollment> Enrollments { get; set; }
           

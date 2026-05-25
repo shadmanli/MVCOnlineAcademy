@@ -19,8 +19,13 @@ namespace Academy.ViewModels.Course
         public List<CourseRequirementVM> Requirements { get; set; }
         public List<Academy.ViewModels.Lesson.LessonVM> Lessons { get; set; }
         public List<Academy.Models.Video> Videos { get; set; }
+        public List<Academy.Models.DemoLesson> DemoLessons { get; set; }
+        public List<Academy.Models.LiveClass> LiveClasses { get; set; }
+
         public int Duration { get; set; }
         public int StudentCount { get; set; }
         public double Rating { get; set; }
+
+        public List<Academy.Models.Course> OtherCourses { get; set; } = new List<Academy.Models.Course>();
     }
 }

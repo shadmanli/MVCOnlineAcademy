@@ -4,6 +4,7 @@ using Academy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Academy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519200904_AddDemoLessons")]
+    partial class AddDemoLessons
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,17 +245,8 @@ namespace Academy.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -261,8 +255,6 @@ namespace Academy.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CourseId");
 
                     b.ToTable("AssessmentQuestions");
                 });
@@ -786,138 +778,6 @@ namespace Academy.Migrations
                     b.ToTable("Lessons");
                 });
 
-            modelBuilder.Entity("Academy.Models.LiveClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AutoAdmitStudents")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DurationMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsLocked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ScheduledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SecureToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.ToTable("LiveClasses");
-                });
-
-            modelBuilder.Entity("Academy.Models.LiveClassAttendance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeviceInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("FirstJoinTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastLeaveTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LiveClassId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalWatchedMinutes")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("LiveClassId");
-
-                    b.ToTable("LiveClassAttendances");
-                });
-
-            modelBuilder.Entity("Academy.Models.LiveClassEventLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EventData")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EventType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LiveClassId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LiveClassId");
-
-                    b.ToTable("LiveClassEventLogs");
-                });
-
             modelBuilder.Entity("Academy.Models.Mission", b =>
                 {
                     b.Property<int>("Id")
@@ -1093,9 +953,6 @@ namespace Academy.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -1120,8 +977,6 @@ namespace Academy.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CourseId");
 
                     b.ToTable("UserAssessmentResults");
                 });
@@ -1321,13 +1176,7 @@ namespace Academy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Academy.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
-
                     b.Navigation("Category");
-
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("Academy.Models.Basket", b =>
@@ -1470,55 +1319,6 @@ namespace Academy.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("Academy.Models.LiveClass", b =>
-                {
-                    b.HasOne("Academy.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Academy.Models.Instructor", "Instructor")
-                        .WithMany()
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Instructor");
-                });
-
-            modelBuilder.Entity("Academy.Models.LiveClassAttendance", b =>
-                {
-                    b.HasOne("Academy.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Academy.Models.LiveClass", "LiveClass")
-                        .WithMany("Attendances")
-                        .HasForeignKey("LiveClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("LiveClass");
-                });
-
-            modelBuilder.Entity("Academy.Models.LiveClassEventLog", b =>
-                {
-                    b.HasOne("Academy.Models.LiveClass", "LiveClass")
-                        .WithMany("EventLogs")
-                        .HasForeignKey("LiveClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LiveClass");
-                });
-
             modelBuilder.Entity("Academy.Models.Review", b =>
                 {
                     b.HasOne("Academy.Models.Course", "Course")
@@ -1552,15 +1352,9 @@ namespace Academy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Academy.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
-
                     b.Navigation("AppUser");
 
                     b.Navigation("Category");
-
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("Academy.Models.Video", b =>
@@ -1680,13 +1474,6 @@ namespace Academy.Migrations
             modelBuilder.Entity("Academy.Models.Language", b =>
                 {
                     b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("Academy.Models.LiveClass", b =>
-                {
-                    b.Navigation("Attendances");
-
-                    b.Navigation("EventLogs");
                 });
 
             modelBuilder.Entity("Academy.Models.Student", b =>
