@@ -1,4 +1,4 @@
-@model Academy.Models.LiveClass
+﻿@model Academy.Models.LiveClass
 @{
     Layout = null; 
 }
@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Room | @Model.Title</title>
+    <title>Live Room | @Model?.Title</title>
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -344,7 +344,7 @@
     <div id="loadingOverlay">
         <div class="loader-ring"></div>
         <h2>Ota?a Qo?ulur...</h2>
-        <p>T?hl�k?siz ba?lant? qurulur, z?hm?t olmasa g�zl?yin.</p>
+        <p>T?hlük?siz ba?lant? qurulur, z?hm?t olmasa gözl?yin.</p>
     </div>
 
     <!-- Header -->
@@ -352,10 +352,10 @@
         <div class="header-info">
             <i class="fa-solid fa-shield-halved shield"></i>
             <div>
-                <h2>@Model.Title</h2>
-                <p>M�?llim: @Model.Instructor.FullName &bull; <span id="timer">00:00:00</span></p>
+                <h2>@Model?.Title</h2>
+                <p>Müəllim: @Model?.Instructor?.FullName &bull; <span id="timer">00:00:00</span> &bull; <i class="fa-solid fa-users"></i> <span id="participantCount">1</span></p>
             </div>
-            <span class="course-badge">@Model.Course.Title</span>
+            <span class="course-badge">@Model?.Course?.Title</span>
         </div>
         <div class="header-actions">
             <div class="badge-rec"><i class="fa-solid fa-circle"></i> REC</div>
@@ -370,38 +370,19 @@
 
         <!-- Video Grid -->
         <div class="video-container">
-            <!-- Main Speaker -->
-            <div class="speaker-view">
-                <div class="speaker-avatar">
-                    @(Model.Instructor.FullName.Substring(0, 1))
-                </div>
+            <!-- Main Speaker / Local Camera -->
+            <div class="speaker-view" style="padding: 0; position: relative;">
+                <video id="localVideo" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border: none;"></video>
                 <div class="name-tag">
-                    <i class="fa-solid fa-microphone mic-status"></i> 
-                    @Model.Instructor.FullName (Host)
+                    <i class="fa-solid fa-microphone mic-status" id="localMicIcon"></i> 
+                    @(ViewBag.CurrentFullName) @((ViewBag.IsTeacher != null && ViewBag.IsTeacher) ? "(Host)" : "") (Siz)
+                    <span id="localHandIcon" style="margin-left: 5px; display: none;">✋</span>
                 </div>
             </div>
 
             <!-- Other Participants Grid -->
-            <div class="participants-grid">
-                <div class="grid-video">
-                    <div class="speaker-avatar" style="width:60px; height:60px; font-size:24px;">S?n</div>
-                    <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
-                        <i class="fa-solid fa-microphone-slash mic-status muted"></i> S?n
-                    </div>
-                </div>
-                <div class="grid-video">
-                    <div class="speaker-avatar" style="width:60px; height:60px; font-size:24px;">N</div>
-                    <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
-                        <i class="fa-solid fa-microphone mic-status"></i> N?rgiz
-                    </div>
-                </div>
-                <div class="grid-video">
-                    <div class="speaker-avatar" style="width:60px; height:60px; font-size:24px;">R</div>
-                    <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
-                        <i class="fa-solid fa-microphone-slash mic-status muted"></i> R?sul
-                    </div>
-                </div>
-                <!-- Feel free to add more to see scroll -->
+            <div class="participants-grid" id="remoteVideosGrid">
+                <!-- Real participants will be added here dynamically -->
             </div>
         </div>
 
@@ -409,40 +390,29 @@
         <aside class="side-panel" id="sidePanel">
             <div class="panel-header">
                 <button class="panel-tab active" onclick="switchTab('chat')"><i class="fa-regular fa-comment-dots"></i> Chat</button>
-                <button class="panel-tab" onclick="switchTab('users')"><i class="fa-solid fa-user-group"></i> ??tirak�?lar (4)</button>
+                <button class="panel-tab" onclick="switchTab('users')"><i class="fa-solid fa-user-group"></i> ??tirakç?lar</button>
             </div>
 
             <div class="panel-body">
                 <!-- Chat Window -->
                 <div id="tabChat" style="display: flex; flex-direction: column; height: 100%;">
                     <div class="chat-list">
-                        <div class="msg">
-                            <div class="msg-header"><span>N?rgiz M.</span> <span>10:05</span></div>
-                            <div class="msg-bubble">Salam m�?llim, s?s g?lir?</div>
-                        </div>
-                        <div class="msg">
-                            <div class="msg-header"><span style="color:var(--accent)">@Model.Instructor.FullName</span> <span>10:05</span></div>
-                            <div class="msg-bubble">B?li N?rgiz, ?la g?lir. D?rs? ba?lay?r?q.</div>
-                        </div>
-                        <div class="msg me">
-                            <div class="msg-header"><span>S?n</span> <span>10:12</span></div>
-                            <div class="msg-bubble">Ekran? g�r? bilmir?m, n?s? problem var?</div>
-                        </div>
+                        <!-- Messages will appear here -->
                     </div>
                     <div class="chat-input-wrapper">
                         <input type="text" class="chat-input" placeholder="Mesaj yaz...">
                         <button class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
-                    <div class="typing-indicator">N?rgiz M. yaz?r...</div>
-                    <div class="system-msg">Siz? qo?ulmaq ���n icaz? g�zl?nilir...</div>
+                    <div class="typing-indicator">...</div>
+                    <div class="system-msg">Siz? qo?ulmaq üçün icaz? gözl?nilir...</div>
                 </div>
 
                 <!-- Users Window -->
                 <div id="tabUsers" class="user-list">
                     <div class="user-item">
                         <div class="user-info">
-                            <div class="user-avatar">@(Model.Instructor.FullName.Substring(0,1))</div>
-                            <span>@Model.Instructor.FullName (Host)</span>
+                            <div class="user-avatar">@(Model?.Instructor?.FullName?.FirstOrDefault().ToString())</div>
+                            <span>@(Model?.Instructor?.FullName) (Host)</span>
                         </div>
                         <div class="user-controls">
                             <i class="fa-solid fa-microphone"></i>
@@ -469,29 +439,29 @@
     <footer class="bottom-bar">
 
         <div class="control-group">
-            <button class="ctrl-btn danger" id="micBtn" onclick="toggleState(this, 'fa-microphone', 'fa-microphone-slash')" title="Mikrofonu A�/Ba?la">
+            <button class="ctrl-btn danger" id="micBtn" onclick="toggleState(this, 'fa-microphone', 'fa-microphone-slash')" title="Mikrofonu Aç/Ba?la">
                 <i class="fa-solid fa-microphone-slash"></i>
             </button>
-            <button class="ctrl-btn danger" id="camBtn" onclick="toggleState(this, 'fa-video', 'fa-video-slash')" title="Kameran? A�/Ba?la">
+            <button class="ctrl-btn danger" id="camBtn" onclick="toggleState(this, 'fa-video', 'fa-video-slash')" title="Kameran? Aç/Ba?la">
                 <i class="fa-solid fa-video-slash"></i>
             </button>
         </div>
 
         <div class="control-group">
-            <button class="ctrl-btn share-btn" title="Ekran Payla?">
+            <button class="ctrl-btn share-btn" title="Ekran Paylaş" onclick="toggleScreenShare()">
                 <i class="fa-solid fa-display"></i>
             </button>
-            <button class="ctrl-btn" title="?l Qald?r">
+            <button class="ctrl-btn" title="Əl Qaldır" onclick="toggleHandRaise()" id="handRaiseBtn">
                 <i class="fa-regular fa-hand"></i>
             </button>
-            <button class="ctrl-btn active" id="chatBtn" onclick="togglePanel()" title="Paneli A�/Ba?la" style="position:relative;">
+            <button class="ctrl-btn active" id="chatBtn" onclick="togglePanel()" title="Paneli Aç/Bağla" style="position:relative;">
                 <i class="fa-solid fa-message"></i>
                 <div class="chat-badge" id="unreadBadge">0</div>
             </button>
         </div>
 
         <div class="control-group">
-            <form action="/CourseDetail/Index/@Model.CourseId" method="get" style="margin:0;">
+            <form action="/CourseDetail/Index/@Model?.CourseId" method="get" style="margin:0;">
                 <button type="submit" class="ctrl-btn-text">
                     T?rk Et
                 </button>
@@ -508,7 +478,7 @@
                 const overlay = document.getElementById('loadingOverlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => { overlay.style.display = 'none'; }, 600);
-            }, 1500); // S�ni gecikm? (ba?lant? qurulur hissi ���n)
+            }, 1500); // Süni gecikm? (ba?lant? qurulur hissi üçün)
         });
 
         // 2. Timer Logic
@@ -564,9 +534,10 @@
         // ==========================================
         // REALTIME CHAT SYSTEM (SignalR)
         // ==========================================
-        const roomId = "@Model.RoomId";
-        const fullName = "T?l?b? (Anonim)"; // In real scenario, get from User.Identity.Name
-        const isTeacher = false; 
+        const roomId = "@Model?.RoomId";
+        const currentUserId = "@ViewBag.CurrentUserId";
+        const fullName = "@Html.Raw(ViewBag.CurrentFullName)";
+        const isTeacher = @(ViewBag.IsTeacher?.ToString().ToLower() ?? "false"); 
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/liveclasshub")
@@ -591,7 +562,7 @@
             msgDiv.className = `msg ${isMe ? 'me' : ''}`;
             
             const headerColor = isTeacherMsg ? 'color:var(--accent); font-weight:bold;' : 'color:var(--text-muted);';
-            const badge = isTeacherMsg ? ' <i class="fa-solid fa-graduation-cap" style="font-size:10px; margin-left:4px;" title="M�?llim"></i>' : '';
+            const badge = isTeacherMsg ? ' <i class="fa-solid fa-graduation-cap" style="font-size:10px; margin-left:4px;" title="Mü?llim"></i>' : '';
 
             msgDiv.innerHTML = `
                 <div class="msg-header"><span style="${headerColor}">${sender}${badge}</span> <span>${time}</span></div>
@@ -635,7 +606,7 @@
                 await connection.invoke("SendMessage", roomId, text, fullName, isTeacher);
             } catch (err) {
                 console.error("X?ta ba? verdi: ", err);
-                appendSystemMessage("Mesaj g�nd?ril? bilm?di. Ba?lant?n? yoxlay?n.", "");
+                appendSystemMessage("Mesaj gönd?ril? bilm?di. Ba?lant?n? yoxlay?n.", "");
             }
         }
 
@@ -667,46 +638,224 @@
         connection.on("UserTypingStatus", (connId, typerName, isTyping) => {
             if (typerName === fullName) return;
             if (isTyping) {
-                typingIndicator.innerText = `${typerName} yaz?r...`;
+                typingIndicator.innerText = `${typerName} yazır...`;
                 typingIndicator.style.display = 'block';
             } else {
                 typingIndicator.style.display = 'none';
             }
         });
 
-        connection.on("ParticipantJoined", (user) => {
-            // Update online users list... (mock logic for now)
-            console.log("Joined: ", user);
+        const peers = {}; 
+        const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+        const remoteVideosGrid = document.getElementById('remoteVideosGrid');
+
+        function setupRemoteVideo(user) {
+            if(document.getElementById('grid-card-' + user.connectionId)) return;
+            
+            const card = document.createElement('div');
+            card.className = 'grid-video';
+            card.id = 'grid-card-' + user.connectionId;
+            
+            let hostLabel = user.isTeacher ? " (Host)" : "";
+            
+            card.innerHTML = `
+                <video id="video-${user.connectionId}" autoplay playsinline style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></video>
+                <div class="name-tag" style="font-size:11px; padding: 4px 8px; bottom:8px; left:8px;">
+                    <i class="fa-solid fa-microphone mic-status" id="mic-icon-${user.connectionId}"></i> 
+                    ${user.fullName}${hostLabel}
+                    <span id="hand-icon-${user.connectionId}" style="margin-left: 5px; display: none;">✋</span>
+                </div>
+            `;
+            
+            if (isTeacher && !user.isTeacher) {
+                card.innerHTML += `<button onclick="connection.invoke('LowerHand', roomId, '${user.connectionId}')" id="lower-hand-btn-${user.connectionId}" style="position:absolute; top:8px; right:8px; display:none; background:red; color:white; border:none; border-radius:4px; font-size:10px; padding:4px; cursor:pointer;">Əli İndir</button>`;
+            }
+            
+            remoteVideosGrid.appendChild(card);
+        }
+
+        function removeRemoteVideo(connectionId) {
+            const card = document.getElementById('grid-card-' + connectionId);
+            if(card) card.remove();
+        }
+
+        let totalParticipants = 1;
+        function updateParticipantCount(count) {
+            document.getElementById('participantCount').innerText = count;
+        }
+
+        async function createPeerConnection(remoteUser, isInitiator) {
+            const pc = new RTCPeerConnection(rtcConfig);
+            peers[remoteUser.connectionId] = pc;
+
+            if (localStream) {
+                localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+            }
+
+            pc.onicecandidate = event => {
+                if (event.candidate) {
+                    connection.invoke("SendSignal", remoteUser.connectionId, JSON.stringify({
+                        type: 'candidate',
+                        candidate: event.candidate
+                    }));
+                }
+            };
+
+            pc.ontrack = event => {
+                const remoteVideo = document.getElementById('video-' + remoteUser.connectionId);
+                if (remoteVideo) {
+                    remoteVideo.srcObject = event.streams[0];
+                }
+            };
+
+            if (isInitiator) {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                connection.invoke("SendSignal", remoteUser.connectionId, JSON.stringify({
+                    type: 'offer',
+                    sdp: pc.localDescription
+                }));
+            }
+            
+            return pc;
+        }
+
+        connection.on("ParticipantJoined", async (user) => {
+            appendSystemMessage(user.fullName + " otağa qoşuldu.", "");
+            totalParticipants++;
+            updateParticipantCount(totalParticipants);
+            setupRemoteVideo(user);
+            await createPeerConnection(user, true);
+        });
+
+        connection.on("UpdateParticipants", (users) => {
+            totalParticipants = users.length;
+            updateParticipantCount(totalParticipants);
+            users.forEach(user => {
+                if (user.connectionId !== connection.connectionId) {
+                    setupRemoteVideo(user);
+                    if(user.handRaised) {
+                        setHandRaise(user.connectionId, true, user.fullName);
+                    }
+                }
+            });
         });
 
         connection.on("ParticipantLeft", (connId) => {
-            // Remove from list
-            console.log("Left: ", connId);
+            if (peers[connId]) {
+                peers[connId].close();
+                delete peers[connId];
+            }
+            removeRemoteVideo(connId);
+            totalParticipants = Math.max(1, totalParticipants - 1);
+            updateParticipantCount(totalParticipants);
+            appendSystemMessage("Bir iştirakçı otaqdan ayrıldı.", "");
+        });
+
+        connection.on("ReceiveSignal", async (fromConnectionId, signalStr) => {
+            const signal = JSON.parse(signalStr);
+            let pc = peers[fromConnectionId];
+            
+            if (!pc) {
+                pc = await createPeerConnection({ connectionId: fromConnectionId, fullName: "İştirakçı" }, false);
+            }
+
+            if (signal.type === 'offer') {
+                await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
+                connection.invoke("SendSignal", fromConnectionId, JSON.stringify({
+                    type: 'answer',
+                    sdp: pc.localDescription
+                }));
+            } else if (signal.type === 'answer') {
+                await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+            } else if (signal.type === 'candidate') {
+                await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+            }
         });
 
         // Connection Handling
         connection.onreconnecting(error => {
-            appendSystemMessage("Ba?lant? qopdu. Yenid?n qo?ulma c?hdi...", "");
+            appendSystemMessage("Bağlantı qopdu. Yenidən qoşulma cəhdi...", "");
         });
 
         connection.onreconnected(connectionId => {
-            appendSystemMessage("Ba?lant? b?rpa edildi.", "");
+            appendSystemMessage("Bağlantı bərpa edildi.", "");
         });
 
         connection.onclose(error => {
-            appendSystemMessage("Ba?lant? tamamil? k?sildi. S?hif?ni yenil?yin.", "");
+            appendSystemMessage("Bağlantı tamamilə kəsildi. Səhifəni yeniləyin.", "");
         });
 
-        // Start Connection
-        connection.start()
-            .then(() => {
-                // Remove hardcoded UI initial messages
-                chatList.innerHTML = '';
-                appendSystemMessage("�ata qo?uldunuz. S�hb?t ?ifr?l?nib.", "");
-                // Join room
-                return connection.invoke("JoinRoom", roomId, "user-" + Math.floor(Math.random() * 1000), fullName, isTeacher);
-            })
-            .catch(err => console.error(err));
+        function setHandRaise(connId, isRaised, name) {
+            const icon = connId === connection.connectionId ? document.getElementById('localHandIcon') : document.getElementById('hand-icon-' + connId);
+            const btn = document.getElementById('lower-hand-btn-' + connId);
+            if (icon) icon.style.display = isRaised ? 'inline' : 'none';
+            if (btn) btn.style.display = isRaised ? 'block' : 'none';
+            
+            if (isRaised && isTeacher && connId !== connection.connectionId) {
+                appendSystemMessage(name + " əl qaldırdı ✋", "");
+            }
+        }
+
+        connection.on("HandRaised", (connId, isRaised) => {
+            // Find participant logic is a bit manual but we can just update UI directly
+            // Full name isn't passed in HandRaised, but we can pass it if we need, or just lookup
+            const gridCard = document.getElementById('grid-card-' + connId);
+            const pName = gridCard ? gridCard.querySelector('.name-tag').innerText.replace(' (Host)', '').trim() : "İştirakçı";
+            setHandRaise(connId, isRaised, pName);
+            
+            if (connId === connection.connectionId) {
+                const btn = document.getElementById('handRaiseBtn');
+                if (isRaised) btn.classList.add('active');
+                else btn.classList.remove('active');
+            }
+        });
+
+        function toggleHandRaise() {
+            connection.invoke("RaiseHand", roomId);
+        }
+
+        let isScreenSharing = false;
+        async function toggleScreenShare() {
+            if (!isTeacher) return;
+            try {
+                if (!isScreenSharing) {
+                    const displayStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                    const screenTrack = displayStream.getVideoTracks()[0];
+                    
+                    screenTrack.onended = () => {
+                        stopScreenShare();
+                    };
+
+                    Object.values(peers).forEach(pc => {
+                        const sender = pc.getSenders().find(s => s.track.kind === 'video');
+                        if (sender) sender.replaceTrack(screenTrack);
+                    });
+
+                    document.getElementById('localVideo').srcObject = displayStream;
+                    isScreenSharing = true;
+                    document.querySelector('.share-btn').classList.add('active');
+                    
+                } else {
+                    stopScreenShare();
+                }
+            } catch (err) {
+                console.error("Screen share error", err);
+            }
+        }
+
+        async function stopScreenShare() {
+            const videoTrack = localStream.getVideoTracks()[0];
+            Object.values(peers).forEach(pc => {
+                const sender = pc.getSenders().find(s => s.track.kind === 'video');
+                if (sender) sender.replaceTrack(videoTrack);
+            });
+            document.getElementById('localVideo').srcObject = localStream;
+            isScreenSharing = false;
+            document.querySelector('.share-btn').classList.remove('active');
+        }
 
         // Inject simple keyframes dynamically
         const style = document.createElement('style');
@@ -715,6 +864,63 @@
             @@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         `;
         document.head.appendChild(style);
+
+        // ==========================================
+        // LOCAL CAMERA VIDEO & START CONNECTION
+        // ==========================================
+        let localStream;
+        let audioContext;
+        let analyser;
+        let microphone;
+        let pId;
+
+        async function startCamera() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const localVideo = document.getElementById('localVideo');
+                if (localVideo) {
+                    localVideo.srcObject = localStream;
+                }
+                
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(localStream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                
+                function detectMicLevel() {
+                    analyser.getByteFrequencyData(dataArray);
+                    let sum = 0;
+                    for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
+                    let average = sum / bufferLength;
+                    
+                    const micIcon = document.getElementById('localMicIcon');
+                    if (micIcon) {
+                        if (average > 10) micIcon.style.opacity = '0.5';
+                        else micIcon.style.opacity = '1';
+                    }
+                    pId = requestAnimationFrame(detectMicLevel);
+                }
+                detectMicLevel();
+
+                // Start Connection after camera is ready
+                connection.start()
+                    .then(() => {
+                        chatList.innerHTML = '';
+                        appendSystemMessage("Çata qoşuldunuz. Söhbət şifrələnib.", "");
+                        return connection.invoke("JoinRoom", roomId, currentUserId, fullName, isTeacher);
+                    })
+                    .catch(err => console.error(err));
+
+            } catch (err) {
+                console.error("Camera error: ", err);
+                appendSystemMessage("Kamera və ya mikrofona icazə verilmədi.", "");
+            }
+        }
+
+        startCamera();
 
     </script>
 </body>

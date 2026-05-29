@@ -51,47 +51,89 @@ namespace Academy.Hubs
             // Broadcast to the room that a new participant joined
             await Clients.Group(roomId).SendAsync("ParticipantJoined", participant);
 
-            // Send system message to chat
-            await Clients.Group(roomId).SendAsync("ReceiveSystemMessage", $"{fullName} ota?a qo?uldu", DateTime.Now.ToString("HH:mm"));
-
-            // Send current participants to the newly joined user
+            // Send current list of participants to the newly joined user
             await Clients.Caller.SendAsync("UpdateParticipants", room.Values.ToList());
         }
 
         public async Task LeaveRoom(string roomId)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
-
             if (_roomParticipants.TryGetValue(roomId, out var room))
             {
-                if (room.TryRemove(Context.ConnectionId, out var participant))
+                if (room.TryRemove(Context.ConnectionId, out _))
                 {
                     await Clients.Group(roomId).SendAsync("ParticipantLeft", Context.ConnectionId);
-                    await Clients.Group(roomId).SendAsync("ReceiveSystemMessage", $"{participant.FullName} otaqdan ayr?ld?", DateTime.Now.ToString("HH:mm"));
                 }
             }
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
         }
 
         public async Task StartClass(string roomId)
         {
+            if (!_roomParticipants.TryGetValue(roomId, out var room) ||
+                !room.TryGetValue(Context.ConnectionId, out var participant) ||
+                !participant.IsTeacher)
+            {
+                return; // Only host can start
+            }
+
             var liveClass = await _context.LiveClasses.FirstOrDefaultAsync(l => l.RoomId == roomId);
-            if (liveClass != null && liveClass.Status != LiveSessionStatus.Live)
+            if(liveClass != null && liveClass.Status != LiveSessionStatus.Live && liveClass.TeacherId == participant.UserId)
             {
                 liveClass.Status = LiveSessionStatus.Live;
                 await _context.SaveChangesAsync();
-                await Clients.Group(roomId).SendAsync("ClassStarted");
+                await Clients.All.SendAsync("ClassStatusChanged", roomId, "Live");
             }
         }
 
         public async Task EndClass(string roomId)
         {
+            if (!_roomParticipants.TryGetValue(roomId, out var room) ||
+                !room.TryGetValue(Context.ConnectionId, out var participant) ||
+                !participant.IsTeacher)
+            {
+                return; // Only host can end
+            }
+
             var liveClass = await _context.LiveClasses.FirstOrDefaultAsync(l => l.RoomId == roomId);
-            if (liveClass != null && liveClass.Status == LiveSessionStatus.Live)
+            if(liveClass != null && liveClass.TeacherId == participant.UserId)
             {
                 liveClass.Status = LiveSessionStatus.Ended;
                 await _context.SaveChangesAsync();
-                await Clients.Group(roomId).SendAsync("ClassEnded");
+                await Clients.All.SendAsync("ClassStatusChanged", roomId, "Ended");
             }
+        }
+        
+        public async Task RemoveParticipant(string roomId, string targetConnectionId)
+        {
+            if (!_roomParticipants.TryGetValue(roomId, out var room) ||
+                !room.TryGetValue(Context.ConnectionId, out var participant) ||
+                !participant.IsTeacher)
+            {
+                return; // Only host can remove
+            }
+            
+            if (room.TryRemove(targetConnectionId, out _))
+            {
+                await Clients.Client(targetConnectionId).SendAsync("KickedOut");
+                await Clients.Group(roomId).SendAsync("ParticipantLeft", targetConnectionId);
+            }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            foreach (var room in _roomParticipants)
+            {
+                if (room.Value.TryRemove(Context.ConnectionId, out _))
+                {
+                    await Clients.Group(room.Key).SendAsync("ParticipantLeft", Context.ConnectionId);
+                }
+            }
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        public async Task SendSignal(string targetConnectionId, string signal)
+        {
+            await Clients.Client(targetConnectionId).SendAsync("ReceiveSignal", Context.ConnectionId, signal);
         }
 
         public async Task ToggleMic(string roomId, bool state)
@@ -121,6 +163,17 @@ namespace Academy.Hubs
             }
         }
 
+        public async Task LowerHand(string roomId, string targetConnectionId)
+        {
+            if (_roomParticipants.TryGetValue(roomId, out var room) && 
+                room.TryGetValue(Context.ConnectionId, out var caller) && caller.IsTeacher &&
+                room.TryGetValue(targetConnectionId, out var target))
+            {
+                target.HandRaised = false;
+                await Clients.Group(roomId).SendAsync("HandRaised", targetConnectionId, false);
+            }
+        }
+
         public async Task SendMessage(string roomId, string message, string fullName, bool isTeacher)
         {
             var msgId = Guid.NewGuid().ToString("N");
@@ -130,28 +183,6 @@ namespace Academy.Hubs
         public async Task UserTyping(string roomId, string fullName, bool isTyping)
         {
             await Clients.Group(roomId).SendAsync("UserTypingStatus", Context.ConnectionId, fullName, isTyping);
-        }
-
-        // WebRTC Signaling
-        public async Task SendSignal(string targetConnectionId, string signal)
-        {
-            await Clients.Client(targetConnectionId).SendAsync("ReceiveSignal", Context.ConnectionId, signal);
-        }
-
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            foreach (var roomKey in _roomParticipants.Keys)
-            {
-                if (_roomParticipants.TryGetValue(roomKey, out var room))
-                {
-                    if (room.TryRemove(Context.ConnectionId, out var participant))
-                    {
-                        await Clients.Group(roomKey).SendAsync("ParticipantLeft", Context.ConnectionId);
-                        await Clients.Group(roomKey).SendAsync("ReceiveSystemMessage", $"{participant.FullName} otaqdan ayr?ld?", DateTime.Now.ToString("HH:mm"));
-                    }
-                }
-            }
-            await base.OnDisconnectedAsync(exception);
         }
     }
 

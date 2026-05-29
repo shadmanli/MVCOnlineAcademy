@@ -808,21 +808,23 @@
                         coursesGrid.innerHTML = '';
                         if (resultData.recommendedCourses && resultData.recommendedCourses.length > 0) {
                             resultData.recommendedCourses.forEach((c) => {
-                                const levelColor = c.level === 'Beginner' ? '#10B981' : c.level === 'Intermediate' ? '#00F0FF' : '#FF8C00';
+                                const levelColor = c.level === 'Beginner' ? '#10B981' : c.level === 'Intermediate' ? '#fbbf24' : '#ef4444';
                                 
                                 const html = `
-                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; text-align: left; transition: 0.3s; position:relative; overflow:hidden;" class="course-rec-card">
-                                        <div style="display:flex; justify-content: space-between; align-items:flex-start; margin-bottom:12px;">
-                                            <span style="font-size: 11px; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; color:#ddd; font-weight:600;"><i class="fa-solid fa-folder-tree"></i> ${c.category}</span>
-                                            <span style="font-size: 11px; border: 1px solid ${levelColor}; padding: 4px 8px; border-radius: 6px; color:${levelColor}; font-weight:600;"><i class="fa-solid fa-layer-group"></i> ${c.level}</span>
+                                    <a href="${c.url}" style="text-decoration: none; color: inherit; display: block;" class="course-rec-link">
+                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; text-align: left; transition: 0.3s; position:relative; overflow:hidden;" class="course-rec-card">
+                                            <div style="display:flex; justify-content: space-between; align-items:flex-start; margin-bottom:12px;">
+                                                <span style="font-size: 11px; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; color:#ddd; font-weight:600;"><i class="fa-solid fa-folder-tree"></i> ${c.category}</span>
+                                                <span style="font-size: 11px; border: 1px solid ${levelColor}; padding: 4px 8px; border-radius: 6px; color:${levelColor}; font-weight:600;"><i class="fa-solid fa-layer-group"></i> ${c.level}</span>
+                                            </div>
+                                            <h4 style="font-family:'Sora'; margin-bottom:8px; font-size:16px;">${c.title}</h4>
+                                            <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:12px;">${c.shortDescription || 'Məlumat yoxdur'}</p>
+                                            <div style="background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--accent); padding: 8px 12px; font-size: 12px; color:#fff;">
+                                                <strong><i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> Niyə biz bunu seçdik?</strong><br/>
+                                                <span style="color: rgba(255,255,255,0.8);">${c.reason}</span>
+                                            </div>
                                         </div>
-                                        <h4 style="font-family:'Sora'; margin-bottom:8px; font-size:16px;">${c.title}</h4>
-                                        <p style="color:var(--text-muted); font-size:13px; line-height:1.5; margin-bottom:12px;">${c.shortDescription || 'Məlumat yoxdur'}</p>
-                                        <div style="background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--accent); padding: 8px 12px; font-size: 12px; color:#fff;">
-                                            <strong><i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> Niyə biz bunu seçdik?</strong><br/>
-                                            <span style="color: rgba(255,255,255,0.8);">${c.reason}</span>
-                                        </div>
-                                    </div>
+                                    </a>
                                 `;
                                 coursesGrid.insertAdjacentHTML('beforeend', html);
                             });

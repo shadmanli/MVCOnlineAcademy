@@ -27,6 +27,7 @@ namespace Academy.ViewComponents.Course
             string? sort,
             int? categoryId,
             int? instructorId,
+            string? level,
             decimal? minPrice,
             decimal? maxPrice,
             int page = 1)
@@ -41,6 +42,9 @@ namespace Academy.ViewComponents.Course
 
             if (instructorId != null)
                 courses = courses.Where(x => x.InstructorId == instructorId);
+                
+            if (!string.IsNullOrEmpty(level))
+                courses = courses.Where(x => x.Level == level);
 
             if (minPrice != null)
                 courses = courses.Where(x => x.Price >= minPrice);

@@ -193,8 +193,8 @@
                                 var lc = Model.LiveClasses.FirstOrDefault();
                                 if (lc != null)
                                 {
-                                    bool isLive = lc.Status == Academy.Models.LiveSessionStatus.Live;
-                                    bool isScheduled = lc.Status == Academy.Models.LiveSessionStatus.Scheduled;
+                                    bool isLive = lc.Status == Academy.Models.LiveSessionStatus.Live || (lc.Status == Academy.Models.LiveSessionStatus.Scheduled && DateTime.Now >= lc.ScheduledDate);
+                                    bool isScheduled = !isLive && lc.Status == Academy.Models.LiveSessionStatus.Scheduled;
 
                                     <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
                                         <h5 style="margin: 0 0 4px 0; font-size: 15px; color: #e2e8f0;">@lc.Title</h5>
@@ -389,16 +389,19 @@
 
 </main>
 
-@section Scripts {
-    <script src="~/assets/js/courses-detail.js"></script>
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
     <script>
-        document.getElementById('demoPlayBtn')?.addEventListener('click', function() {
-            var demoSection = document.getElementById('demoSection');
-            if (demoSection) {
-                demoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-                alert('Bu kurs üçün hazırda demo dərs yoxdur.');
-            }
+        const conn = new signalR.HubConnectionBuilder()
+            .withUrl("/liveclasshub")
+            .withAutomaticReconnect()
+            .build();
+
+        conn.on("ClassStatusChanged", (roomId, newStatus) => {
+            // "Gözlənilir" → "Aktiv" -> "Bitib", we can just reload the page to get all correct data
+            location.reload(); 
         });
+
+        conn.start().catch(err => console.error(err));
     </script>
 }

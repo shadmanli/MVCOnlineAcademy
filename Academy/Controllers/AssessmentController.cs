@@ -29,26 +29,21 @@ namespace Academy.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetQuestions(int categoryId)
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> GetQuestions(int courseId)
         {
-            var questionsQuery = _context.AssessmentQuestions
-                .Include(q => q.Options)
-                .AsQueryable();
+            var quiz = await _context.Quizzes
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.Options)
+                .FirstOrDefaultAsync(q => q.CourseId == courseId);
 
-            if (categoryId > 0)
-            {
-                questionsQuery = questionsQuery.Where(q => q.CategoryId == categoryId);
-            }
-
-            var questions = await questionsQuery.ToListAsync();
-
-            if (questions == null || !questions.Any())
+            if (quiz == null || !quiz.Questions.Any())
                 return NotFound();
 
             var rng = new Random();
-            
+
             // Anti-repeat/Randomize: Shuffle questions and take max 15
-            var shuffledQuestions = questions.OrderBy(x => rng.Next()).Take(15).Select(q => new
+            var shuffledQuestions = quiz.Questions.OrderBy(x => rng.Next()).Take(15).Select(q => new
             {
                 id = q.Id,
                 text = q.Text,
@@ -62,10 +57,18 @@ namespace Academy.Controllers
         }
 
         [HttpPost]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> SubmitAssessment([FromBody] AssessmentSubmissionDto submission)
         {
-            if (submission == null || submission.Answers == null)
-                return BadRequest();
+            if (submission == null || submission.Answers == null || !submission.Answers.Any())
+                return BadRequest("Cavablar bo? ola bilm?z.");
+
+            if (!submission.CourseId.HasValue)
+                return BadRequest("CourseId mütl?qdir.");
+
+            var quiz = await _context.Quizzes.FirstOrDefaultAsync(q => q.CourseId == submission.CourseId.Value);
+            if (quiz == null)
+                return BadRequest("Bu kursun quiz-i yoxdur.");
 
             int correctCount = 0;
             int total = submission.Answers.Count;
@@ -128,51 +131,31 @@ namespace Academy.Controllers
             if (finalScore < 0) finalScore = 0;
 
             double percentage = total == 0 ? 0 : (double)correctCount / total;
-            
-           
+
             double percentageForLevel = percentage * 100;
             string level = "Beginner";
-            
+
             if (percentageForLevel >= 71) level = "Advanced";
             else if (percentageForLevel >= 41) level = "Intermediate";
-            
+
             int xp = (int)Math.Round(finalScore * 50);
 
-           
-            AppUser appUser = null;
-            if (User.Identity.IsAuthenticated)
+            AppUser appUser = await _userManager.GetUserAsync(User);
+            if (appUser != null)
             {
-                appUser = await _userManager.GetUserAsync(User);
-                if (appUser != null)
+                var newResult = new UserAssessmentResult
                 {
-                    var existingResult = await _context.UserAssessmentResults
-                        .FirstOrDefaultAsync(r => r.AppUserId == appUser.Id && r.CategoryId == submission.CategoryId);
-
-                    if (existingResult != null)
-                    {
-                        existingResult.Score = (int)Math.Round(finalScore);
-                        existingResult.TotalQuestions = total;
-                        existingResult.Percentage = percentage * 100;
-                        existingResult.Level = level;
-                        existingResult.XP = xp;
-                    }
-                    else
-                    {
-                        var newResult = new UserAssessmentResult
-                        {
-                            AppUserId = appUser.Id,
-                            CategoryId = submission.CategoryId ?? 0,
-                            CourseId = submission.CourseId,
-                            Score = (int)Math.Round(finalScore),
-                            TotalQuestions = total,
-                            Percentage = percentage * 100,
-                            Level = level,
-                            XP = xp
-                        };
-                        _context.UserAssessmentResults.Add(newResult);
-                    }
-                    await _context.SaveChangesAsync();
-                }
+                    AppUserId = appUser.Id,
+                    CourseId = submission.CourseId,
+                    QuizId = quiz.Id,
+                    Score = (int)Math.Round(finalScore),
+                    TotalQuestions = total,
+                    Percentage = percentageForLevel,
+                    Level = level,
+                    XP = xp
+                };
+                _context.UserAssessmentResults.Add(newResult);
+                await _context.SaveChangesAsync();
             }
 
             // Create Recommendation System
@@ -194,7 +177,7 @@ namespace Academy.Controllers
             // Fetch Courses dynamically based on performance
             var recommendationQuery = _context.Courses
                 .Include(c => c.Category)
-                .Where(c => c.IsActive && !c.IsDeleted)
+                .Where(c => c.IsActive && !c.IsDeleted && c.Id != submission.CourseId)
                 .AsQueryable();
 
             var allCourses = await recommendationQuery.ToListAsync();
@@ -207,13 +190,11 @@ namespace Academy.Controllers
                 if (wrongCategories.Contains(c.CategoryId)) score += 10;
                 
                 // Boost based on title/level match
-                if (level == "Beginner" && c.Title.Contains("Baza", StringComparison.OrdinalIgnoreCase)) score += 5;
-                if (level == "Intermediate" && c.Title.Contains("Pro", StringComparison.OrdinalIgnoreCase)) score += 5;
-                if (level == "Advanced" && c.Title.Contains("Advanced", StringComparison.OrdinalIgnoreCase)) score += 5;
+                if (level == c.Level) score += 20;
                 
                 return new { Course = c, Score = score };
             })
-            // YALNIZ gerç?k uy?unlu?u olan xüsusi kurslar? qaytar (Score > 0). 
+            // YALNIZ ger?k uy?unlu?u olan xsusi kurslar? qaytar (Score > 0). 
             // ?g?r uy?unluq yoxdursa siyah? bo? qals?n ki, UI-da "tap?lmad?" funksionall??? görünsün.
             .Where(x => x.Score > 0)
             .OrderByDescending(x => x.Score)
@@ -224,16 +205,18 @@ namespace Academy.Controllers
             var recommendedCourses = rankedCourses.Select(c => new
             {
                 title = c.Title,
+                imageUrl = c.ImageUrl, // Assuming ImageUrl is needed for UI
+                url = Url.Action("Index", "CourseDetail", new { id = c.Id }), // Getting URL to course
                 shortDescription = !string.IsNullOrEmpty(c.Description) && c.Description.Length > 80 
                                     ? c.Description.Substring(0, 80) + "..." 
                                     : c.Description,
-                level = level,
+                level = c.Level,
                 category = c.Category?.Name ?? "General",
                 reason = wrongCategories.Contains(c.CategoryId) 
                          ? "Sizin üçün xüsusi: M?hz s?naqda s?hv etdiyiniz mövzular? dolduracaq ?n uy?un kurs."
                          : level == "Intermediate"
                            ? "Haz?rk? bilikl?rinizi real layih?l?rd? t?tbiq etm?yiniz üçün ön?ririk."
-                           : "Seçdiyiniz sah? üzr? bacar?qlar? s?f?rdan formala?d?rma?a köm?k ed?c?k."
+                           : "Seçdiyiniz sah? üzr? bacar?qlar? inki?af etdirm?y? köm?k ed?c?k."
             }).ToList();
 
             // Generate Recommendations based on calculated Level

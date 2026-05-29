@@ -33,11 +33,18 @@
           
             public int Duration { get; set; } 
             public int StudentCount { get; set; }
-        public List<CourseRequirement> Requirements { get; set; }
-        public bool IsActive { get; set; }
+            
+            // Beginner, Intermediate, Advanced
+            public string Level { get; set; } = "Beginner";
+            
+            public List<CourseRequirement> Requirements { get; set; }
+            public bool IsActive { get; set; }
             public bool IsDeleted { get; set; }
 
         public List<CourseFeature> Features { get; set; }
+        
+        public Quiz Quiz { get; set; }
+
         public DateTime CreatedDate { get; set; }
             public DateTime? UpdatedDate { get; set; }
         }

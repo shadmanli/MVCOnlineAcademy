@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Academy.ViewModels.LiveClass
 {
-    public class LiveClassCreateVM
+    public class LiveClassEditVM
     {
-        [Required(ErrorMessage = "Z?hm?t olmasa kursu seçin.")]
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Z?hm?t olmasa kursu sein.")]
         public int CourseId { get; set; }
 
         [Required(ErrorMessage = "Ba?l?q daxil edilm?lidir.")]
@@ -17,7 +19,7 @@ namespace Academy.ViewModels.LiveClass
         [Required(ErrorMessage = "Tarix v? vaxt daxil edilm?lidir.")]
         public DateTime ScheduledDate { get; set; }
 
-        [Required(ErrorMessage = "Müdd?t (d?qiq? il?) daxil edilm?lidir.")]
+        [Required(ErrorMessage = "Mdd?t (d?qiq? il?) daxil edilm?lidir.")]
         public int DurationMinutes { get; set; }
 
         [ValidateNever]

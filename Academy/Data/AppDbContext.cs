@@ -40,6 +40,8 @@ namespace Academy.Data
         public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
         public DbSet<AssessmentOption> AssessmentOptions { get; set; }
         public DbSet<UserAssessmentResult> UserAssessmentResults { get; set; }
+        
+        public DbSet<Quiz> Quizzes { get; set; }
 
         public DbSet<LiveClass> LiveClasses { get; set; }
         public DbSet<LiveClassAttendance> LiveClassAttendances { get; set; }
@@ -48,6 +50,24 @@ namespace Academy.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Quiz>()
+                .HasOne(q => q.Course)
+                .WithOne(c => c.Quiz)
+                .HasForeignKey<Quiz>(q => q.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<AssessmentQuestion>()
+                .HasOne(q => q.Quiz)
+                .WithMany(qz => qz.Questions)
+                .HasForeignKey(q => q.QuizId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<UserAssessmentResult>()
+                .HasOne(r => r.Quiz)
+                .WithMany(q => q.Results)
+                .HasForeignKey(r => r.QuizId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<LiveClass>()
                 .HasOne(l => l.Instructor)

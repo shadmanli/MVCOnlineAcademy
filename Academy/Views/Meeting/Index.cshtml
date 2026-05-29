@@ -1,19 +1,19 @@
-@model IEnumerable<Academy.Models.LiveClass>
+ï»¿@model IEnumerable<Academy.Models.LiveClass>
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Görü?l?r (Meetings)";
+    ViewData["Title"] = "GÃ¶rÃ¼?l?r (Meetings)";
 }
 
 <div class="container" style="padding-top: 100px; padding-bottom: 50px;">
-    <h2>Bütün Canl? Görü?l?r</h2>
-    <p>A?a??da olan görü?l?r? keçid ed? bil?rsiniz.</p>
+    <h2>BÃ¼tÃ¼n Canl? GÃ¶rÃ¼?l?r</h2>
+    <p>A?a??da olan gÃ¶rÃ¼?l?r? keÃ§id ed? bil?rsiniz.</p>
 
     <div class="row mt-4">
         @if (!Model.Any())
         {
             <div class="col-12">
-                <div class="alert alert-warning">Haz?rda heç bir canl? görü? yoxdur.</div>
+                <div class="alert alert-warning">Haz?rda heÃ§ bir canl? gÃ¶rÃ¼? yoxdur.</div>
             </div>
         }
         else
@@ -26,11 +26,11 @@
                             <h5 class="card-title">@lc.Title</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Kurs: @lc.Course?.Title</h6>
                             <p class="card-text">
-                                <small><strong>Mü?llim:</strong> @lc.Instructor?.FullName</small><br />
-                                <small><strong>Mövzu:</strong> @lc.Topic</small><br />
+                                <small><strong>MÃ¼?llim:</strong> @lc.Instructor?.FullName</small><br />
+                                <small><strong>MÃ¶vzu:</strong> @lc.Topic</small><br />
                                 <small><strong>Vaxt:</strong> @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</small>
                             </p>
-                            <a href="/meeting/@lc.RoomId" class="btn btn-success w-100">Görü?? Qo?ul</a>
+                            <a href="/meeting/@lc.RoomId" class="btn btn-success w-100">GÃ¶rÃ¼?? Qo?ul</a>
                         </div>
                     </div>
                 </div>

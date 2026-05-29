@@ -1,5 +1,5 @@
-@{
-    Layout = null; // Full screen UI ���n Layout-suz i?l?dirik
+﻿@{
+    Layout = null; // Full screen UI üçün Layout-suz i?l?dirik
 }
 
 <!DOCTYPE html>
@@ -95,7 +95,7 @@
             position: relative;
         }
 
-        /* D?rs g�st?ril?n ?sas ekran (Speaker View) */
+        /* D?rs göst?ril?n ?sas ekran (Speaker View) */
         .video-large {
             background: #000;
             border-radius: 16px;
@@ -130,7 +130,7 @@
             gap: 8px;
         }
 
-        /* Ki�ik t?l?b? kameralar? */
+        /* Kiçik t?l?b? kameralar? */
         .students-sidebar {
             position: absolute;
             right: 20px;
@@ -358,7 +358,7 @@
     <header class="room-header">
         <div class="header-info">
             <h2 id="roomTitle">@ViewBag.Title</h2>
-            <p>M�?llim: @ViewBag.Instructor &bull; <span id="timer">00:00:00</span></p>
+            <p>Mü?llim: @ViewBag.Instructor &bull; <span id="timer">00:00:00</span></p>
         </div>
         <div class="header-actions">
             <div class="badge recording"><i class="fa-solid fa-record-vinyl"></i> REC</div>
@@ -378,7 +378,7 @@
                 </div>
             </div>
 
-            <!-- Sa? k?nardak? ki�ik kameralar -->
+            <!-- Sa? k?nardak? kiçik kameralar -->
             <div class="students-sidebar" id="participantsGrid">
                 <div class="video-small" id="localVideoContainer">
                     <div class="video-overlay" id="localVideoOverlay">
@@ -397,7 +397,7 @@
         <aside class="side-panel" id="sidePanel">
             <div class="panel-tabs">
                 <button class="panel-tab active"><i class="fa-regular fa-comment"></i> Chat</button>
-                <button class="panel-tab"><i class="fa-solid fa-users"></i> ??tirak�?lar (12)</button>
+                <button class="panel-tab"><i class="fa-solid fa-users"></i> ??tirakç?lar (12)</button>
             </div>
 
             <div class="panel-content">
@@ -405,7 +405,7 @@
                     <div class="chat-messages">
                         <div class="msg">
                             <span class="sender">Leyla (09:12)</span>
-                            <span class="text">M�?llim, Singleton v? Scoped f?rqin? bir daha baxa bil?rikmi?</span>
+                            <span class="text">Mü?llim, Singleton v? Scoped f?rqin? bir daha baxa bil?rikmi?</span>
                         </div>
                         <div class="msg me">
                             <span class="sender">S?n (09:15)</span>
@@ -448,8 +448,16 @@
 
         <div class="control-group">
             <button class="ctrl-btn danger-fill" onclick="leaveRoom()">
-                <i class="fa-solid fa-phone-slash"></i> <span style="font-size: 14px; margin: 0 0 0 8px;">D?rsi T?rk Et</span>
+                <i class="fa-solid fa-phone-slash"></i> <span style="font-size: 14px; margin: 0 0 0 8px;">Dərsi Tərk Et</span>
             </button>
+            @if(ViewBag.IsTeacher == true) {
+                <button id="startClassBtn" class="ctrl-btn" style="background:#10b981; color:white; width:auto; padding: 0 24px;" onclick="startClass()">
+                    <i class="fa-solid fa-play"></i> <span style="font-size: 14px; margin: 0 0 0 8px;">Dərsi Başlat</span>
+                </button>
+                <button id="endClassBtn" class="ctrl-btn danger-fill" style="display:none;" onclick="endClass()">
+                    <i class="fa-solid fa-stop"></i> <span style="font-size: 14px; margin: 0 0 0 8px;">Dərsi Bitir</span>
+                </button>
+            }
         </div>
 
     </footer>
@@ -518,8 +526,6 @@
                 localVideoFallbackIcon.classList.add('hidden');
                 localVideo.classList.remove('ready');
                 
-                await initSignalR(); // Init SignalR early so they join room even if camera fails
-
                 localStreamRef = await navigator.mediaDevices.getUserMedia({
                     video: {
                         width: { ideal: 1280 },
@@ -545,17 +551,26 @@
                     recoverStream();
                 };
 
+                // Stream tam hazir olduqdan sonra SignalR ve WebRTC baglantisini baslat
+                // Müəllim isə otağa birbaşa JoinRoom etməyəcək, "Dərsi Başlat" basanda qoşulacaq
+                await initSignalR(isTeacher);
+
             } catch (err) {
                 console.error("Camera/Mic access denied or failed:", err);
                 localVideoSpinner.classList.add('hidden');
                 localVideoFallbackIcon.classList.remove('hidden');
+                alert("Kamera və mikrofona icazə verilmədi! Dərsə tam qoşulmaq üçün icazə verməlisiniz.");
                 
-                // Still try to init SignalR if not done
-                await initSignalR();
+                // Otağa ancaq icazə verməyən iştirakçılar kamerasız qoşula bilsin
+                if(!isTeacher) {
+                    await initSignalR(false);
+                } else {
+                    alert("Müəllim olaraq dərs başlatmaq üçün kamera və mikrofon icazəsi mütləqdir!");
+                }
             }
         };
 
-        const initSignalR = async () => {
+        const initSignalR = async (skipJoinForTeacher = false) => {
             if(connection) return;
 
             connection = new signalR.HubConnectionBuilder()
@@ -565,7 +580,7 @@
 
             // When a new participant joins, we are the initiator (create offer)
             connection.on("ParticipantJoined", async (participant) => {
-                participantNames[participant.connectionId] = participant.fullName || "??tirak�?";
+                participantNames[participant.connectionId] = participant.fullName || "??tirakç?";
                 if (participant.connectionId === connection.connectionId) return;
                 await createPeerConnection(participant.connectionId, true);
             });
@@ -573,7 +588,7 @@
             // Receive current participants block
             connection.on("UpdateParticipants", (participantList) => {
                 participantList.forEach(p => {
-                    participantNames[p.connectionId] = p.fullName || "??tirak�?";
+                    participantNames[p.connectionId] = p.fullName || "??tirakç?";
                 });
             });
 
@@ -583,6 +598,18 @@
                 if (peers[connectionId]) {
                     peers[connectionId].close();
                     delete peers[connectionId];
+                }
+            });
+
+            connection.on("KickedOut", () => {
+                alert("Siz müəllim tərəfindən dərsdən çıxarıldınız.");
+                window.location.href = '/Course';
+            });
+
+            connection.on("ClassStatusChanged", (id, newStatus) => {
+                if(newStatus === "Ended" && !isTeacher) {
+                    alert("Müəllim dərsi bitirdi.");
+                    window.location.href = '/Course';
                 }
             });
 
@@ -607,7 +634,10 @@
             });
 
             await connection.start();
-            await connection.invoke("JoinRoom", roomId || "default-room", userId || "u1", fullName || "User", isTeacher);
+            
+            if (!skipJoinForTeacher) {
+                await connection.invoke("JoinRoom", roomId || "default-room", userId || "u1", fullName || "User", isTeacher);
+            }
         };
 
         const createPeerConnection = async (targetConnectionId, isInitiator) => {
@@ -661,10 +691,19 @@
                 
                 const nameTag = document.createElement('div');
                 nameTag.className = 'name-tag';
-                nameTag.innerText = participantNames[connectionId] || "??tirak�?";
+                nameTag.innerText = participantNames[connectionId] || "İştirakçı";
                 
                 container.appendChild(vid);
                 container.appendChild(nameTag);
+
+                if (isTeacher) {
+                    const kickBtn = document.createElement('button');
+                    kickBtn.innerHTML = '<i class="fa-solid fa-times"></i> Çıxart';
+                    kickBtn.style.cssText = "position:absolute; top:8px; right:8px; background:rgba(239, 68, 68, 0.8); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer;";
+                    kickBtn.onclick = () => removeParticipant(connectionId);
+                    container.appendChild(kickBtn);
+                }
+
                 sidebar.appendChild(container);
 
                 attachStream(vid, stream);
@@ -795,8 +834,47 @@
         }
 
         function leaveRoom() {
-            if(confirm("D?rsi t?rk etm?k ist?diyiniz? ?minsiniz?")) {
+            if(confirm("Dərsi tərk etmək istədiyinizə əminsiniz?")) {
                 window.location.href = '/Course';
+            }
+        }
+
+        async function startClass() {
+            if (!localStreamRef) {
+                alert("Dərsi başlatmaq üçün əvvəlcə kameranıza icazə verməlisiniz!");
+                return;
+            }
+
+            if(connection && roomId) {
+                // Əvvəlcə meeting otağına rəsmən qoşul (öz avatarı digərlərində görünsün)
+                await connection.invoke("JoinRoom", roomId, userId, fullName, true);
+                
+                // Sonra isə backenddə statusu Live et ki, tələbələr ana səhifədən girə bilsinlər
+                await connection.invoke("StartClass", roomId);
+                
+                // UI düymələrini yeniləyək ki, bir daha basılmasın
+                document.getElementById('startClassBtn').style.display = 'none';
+                document.getElementById('endClassBtn').style.display = 'inline-flex';
+
+                alert("Dərs uğurla başladıldı və Siz otağa qoşuldunuz!");
+            }
+        }
+
+        async function endClass() {
+            if(confirm("Dərsi bitirmək istədiyinizə əminsiniz? Bütün tələbələr üçün dərs bitəcək.")) {
+                if(connection && roomId) {
+                    await connection.invoke("EndClass", roomId);
+                    alert("Dərs bitdi!");
+                    window.location.href = '/Course';
+                }
+            }
+        }
+
+        async function removeParticipant(targetConnectionId) {
+            if(confirm("Bu iştirakçını dərsdən çıxarmaq istədiyinizə əminsiniz?")) {
+                if(connection && roomId) {
+                    await connection.invoke("RemoveParticipant", roomId, targetConnectionId);
+                }
             }
         }
     </script>

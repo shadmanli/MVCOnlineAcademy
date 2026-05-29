@@ -70,6 +70,48 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+
+    string[] roleNames = { "SuperAdmin", "Admin", "Muellim", "User" };
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+    var users = new[]
+    {
+        new { Email = "superadmin@iguru.az", Password = "SuperAdmin123!", Role = "SuperAdmin" },
+        new { Email = "admin@iguru.az", Password = "Admin123!", Role = "Admin" },
+        new { Email = "muellim@iguru.az", Password = "Muellim123!", Role = "Muellim" },
+        new { Email = "user@iguru.az", Password = "User123!", Role = "User" }
+    };
+
+    foreach (var u in users)
+    {
+        if (await userManager.FindByEmailAsync(u.Email) == null)
+        {
+            var user = new AppUser
+            {
+                UserName = u.Email,
+                Email = u.Email,
+                EmailConfirmed = true,
+                FullName = u.Role
+            };
+            var result = await userManager.CreateAsync(user, u.Password);
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, u.Role);
+            }
+        }
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

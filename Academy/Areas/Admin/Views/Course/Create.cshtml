@@ -13,6 +13,12 @@
     <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control mb-2"></select>
     <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control mb-2"></select>
     <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-control mb-2"></select>
+    
+    <select asp-for="Level" class="form-control mb-2">
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+    </select>
 
     <input asp-for="Duration" class="form-control mb-2" placeholder="Duration" />
 

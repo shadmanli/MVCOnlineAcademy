@@ -15,6 +15,7 @@ namespace Academy.ViewModels.Course
 
         public int Duration { get; set; }
         public int StudentCount { get; set; }
+        public string Level { get; set; } = "Beginner";
 
         public int LanguageId { get; set; }
         public int CategoryId { get; set; }

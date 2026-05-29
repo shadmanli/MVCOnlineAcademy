@@ -223,6 +223,25 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
+        .pcc-level-badge {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 10;
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .level-beginner { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .level-intermediate { background: linear-gradient(135deg, #eab308, #d97706); }
+        .level-advanced { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
         .pcc-wishlist-btn {
             position: absolute;
             top: 16px;
@@ -502,6 +521,25 @@
                 }
             </select>
 
+            <!-- LEVEL -->
+            <select name="level" onchange="this.form.submit()">
+                <option value="">All Levels</option>
+                @{
+                    var levels = new string[] { "Beginner", "Intermediate", "Advanced" };
+                    foreach (var lv in levels)
+                    {
+                        if (Context.Request.Query["level"] == lv)
+                        {
+                            <option value="@lv" selected>@lv</option>
+                        }
+                        else
+                        {
+                            <option value="@lv">@lv</option>
+                        }
+                    }
+                }
+            </select>
+
             <!-- INSTRUCTOR -->
             <select name="instructorId" onchange="this.form.submit()">
                 <option value="">All Instructors</option>
@@ -546,6 +584,11 @@
                             <span class="pcc-category-badge">
                                 @(course.CategoryName ?? "No Category")
                             </span>
+                            @if(!string.IsNullOrEmpty(course.Level)) {
+                                <span class="pcc-level-badge level-@(course.Level.ToLower())">
+                                    @course.Level
+                                </span>
+                            }
                             <div class="pcc-overlay"></div>
                             <img class="pcc-img"
                                  src="@(string.IsNullOrEmpty(course.ImageUrl) ? "/images/default.png" : "/uploads/course/" + course.ImageUrl)"

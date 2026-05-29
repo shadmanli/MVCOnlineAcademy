@@ -8,7 +8,10 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Canl? D?rsl?r (Live Classes)</h6>
-        <a asp-action="Create" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Yeni Canl? D?rs Yarat</a>
+        @if (ViewBag.IsMuellim != null && (bool)ViewBag.IsMuellim)
+        {
+            <a asp-action="Create" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Yeni Canl? D?rs Yarat</a>
+        }
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -27,10 +30,12 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        bool canDelete = (ViewBag.IsAdminOrSuper != null && (bool)ViewBag.IsAdminOrSuper) || 
+                                         (ViewBag.IsMuellim != null && (bool)ViewBag.IsMuellim && item.TeacherId == ViewBag.CurrentUserId?.ToString());
                         <tr>
                             <td>@item.Title</td>
                             <td>@(item.Course != null ? item.Course.Title : "Yoxdur")</td>
-                            <td>@(item.Instructor != null ? item.Instructor.FullName : "Yoxdur")</td>
+                            <td>@(item.Teacher != null ? item.Teacher.FullName ?? item.Teacher.UserName : "Yoxdur")</td>
                             <td>@item.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</td>
                             <td>@item.DurationMinutes d?q.</td>
                             <td>
@@ -53,9 +58,13 @@
                             </td>
                             <td>
                                 <a href="/meeting/@item.RoomId" target="_blank" class="btn btn-info btn-sm" title="Ota?a Bax"><i class="fas fa-video"></i></a>
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline-block;" onsubmit="return confirm('Bu canl? d?rsi silm?k ist?diyiniz? ?minsiniz?');">
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Sil"><i class="fas fa-trash"></i></button>
-                                </form>
+                                @if (canDelete)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="Düz?lt"><i class="fas fa-edit"></i></a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline-block;" onsubmit="return confirm('Bu canl? d?rsi silm?k ist?diyiniz? ?minsiniz?');">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                }
                             </td>
                         </tr>
                     }

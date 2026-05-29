@@ -54,6 +54,14 @@
         <div class="mb-3">
             <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-select"></select>
         </div>
+        
+        <div class="mb-3">
+            <select asp-for="Level" class="form-select">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
 
         <h4 class="mt-4">Existing Videos</h4>
         @if(Model.ExistingVideos != null && Model.ExistingVideos.Any())

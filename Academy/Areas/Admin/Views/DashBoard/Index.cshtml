@@ -1,1 +1,216 @@
-﻿
+﻿@model List<Academy.Models.UserAssessmentResult>
+@{
+    ViewData["Title"] = "Müəllim Paneli - Statistika";
+}
+
+<div class="container-fluid mt-4">
+    <style>
+        .stat-card-custom {
+            border-radius: 16px;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .stat-card-custom:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card-custom h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+            z-index: 2;
+            position: relative;
+        }
+        .stat-card-custom p {
+            margin: 0;
+            opacity: 0.9;
+            z-index: 2;
+            position: relative;
+        }
+        .bg-purple-gradient { background: linear-gradient(135deg, #7b2cbf, #b5179e); }
+        .bg-blue-gradient { background: linear-gradient(135deg, #023e8a, #0077b6); }
+
+        .student-result-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid transparent;
+            transition: all 0.3s;
+        }
+        .student-result-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .level-Beginner { border-left-color: #10B981; }
+        .level-Intermediate { border-left-color: #F59E0B; }
+        .level-Advanced { border-left-color: #EF4444; }
+
+        .top-student-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+        }
+        .top-student-card i {
+            font-size: 40px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+    </style>
+
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2 class="font-weight-bold" style="font-family:'Sora', sans-serif;">Tələbə Nəticələri Statistikası</h2>
+        </div>
+    </div>
+
+    <!-- Counters -->
+    <div class="row mb-5">
+        <div class="col-md-6 mb-3">
+            <div class="stat-card-custom bg-purple-gradient text-center">
+                <p>Məzun Olmuş / Quiz Edən Tələbələr</p>
+                <h3 class="counter" data-target="@ViewBag.TotalStudents">0</h3>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="stat-card-custom bg-blue-gradient text-center">
+                <p>Orta Bal (Faiz)</p>
+                <h3><span class="counter" data-target="@Math.Round(ViewBag.AverageScore)">0</span>%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <!-- Chart -->
+        <div class="col-md-4">
+            <div class="chart-container text-center">
+                <h4 class="mb-4 font-weight-bold">Səviyyə Dağılımı</h4>
+                <canvas id="levelChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Student Highlight -->
+        <div class="col-md-8">
+            @if(ViewBag.TopStudent != null)
+            {
+                var top = ViewBag.TopStudent as Academy.Models.UserAssessmentResult;
+                <div class="top-student-card h-100 d-flex flex-column justify-content-center">
+                    <i class="fa-solid fa-crown"></i>
+                    <h5 class="mb-1 text-uppercase fw-bold text-dark">Ən Yaxşı Nəticə!</h5>
+                    <h2 class="font-weight-bolder text-dark mb-3">@top.AppUser?.FullName</h2>
+                    <div class="d-flex justify-content-center gap-4 text-dark">
+                        <div>
+                            <span class="d-block small fw-bold">Nəticə</span>
+                            <h4 class="mb-0 fw-bold">@top.Percentage%</h4>
+                        </div>
+                        <div>
+                            <span class="d-block small fw-bold">Səviyyə</span>
+                            <h4 class="mb-0 fw-bold">@top.Level</h4>
+                        </div>
+                        <div>
+                            <span class="d-block small fw-bold">Xal / XP</span>
+                            <h4 class="mb-0 fw-bold">@top.XP</h4>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="top-student-card h-100 d-flex flex-column justify-content-center bg-light text-muted" style="background: #f8f9fa!important;">
+                    <p>Hələ nəticə yoxdur.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Student Result Cards -->
+    <h4 class="mb-3 font-weight-bold">Bütün Tələbə Nəticələri</h4>
+    <div class="row">
+        @foreach (var res in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="student-result-card level-@res.Level">
+                    <div>
+                        <h5 class="mb-1 fw-bold">@res.AppUser?.FullName</h5>
+                        <p class="text-muted mb-0 small"><i class="fa-solid fa-layer-group"></i> @res.Level &bull; @res.Category?.Name</p>
+                    </div>
+                    <div class="text-end">
+                        <h4 class="mb-0 fw-bold text-dark">@res.Percentage%</h4>
+                        <span class="badge bg-dark rounded-pill">@res.XP XP</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Count Up Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 100;
+
+        counters.forEach(counter => {
+            const animate = () => {
+                const value = +counter.getAttribute('data-target');
+                const data = +counter.innerText;
+                const time = value / speed;
+
+                if(data < value) {
+                    counter.innerText = Math.ceil(data + time);
+                    setTimeout(animate, 20);
+                } else {
+                    counter.innerText = value;
+                }
+            }
+            animate();
+        });
+
+        // Pie Chart
+        const ctx = document.getElementById('levelChart').getContext('2d');
+        const levelChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Beginner', 'Intermediate', 'Advanced'],
+                datasets: [{
+                    data: [@ViewBag.BeginnerCount, @ViewBag.IntermediateCount, @ViewBag.AdvancedCount],
+                    backgroundColor: [
+                        '#10B981', // green
+                        '#F59E0B', // yellow
+                        '#EF4444'  // red
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 20, font: { family: 'Sora', weight: 'bold' } }
+                    }
+                }
+            }
+        });
+    </script>
+}

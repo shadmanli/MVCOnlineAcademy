@@ -4,6 +4,7 @@ using Academy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Academy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260529153242_AddCourseLevel")]
+    partial class AddCourseLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,9 +257,6 @@ namespace Academy.Migrations
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
-                    b.Property<int>("QuizId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -266,8 +266,6 @@ namespace Academy.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("QuizId");
 
                     b.ToTable("AssessmentQuestions");
                 });
@@ -960,32 +958,6 @@ namespace Academy.Migrations
                     b.ToTable("Mission");
                 });
 
-            modelBuilder.Entity("Academy.Models.Quiz", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId")
-                        .IsUnique();
-
-                    b.ToTable("Quizzes");
-                });
-
             modelBuilder.Entity("Academy.Models.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -1146,9 +1118,6 @@ namespace Academy.Migrations
                     b.Property<double>("Percentage")
                         .HasColumnType("float");
 
-                    b.Property<int>("QuizId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
@@ -1165,8 +1134,6 @@ namespace Academy.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("QuizId");
 
                     b.ToTable("UserAssessmentResults");
                 });
@@ -1370,17 +1337,9 @@ namespace Academy.Migrations
                         .WithMany()
                         .HasForeignKey("CourseId");
 
-                    b.HasOne("Academy.Models.Quiz", "Quiz")
-                        .WithMany("Questions")
-                        .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
 
                     b.Navigation("Course");
-
-                    b.Navigation("Quiz");
                 });
 
             modelBuilder.Entity("Academy.Models.Basket", b =>
@@ -1577,17 +1536,6 @@ namespace Academy.Migrations
                     b.Navigation("LiveClass");
                 });
 
-            modelBuilder.Entity("Academy.Models.Quiz", b =>
-                {
-                    b.HasOne("Academy.Models.Course", "Course")
-                        .WithOne("Quiz")
-                        .HasForeignKey("Academy.Models.Quiz", "CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-                });
-
             modelBuilder.Entity("Academy.Models.Review", b =>
                 {
                     b.HasOne("Academy.Models.Course", "Course")
@@ -1625,19 +1573,11 @@ namespace Academy.Migrations
                         .WithMany()
                         .HasForeignKey("CourseId");
 
-                    b.HasOne("Academy.Models.Quiz", "Quiz")
-                        .WithMany("Results")
-                        .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("AppUser");
 
                     b.Navigation("Category");
 
                     b.Navigation("Course");
-
-                    b.Navigation("Quiz");
                 });
 
             modelBuilder.Entity("Academy.Models.Video", b =>
@@ -1737,9 +1677,6 @@ namespace Academy.Migrations
 
                     b.Navigation("Lessons");
 
-                    b.Navigation("Quiz")
-                        .IsRequired();
-
                     b.Navigation("Requirements");
 
                     b.Navigation("Reviews");
@@ -1767,13 +1704,6 @@ namespace Academy.Migrations
                     b.Navigation("Attendances");
 
                     b.Navigation("EventLogs");
-                });
-
-            modelBuilder.Entity("Academy.Models.Quiz", b =>
-                {
-                    b.Navigation("Questions");
-
-                    b.Navigation("Results");
                 });
 
             modelBuilder.Entity("Academy.Models.Student", b =>

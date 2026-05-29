@@ -25,6 +25,8 @@ namespace Academy.ViewModels.Course
         public int Duration { get; set; }
         public int StudentCount { get; set; }
         public double Rating { get; set; }
+        
+        public string Level { get; set; }
 
         public List<Academy.Models.Course> OtherCourses { get; set; } = new List<Academy.Models.Course>();
     }

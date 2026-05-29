@@ -4,12 +4,14 @@ namespace Academy.Models
     {
         public string Text { get; set; }
 
-        // Subject / Category Relation
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
         public int? CourseId { get; set; }
         public Course Course { get; set; }
+
+        public int QuizId { get; set; }
+        public Quiz Quiz { get; set; }
 
         public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Medium;
         public int Points { get; set; } = 10;

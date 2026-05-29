@@ -23,7 +23,7 @@ namespace Academy.Controllers
         {
             var liveClass = await _context.LiveClasses
                 .Include(l => l.Course)
-                .Include(l => l.Instructor)
+                .Include(l => l.Teacher)
                 .FirstOrDefaultAsync(l => l.RoomId == id);
 
             bool isTeacher = false;
@@ -37,7 +37,7 @@ namespace Academy.Controllers
             else
             {
                 ViewBag.Title = liveClass.Title;
-                ViewBag.Instructor = liveClass.Instructor.FullName;
+                ViewBag.Instructor = liveClass.Teacher != null ? (liveClass.Teacher.FullName ?? liveClass.Teacher.UserName) : "Yoxdur";
                 ViewBag.RoomId = liveClass.RoomId;
                 // Will check teacher status below properly
             }
@@ -53,9 +53,9 @@ namespace Academy.Controllers
                     userId = appUser.Id;
                     fullName = !string.IsNullOrEmpty(appUser.FullName) ? appUser.FullName : appUser.UserName;
                     
-                    if (liveClass != null && liveClass.Instructor != null && liveClass.Instructor.AppUserId == appUser.Id)
+                    if (liveClass != null && liveClass.TeacherId == appUser.Id)
                     {
-                        isTeacher = true;
+                        isTeacher = true; // Sadece o d?rsi yaradan mü?llim admin ola bil?r
                     }
                 }
             }

@@ -1,0 +1,58 @@
+@model Academy.ViewModels.LiveClass.LiveClassEditVM
+
+@{
+    ViewData["Title"] = "Canl? D?rsi Redakt? Et";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Canl? D?rsi Redakt? Et</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label">Ba?l?q</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CourseId" class="control-label">Kurs</label>
+                <select asp-for="CourseId" asp-items="Model.Courses" class="form-control">
+                    <option value="">-- Kurs Seçin --</option>
+                </select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Topic" class="control-label">Mövzu</label>
+                <input asp-for="Topic" class="form-control" />
+                <span asp-validation-for="Topic" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ScheduledDate" class="control-label">Tarix v? Vaxt</label>
+                <input asp-for="ScheduledDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="ScheduledDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DurationMinutes" class="control-label">Müdd?t (d?qiq?)</label>
+                <input asp-for="DurationMinutes" class="form-control" type="number" />
+                <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Yadda Saxla</button>
+                <a asp-action="Index" class="btn btn-secondary">Geri Qay?t</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
