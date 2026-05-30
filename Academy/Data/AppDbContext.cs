@@ -46,6 +46,7 @@ namespace Academy.Data
         public DbSet<LiveClass> LiveClasses { get; set; }
         public DbSet<LiveClassAttendance> LiveClassAttendances { get; set; }
         public DbSet<LiveClassEventLog> LiveClassEventLogs { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

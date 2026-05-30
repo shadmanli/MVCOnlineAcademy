@@ -1,0 +1,344 @@
+@model List<Academy.Models.ContactMessage>
+@{
+    ViewData["Title"] = "Gələn Mesajlar";
+    int totalCount = ViewBag.TotalCount;
+    int unreadCount = ViewBag.UnreadCount;
+    int thisWeekCount = ViewBag.ThisWeekCount;
+    int repliedCount = ViewBag.RepliedCount;
+    string? search = ViewBag.Search;
+    string? filter = ViewBag.Filter;
+}
+
+<div class="container-fluid px-4 mt-4">
+
+    <!-- Toast -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index:9999">
+        <div id="adminToast" class="toast align-items-center border-0 text-white" role="alert">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold" id="adminToastMsg"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+        <div>
+            <h3 class="fw-bold mb-1"><i class="fa fa-envelope me-2 text-primary"></i>Gələn Mesajlar</h3>
+            <p class="text-muted mb-0 small">İstifadəçilərdən gələn əlaqə mesajları</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="fs-2 fw-bold text-primary">@totalCount</div>
+                <div class="small text-muted">Ümumi Mesaj</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="fs-2 fw-bold text-danger">@unreadCount</div>
+                <div class="small text-muted">Oxunmamış</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="fs-2 fw-bold text-success">@thisWeekCount</div>
+                <div class="small text-muted">Bu Həftə</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="fs-2 fw-bold text-info">@repliedCount</div>
+                <div class="small text-muted">Cavablandı</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body py-3">
+            <form method="get" class="row g-2 align-items-center">
+                <div class="col-12 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent"><i class="fa fa-search text-muted"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0"
+                               placeholder="Ad və ya email ilə axtar..." value="@search" />
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <select name="filter" class="form-select">
+                        <option value="" selected="@(filter == null)">Hamısı</option>
+                        <option value="unread" selected="@(filter == "unread")">Oxunmamış</option>
+                        <option value="read" selected="@(filter == "read")">Oxunmuş</option>
+                        <option value="replied" selected="@(filter == "replied")">Cavablandı</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">Axtar</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary flex-fill">Sıfırla</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Messages Grid -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="fa fa-inbox fa-3x mb-3 d-block"></i>
+            <p>Heç bir mesaj tapılmadı.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3" id="messagesGrid">
+            @foreach (var msg in Model)
+            {
+                string cardBorder = msg.IsReplied ? "border-success" : (!msg.IsRead ? "border-danger" : "border-0");
+                <div class="col-12 col-md-6 col-lg-4" id="card-@msg.Id">
+                    <div class="card shadow-sm rounded-3 h-100 @cardBorder message-card"
+                         style="cursor:pointer;border-width:2px!important;transition:transform 0.2s;"
+                         onclick="openMessage(@msg.Id)"
+                         onmouseenter="this.style.transform='translateY(-3px)'"
+                         onmouseleave="this.style.transform='translateY(0)'">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                                         style="width:40px;height:40px;background:linear-gradient(135deg,#667eea,#764ba2);flex-shrink:0;font-size:16px;">
+                                        @msg.Name[0].ToString().ToUpper()
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">@msg.Name</div>
+                                        <div class="small text-muted">@msg.Email</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column align-items-end gap-1">
+                                    @if (msg.IsReplied)
+                                    {
+                                        <span class="badge bg-success rounded-pill"><i class="fa fa-check me-1"></i>Cavablandı</span>
+                                    }
+                                    else if (!msg.IsRead)
+                                    {
+                                        <span class="badge bg-danger rounded-pill"><i class="fa fa-circle me-1"></i>Yeni</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary rounded-pill"><i class="fa fa-check me-1"></i>Oxundu</span>
+                                    }
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-2" style="line-height:1.5;">
+                                @(msg.Message.Length > 100 ? msg.Message.Substring(0, 100) + "..." : msg.Message)
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <small class="text-muted"><i class="fa fa-clock me-1"></i>@msg.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                                @if (!string.IsNullOrEmpty(msg.Website))
+                                {
+                                    <small class="text-muted"><i class="fa fa-globe me-1"></i>Web</small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Message Detail Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+                <h5 class="modal-title text-white"><i class="fa fa-envelope-open me-2"></i>Mesaj Detalı</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="modalBody">
+                <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" id="btnDelete" onclick="deleteMessage()">
+                    <i class="fa fa-trash me-1"></i>Sil
+                </button>
+                <button type="button" class="btn btn-primary" id="btnReply" onclick="showReplyForm()">
+                    <i class="fa fa-reply me-1"></i>Cavab ver
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reply Modal -->
+<div class="modal fade" id="replyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fa fa-reply me-2"></i>Cavab Yaz</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Kimə:</label>
+                    <input type="text" id="replyTo" class="form-control" readonly />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Cavab mətni:</label>
+                    <textarea id="replyText" class="form-control" rows="6"
+                              placeholder="Cavabınızı buraya yazın..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ləğv et</button>
+                <button type="button" class="btn btn-primary" onclick="sendReply()">
+                    <i class="fa fa-paper-plane me-1"></i>Göndər
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var currentMsgId = null;
+
+    function showToast(msg, type) {
+        var t = document.getElementById('adminToast');
+        var m = document.getElementById('adminToastMsg');
+        t.className = 'toast align-items-center border-0 text-white ' + (type === 'success' ? 'bg-success' : 'bg-danger');
+        m.textContent = msg;
+        new bootstrap.Toast(t, { delay: 4000 }).show();
+    }
+
+    function openMessage(id) {
+        currentMsgId = id;
+        document.getElementById('modalBody').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
+        new bootstrap.Modal(document.getElementById('messageModal')).show();
+
+        fetch('/Admin/ContactMessage/GetMessage/' + id)
+            .then(r => r.json())
+            .then(function(data) {
+                if (!data.success) { showToast('Mesaj yüklənə bilmədi.', 'error'); return; }
+
+                var repliedBadge = data.isReplied
+                    ? '<span class="badge bg-success ms-2"><i class="fa fa-check me-1"></i>Cavablandı (' + data.repliedAt + ')</span>'
+                    : '';
+
+                document.getElementById('modalBody').innerHTML = `
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-semibold">AD</label>
+                            <div class="fw-semibold">${data.name} ${repliedBadge}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-semibold">EMAIL</label>
+                            <div><a href="mailto:${data.email}" class="text-primary">${data.email}</a></div>
+                        </div>
+                        ${data.website ? `<div class="col-md-6"><label class="small text-muted fw-semibold">WEBSİTE</label><div><a href="${data.website}" target="_blank" class="text-primary">${data.website}</a></div></div>` : ''}
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-semibold">TARİX</label>
+                            <div>${data.createdAt}</div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-3" style="background:#f8f9fa;border-left:4px solid #667eea;">
+                        <label class="small text-muted fw-semibold d-block mb-2">MESAJ</label>
+                        <p class="mb-0" style="line-height:1.7;">${data.message}</p>
+                    </div>`;
+
+                // Kartı oxunmuş göstər
+                var card = document.getElementById('card-' + id);
+                if (card) {
+                    var badge = card.querySelector('.badge.bg-danger');
+                    if (badge) {
+                        badge.className = 'badge bg-secondary rounded-pill';
+                        badge.innerHTML = '<i class="fa fa-check me-1"></i>Oxundu';
+                    }
+                    card.querySelector('.card').classList.remove('border-danger');
+                    card.querySelector('.card').classList.add('border-0');
+                }
+
+                // Cavab ver düyməsi
+                document.getElementById('replyTo').value = data.email;
+                if (data.isReplied) {
+                    document.getElementById('btnReply').disabled = true;
+                    document.getElementById('btnReply').textContent = 'Cavablandı';
+                } else {
+                    document.getElementById('btnReply').disabled = false;
+                    document.getElementById('btnReply').innerHTML = '<i class="fa fa-reply me-1"></i>Cavab ver';
+                }
+            });
+    }
+
+    function deleteMessage() {
+        if (!currentMsgId) return;
+        if (!confirm('Bu mesajı silmək istədiyinizə əminsiniz?')) return;
+
+        fetch('/Admin/ContactMessage/Delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + currentMsgId + '&__RequestVerificationToken=' + getToken()
+        })
+        .then(r => r.json())
+        .then(function(res) {
+            bootstrap.Modal.getInstance(document.getElementById('messageModal')).hide();
+            if (res.success) {
+                var card = document.getElementById('card-' + currentMsgId);
+                if (card) card.remove();
+                showToast('✅ Mesaj silindi.', 'success');
+            } else {
+                showToast('❌ ' + res.message, 'error');
+            }
+        });
+    }
+
+    function showReplyForm() {
+        bootstrap.Modal.getInstance(document.getElementById('messageModal')).hide();
+        setTimeout(function() {
+            new bootstrap.Modal(document.getElementById('replyModal')).show();
+        }, 300);
+    }
+
+    function sendReply() {
+        var text = document.getElementById('replyText').value.trim();
+        if (!text) { showToast('Cavab mətni boş ola bilməz.', 'error'); return; }
+
+        fetch('/Admin/ContactMessage/Reply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + currentMsgId + '&replyText=' + encodeURIComponent(text) + '&__RequestVerificationToken=' + getToken()
+        })
+        .then(r => r.json())
+        .then(function(res) {
+            bootstrap.Modal.getInstance(document.getElementById('replyModal')).hide();
+            if (res.success) {
+                showToast('✅ ' + res.message, 'success');
+                // Kartı cavablandı göstər
+                var card = document.getElementById('card-' + currentMsgId);
+                if (card) {
+                    var badge = card.querySelector('.badge');
+                    if (badge) {
+                        badge.className = 'badge bg-success rounded-pill';
+                        badge.innerHTML = '<i class="fa fa-check me-1"></i>Cavablandı';
+                    }
+                    var c = card.querySelector('.card');
+                    c.classList.remove('border-danger','border-0','border-secondary');
+                    c.classList.add('border-success');
+                }
+                document.getElementById('replyText').value = '';
+            } else {
+                showToast('❌ ' + res.message, 'error');
+            }
+        });
+    }
+
+    function getToken() {
+        var t = document.querySelector('input[name="__RequestVerificationToken"]');
+        return t ? encodeURIComponent(t.value) : '';
+    }
+</script>
+@Html.AntiForgeryToken()
+}

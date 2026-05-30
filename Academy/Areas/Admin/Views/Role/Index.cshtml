@@ -1,0 +1,233 @@
+@model List<(Microsoft.AspNetCore.Identity.IdentityRole Role, int UserCount)>
+@{
+    ViewData["Title"] = "Rol İdarəetmə";
+    var protectedRoles = ViewBag.ProtectedRoles as string[] ?? Array.Empty<string>();
+}
+
+<div class="container-fluid px-4 mt-4">
+
+    <!-- Toast Container -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="liveToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+        <div>
+            <h3 class="fw-bold mb-1" style="font-family:'Roboto',sans-serif;">
+                <i class="fa fa-shield-alt me-2 text-primary"></i>Rol İdarəetmə
+            </h3>
+            <p class="text-muted mb-0 small">Yalnız SuperAdmin bu səhifəyə daxil ola bilər.</p>
+        </div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRoleModal">
+            <i class="fa fa-plus me-1"></i> Yeni Rol
+        </button>
+    </div>
+
+    <!-- TempData Alerts (JS toast üçün) -->
+    @if (TempData["Success"] != null)
+    {
+        <div id="tempSuccess" data-msg="@TempData["Success"]" class="d-none"></div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div id="tempError" data-msg="@TempData["Error"]" class="d-none"></div>
+    }
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="card-body p-2">
+                    <div class="fs-2 fw-bold text-primary">@Model.Count</div>
+                    <div class="small text-muted">Ümumi Rol</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="card-body p-2">
+                    <div class="fs-2 fw-bold text-success">@Model.Sum(x => x.UserCount)</div>
+                    <div class="small text-muted">Ümumi İstifadəçi</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="card-body p-2">
+                    <div class="fs-2 fw-bold text-warning">@protectedRoles.Length</div>
+                    <div class="small text-muted">Qorunan Rol</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3">
+                <div class="card-body p-2">
+                    <div class="fs-2 fw-bold text-info">@(Model.Count - protectedRoles.Length)</div>
+                    <div class="small text-muted">Xüsusi Rol</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles Table -->
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-transparent border-0 pt-3 pb-0">
+            <h5 class="fw-semibold mb-0"><i class="fa fa-list me-2"></i>Mövcud Rollar</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4">#</th>
+                            <th>Rol Adı</th>
+                            <th class="text-center">İstifadəçi Sayı</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1; }
+                        @foreach (var item in Model)
+                        {
+                            bool isProtected = protectedRoles.Contains(item.Role.Name, StringComparer.OrdinalIgnoreCase);
+                            string badgeClass = item.Role.Name switch
+                            {
+                                "SuperAdmin" => "bg-danger",
+                                "Admin"      => "bg-warning text-dark",
+                                "Muellim"    => "bg-info text-dark",
+                                "User"       => "bg-success",
+                                _            => "bg-secondary"
+                            };
+                            <tr>
+                                <td class="ps-4 text-muted">@i</td>
+                                <td>
+                                    <span class="badge @badgeClass rounded-pill px-3 py-2 fs-6">
+                                        @item.Role.Name
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-dark rounded-pill px-3">@item.UserCount nəfər</span>
+                                </td>
+                                <td class="text-center">
+                                    @if (isProtected)
+                                    {
+                                        <span class="badge bg-warning text-dark"><i class="fa fa-lock me-1"></i>Qorunan</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success"><i class="fa fa-unlock me-1"></i>Silinə bilər</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (!isProtected)
+                                    {
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="confirmDelete('@item.Role.Id', '@item.Role.Name', @item.UserCount)">
+                                            <i class="fa fa-trash me-1"></i>Sil
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small"><i class="fa fa-ban me-1"></i>Əməliyyat yoxdur</span>
+                                    }
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Button -->
+    <div class="mt-3">
+        <a asp-area="Admin" asp-controller="Role" asp-action="Users" class="btn btn-outline-primary">
+            <i class="fa fa-users me-1"></i> İstifadəçilərə Rol Təyin Et
+        </a>
+    </div>
+</div>
+
+<!-- Create Role Modal -->
+<div class="modal fade" id="createRoleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fa fa-plus-circle me-2"></i>Yeni Rol Yarat</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-area="Admin" asp-controller="Role" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <label class="form-label fw-semibold">Rol Adı</label>
+                    <input type="text" name="roleName" class="form-control" placeholder="Məs: Moderator" required maxlength="50" />
+                    <div class="form-text text-muted mt-1">Əsas rollar (SuperAdmin, Admin, Muellim, User) artıq mövcuddur.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ləğv et</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save me-1"></i>Yarat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal fade" id="deleteRoleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fa fa-exclamation-triangle me-2"></i>Rolu Sil</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteConfirmText" class="mb-0"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ləğv et</button>
+                <form id="deleteRoleForm" method="post" asp-area="Admin" asp-controller="Role" asp-action="Delete">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="roleId" id="deleteRoleId" />
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash me-1"></i>Sil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Delete confirm
+    function confirmDelete(roleId, roleName, userCount) {
+        document.getElementById('deleteRoleId').value = roleId;
+        const msg = userCount > 0
+            ? `<strong>${roleName}</strong> rolunu silmək istəyirsiniz? Bu rolda <strong>${userCount}</strong> istifadəçi var!`
+            : `<strong>${roleName}</strong> rolunu silmək istədiyinizə əminsiniz?`;
+        document.getElementById('deleteConfirmText').innerHTML = msg;
+        new bootstrap.Modal(document.getElementById('deleteRoleModal')).show();
+    }
+
+    // Toast bildirişləri
+    function showToast(message, type) {
+        const toast = document.getElementById('liveToast');
+        const toastMsg = document.getElementById('toastMessage');
+        toast.className = `toast align-items-center border-0 text-white ${type === 'success' ? 'bg-success' : 'bg-danger'}`;
+        toastMsg.textContent = message;
+        new bootstrap.Toast(toast, { delay: 4000 }).show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const successEl = document.getElementById('tempSuccess');
+        const errorEl = document.getElementById('tempError');
+        if (successEl) showToast(successEl.dataset.msg, 'success');
+        if (errorEl) showToast(errorEl.dataset.msg, 'error');
+    });
+</script>
+}

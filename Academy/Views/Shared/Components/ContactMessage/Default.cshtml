@@ -1,19 +1,114 @@
 ﻿<section id="contact-form">
     <div class="img-form-common">
         <div class="form-container">
-            <h1>Send  Us A Message</h1>
+            <h1>Send Us A Message</h1>
             <p>Have some suggestions or just want to say hi? Contact us:</p>
-            <form>
-                <input type="text" placeholder="Your Name">
-                <input type="email" placeholder="Your Email *">
-                <input type="text" placeholder="Website">
-                <textarea placeholder="Message..."></textarea>
-                <button type="submit">Send  As A Message</button>
+
+            <!-- Toast -->
+            <div id="contactToast" style="display:none;padding:14px 20px;border-radius:8px;margin-bottom:16px;font-weight:600;font-size:14px;"></div>
+
+            <form id="contactMessageForm" novalidate>
+                <div class="field-wrap">
+                    <input type="text" id="contactName" placeholder="Your Name *" maxlength="100" />
+                    <span class="field-error" id="err-Name"></span>
+                </div>
+                <div class="field-wrap">
+                    <input type="email" id="contactEmail" placeholder="Your Email *" />
+                    <span class="field-error" id="err-Email"></span>
+                </div>
+                <div class="field-wrap">
+                    <input type="text" id="contactWebsite" placeholder="Website (optional)" />
+                    <span class="field-error" id="err-Website"></span>
+                </div>
+                <div class="field-wrap">
+                    <textarea id="contactMessage" placeholder="Message..." rows="5"></textarea>
+                    <span class="field-error" id="err-Message"></span>
+                </div>
+                <button type="submit" id="contactSubmitBtn">Send A Message</button>
             </form>
         </div>
 
         <div class="end-img">
-            <img src="./assets/images/contacts_02.png" alt="">
+            <img src="~/assets/images/contacts_02.png" alt="">
         </div>
     </div>
 </section>
+
+<style>
+    .field-wrap { position: relative; margin-bottom: 4px; }
+    .field-error { display: block; color: #e74c3c; font-size: 12px; margin-bottom: 8px; min-height: 16px; }
+    #contactSubmitBtn:disabled { opacity: 0.7; cursor: not-allowed; }
+</style>
+
+<script>
+(function () {
+    var form = document.getElementById('contactMessageForm');
+    if (!form) return;
+
+    function showToast(msg, type) {
+        var t = document.getElementById('contactToast');
+        t.textContent = msg;
+        t.style.display = 'block';
+        t.style.background = type === 'success' ? '#00bda6' : '#e74c3c';
+        t.style.color = '#fff';
+        setTimeout(function () { t.style.display = 'none'; }, 5000);
+    }
+
+    function clearErrors() {
+        ['Name','Email','Website','Message'].forEach(function(f) {
+            var el = document.getElementById('err-' + f);
+            if (el) el.textContent = '';
+        });
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearErrors();
+
+        var btn = document.getElementById('contactSubmitBtn');
+        btn.disabled = true;
+        btn.textContent = 'Göndərilir...';
+
+        var data = {
+            name: document.getElementById('contactName').value,
+            email: document.getElementById('contactEmail').value,
+            website: document.getElementById('contactWebsite').value,
+            message: document.getElementById('contactMessage').value
+        };
+
+        // CSRF token
+        var token = document.querySelector('input[name="__RequestVerificationToken"]');
+
+        fetch('/Contact/SendMessage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token ? token.value : ''
+            },
+            body: JSON.stringify(data)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            if (res.success) {
+                showToast('✅ Mesajınız göndərildi! Tezliklə sizinlə əlaqə saxlayacağıq.', 'success');
+                form.reset();
+            } else {
+                if (res.errors) {
+                    Object.keys(res.errors).forEach(function(key) {
+                        var el = document.getElementById('err-' + key);
+                        if (el) el.textContent = res.errors[key];
+                    });
+                }
+                showToast('❌ Zəhmət olmasa xətaları düzəldin.', 'error');
+            }
+        })
+        .catch(function() {
+            showToast('❌ Xəta baş verdi. Yenidən cəhd edin.', 'error');
+        })
+        .finally(function() {
+            btn.disabled = false;
+            btn.textContent = 'Send A Message';
+        });
+    });
+})();
+</script>

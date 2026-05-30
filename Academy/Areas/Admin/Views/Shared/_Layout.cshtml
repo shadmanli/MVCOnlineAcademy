@@ -59,8 +59,18 @@
                 <div class="navbar-nav w-100">
                     <a href="/admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <a asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-item nav-link">
+                            <i class="fa fa-shield-alt me-2"></i>Rol İdarəetmə
+                        </a>
+                    }
+
                     @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
                     {
+                        <a asp-area="Admin" asp-controller="ContactMessage" asp-action="Index" class="nav-item nav-link">
+                            <i class="fa fa-envelope me-2"></i>Gələn Mesajlar
+                        </a>
                         <div class="nav-item dropdown">
                             <a asp-area="Admin"
                                asp-controller="Slider"

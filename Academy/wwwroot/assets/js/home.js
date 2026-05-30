@@ -935,24 +935,22 @@ for(let i =12; i<=25;i++){
 
 
   const slides = document.querySelectorAll(".slide, .slide-active");
-  let currentIndex = 0;
+  if (slides.length > 0) {
+    let currentIndex = 0;
+    slides.forEach(function (s, i) {
+      if (s.classList.contains("slide-active")) currentIndex = i;
+    });
 
-  function changeSlide() {
-    slides[currentIndex].classList.remove("slide-active");
-    slides[currentIndex].classList.add("slide");
-
-    currentIndex++;
-    if (currentIndex >= slides.length) {
-      currentIndex = 0;
+    function changeSlide() {
+      slides[currentIndex].classList.remove("slide-active");
+      slides[currentIndex].classList.add("slide");
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex].classList.remove("slide");
+      slides[currentIndex].classList.add("slide-active");
     }
 
-    slides[currentIndex].classList.remove("slide");
-    slides[currentIndex].classList.add("slide-active");
+    setInterval(changeSlide, 5000);
   }
-
-  setInterval(changeSlide, 5000);
-
-/// arrayin icindeki elementlerin cemini tapmaq.
 
 
 let arayy = [20,3,4,5,6];

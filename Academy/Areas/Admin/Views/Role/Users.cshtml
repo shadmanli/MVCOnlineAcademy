@@ -1,0 +1,235 @@
+@model List<(Academy.Models.AppUser User, IList<string> Roles)>
+@{
+    ViewData["Title"] = "İstifadəçi Rol İdarəetmə";
+    var allRoles = ViewBag.AllRoles as List<string> ?? new List<string>();
+}
+
+<div class="container-fluid px-4 mt-4">
+
+    <!-- Toast Container -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="liveToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div id="tempSuccess" data-msg="@TempData["Success"]" class="d-none"></div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div id="tempError" data-msg="@TempData["Error"]" class="d-none"></div>
+    }
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+        <div>
+            <h3 class="fw-bold mb-1" style="font-family:'Roboto',sans-serif;">
+                <i class="fa fa-users me-2 text-primary"></i>İstifadəçi Rol İdarəetmə
+            </h3>
+            <p class="text-muted mb-0 small">İstifadəçilərə rol təyin edin. Bütün dəyişikliklər qeydə alınır.</p>
+        </div>
+        <a asp-area="Admin" asp-controller="Role" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-1"></i> Rollara Qayıt
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="card border-0 shadow-sm rounded-3 mb-3">
+        <div class="card-body py-2 px-3">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-0"><i class="fa fa-search text-muted"></i></span>
+                <input type="text" id="userSearch" class="form-control border-0 bg-transparent"
+                       placeholder="İstifadəçi axtar (ad, email)..." />
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="usersTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4">#</th>
+                            <th>İstifadəçi</th>
+                            <th>Email</th>
+                            <th class="text-center">Cari Rol</th>
+                            <th class="text-center">Rol Dəyiş</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1; }
+                        @foreach (var item in Model)
+                        {
+                            var currentRole = item.Roles.FirstOrDefault() ?? "Yoxdur";
+                            string badgeClass = currentRole switch
+                            {
+                                "SuperAdmin" => "bg-danger",
+                                "Admin"      => "bg-warning text-dark",
+                                "Muellim"    => "bg-info text-dark",
+                                "User"       => "bg-success",
+                                _            => "bg-secondary"
+                            };
+                            <tr class="user-row">
+                                <td class="ps-4 text-muted">@i</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                             style="width:36px;height:36px;font-size:14px;font-weight:700;flex-shrink:0;">
+                                            @(item.User.FullName?.Length > 0 ? item.User.FullName[0].ToString().ToUpper() : "?")
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold user-name">@item.User.FullName</div>
+                                            <div class="small text-muted user-email">@item.User.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="user-email-col text-muted small">@item.User.Email</td>
+                                <td class="text-center">
+                                    <span class="badge @badgeClass rounded-pill px-3 py-2 current-role-badge">
+                                        @currentRole
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <form asp-area="Admin" asp-controller="Role" asp-action="AssignRole"
+                                          method="post" class="d-flex align-items-center justify-content-center gap-2 role-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@item.User.Id" />
+                                        <select name="newRole" class="form-select form-select-sm role-select"
+                                                style="width:auto;min-width:130px;">
+                                            @foreach (var role in allRoles)
+                                            {
+                                                if (role == currentRole)
+                                                {
+                                                    <option value="@role" selected>@role</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@role">@role</option>
+                                                }
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Section -->
+    <div class="card border-0 shadow-sm rounded-3 mt-4">
+        <div class="card-header bg-transparent border-0 pt-3 pb-0 d-flex align-items-center justify-content-between">
+            <h5 class="fw-semibold mb-0"><i class="fa fa-history me-2 text-warning"></i>Dəyişiklik Logu</h5>
+            <button class="btn btn-sm btn-outline-danger" onclick="clearLog()">
+                <i class="fa fa-trash me-1"></i>Logu Təmizlə
+            </button>
+        </div>
+        <div class="card-body">
+            <div id="roleChangeLog" class="small">
+                <p class="text-muted mb-0" id="emptyLogMsg">Hələ heç bir dəyişiklik qeydə alınmayıb.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Toast
+    function showToast(message, type) {
+        const toast = document.getElementById('liveToast');
+        const toastMsg = document.getElementById('toastMessage');
+        toast.className = `toast align-items-center border-0 text-white ${type === 'success' ? 'bg-success' : 'bg-danger'}`;
+        toastMsg.textContent = message;
+        new bootstrap.Toast(toast, { delay: 4000 }).show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const successEl = document.getElementById('tempSuccess');
+        const errorEl = document.getElementById('tempError');
+        if (successEl) showToast(successEl.dataset.msg, 'success');
+        if (errorEl) showToast(errorEl.dataset.msg, 'error');
+
+        // Log-u localStorage-dən yüklə
+        loadLog();
+
+        // Rol dəyişmə formları — log yaz
+        document.querySelectorAll('.role-form').forEach(function (form) {
+            form.addEventListener('submit', function () {
+                const row = form.closest('tr');
+                const userName = row.querySelector('.user-name')?.textContent?.trim() || 'Naməlum';
+                const oldRole = row.querySelector('.current-role-badge')?.textContent?.trim() || 'Yoxdur';
+                const newRole = form.querySelector('.role-select')?.value || '';
+                if (oldRole !== newRole) {
+                    addLog(userName, oldRole, newRole);
+                }
+            });
+        });
+
+        // Axtarış
+        document.getElementById('userSearch').addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('.user-row').forEach(function (row) {
+                const name = row.querySelector('.user-name')?.textContent?.toLowerCase() || '';
+                const email = row.querySelector('.user-email')?.textContent?.toLowerCase() || '';
+                row.style.display = (name.includes(q) || email.includes(q)) ? '' : 'none';
+            });
+        });
+    });
+
+    // Log funksiyaları
+    function addLog(userName, oldRole, newRole) {
+        const logs = getStoredLogs();
+        const now = new Date().toLocaleString('az-AZ');
+        logs.unshift({ userName, oldRole, newRole, time: now });
+        if (logs.length > 50) logs.pop();
+        localStorage.setItem('roleChangeLogs', JSON.stringify(logs));
+    }
+
+    function getStoredLogs() {
+        try { return JSON.parse(localStorage.getItem('roleChangeLogs') || '[]'); }
+        catch { return []; }
+    }
+
+    function loadLog() {
+        const logs = getStoredLogs();
+        const container = document.getElementById('roleChangeLog');
+        const emptyMsg = document.getElementById('emptyLogMsg');
+        if (logs.length === 0) {
+            if (emptyMsg) emptyMsg.style.display = '';
+            return;
+        }
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        const html = logs.map(function (l) {
+            return `<div class="d-flex align-items-center gap-2 py-1 border-bottom">
+                <i class="fa fa-exchange-alt text-primary"></i>
+                <span><strong>${l.userName}</strong>: 
+                    <span class="badge bg-secondary">${l.oldRole}</span>
+                    <i class="fa fa-arrow-right mx-1 text-muted"></i>
+                    <span class="badge bg-primary">${l.newRole}</span>
+                </span>
+                <span class="ms-auto text-muted">${l.time}</span>
+            </div>`;
+        }).join('');
+        container.innerHTML = html;
+    }
+
+    function clearLog() {
+        localStorage.removeItem('roleChangeLogs');
+        const container = document.getElementById('roleChangeLog');
+        container.innerHTML = '<p class="text-muted mb-0" id="emptyLogMsg">Hələ heç bir dəyişiklik qeydə alınmayıb.</p>';
+    }
+</script>
+}

@@ -6,16 +6,18 @@
         <div class="slider">
             <div class="top-line"></div>
 
+            @{ int slideIndex = 0; }
             @foreach (var slide in Model)
             {
-                <div class="slide" style="background: url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;">
+                string slideClass = slideIndex == 0 ? "slide-active" : "slide";
+                <div class="@slideClass" style="background: url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;">
                     <div class="slide-text">
                         <h2>@slide.Title</h2>
                         <p>@slide.Description</p>
                         <a href="courses.html">View Courses</a>
-                       
                     </div>
                 </div>
+                slideIndex++;
             }
         </div>
     </section>
