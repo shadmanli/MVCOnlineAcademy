@@ -40,14 +40,14 @@
 
             @if (TempData["LoginError"] != null)
             {
-                <div class="alert alert-danger text-center mt-3" style="color:red; font-size:14px;">
-                    @TempData["LoginError"]
+                <div class="auth-alert auth-alert-error">
+                    <i class="fa fa-exclamation-circle me-2"></i>@TempData["LoginError"]
                 </div>
             }
             @if (TempData["LoginSuccess"] != null)
             {
-                <div class="alert alert-success text-center mt-3" style="color:green; font-size:14px;">
-                    @TempData["LoginSuccess"]
+                <div class="auth-alert auth-alert-success">
+                    <i class="fa fa-check-circle me-2"></i>@TempData["LoginSuccess"]
                 </div>
             }
 
@@ -85,14 +85,14 @@
 
             @if (TempData["RegisterError"] != null)
             {
-                <div class="alert alert-danger text-center mt-3" style="color:red; font-size:14px;">
-                    @TempData["RegisterError"]
+                <div class="auth-alert auth-alert-error">
+                    <i class="fa fa-exclamation-circle me-2"></i>@TempData["RegisterError"]
                 </div>
             }
             @if (TempData["RegisterSuccess"] != null)
             {
-                <div class="alert alert-success text-center mt-3" style="color:green; font-size:14px;">
-                    @TempData["RegisterSuccess"]
+                <div class="auth-alert auth-alert-success">
+                    <i class="fa fa-check-circle me-2"></i>@TempData["RegisterSuccess"]
                 </div>
             }
 
@@ -117,6 +117,51 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="~/assets/js/home.js"></script>
     <script src="~/assets/js/wishlist.js"></script>
+
+    <!-- Modal açma/bağlama — bütün səhifələrdə işləsin -->
+    <script>
+        (function () {
+            var loginModal    = document.getElementById('loginModal');
+            var registerModal = document.getElementById('registerModal');
+
+            // Login düyməsi (header-dəki user ikonu)
+            var loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    openLogin();
+                });
+            }
+
+            // Bağla düymələri
+            document.querySelectorAll('.closeBtn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    if (loginModal)    loginModal.classList.remove('active');
+                    if (registerModal) registerModal.classList.remove('active');
+                });
+            });
+
+            // Modal xaricinə klikləndikdə bağla
+            window.addEventListener('click', function (e) {
+                if (e.target === loginModal)    loginModal.classList.remove('active');
+                if (e.target === registerModal) registerModal.classList.remove('active');
+            });
+        })();
+
+        function openLogin() {
+            var loginModal    = document.getElementById('loginModal');
+            var registerModal = document.getElementById('registerModal');
+            if (registerModal) registerModal.classList.remove('active');
+            if (loginModal)    loginModal.classList.add('active');
+        }
+
+        function openRegister() {
+            var loginModal    = document.getElementById('loginModal');
+            var registerModal = document.getElementById('registerModal');
+            if (loginModal)    loginModal.classList.remove('active');
+            if (registerModal) registerModal.classList.add('active');
+        }
+    </script>
 
     @if (TempData["OpenLoginModal"] != null)
     {

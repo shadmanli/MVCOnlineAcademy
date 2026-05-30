@@ -1,72 +1,64 @@
-﻿<section id="Testimonial">
+﻿@model List<Academy.Models.CourseReview>
+
+<section id="Testimonial">
     <div class="testimonial-common">
 
         <div class="testimonial-text">
-            <span>TESTIMONIALS</span>
+            <span>TƏSDİQLƏNMİŞ RƏYLƏR</span>
             <h1>What People Say</h1>
-            <p>
-                We’ll then ask you to tell us your current level of English or invite you to take our quick
-                20 minute placement test so we can make sure you start learning English.
-            </p>
+            <p>Kurslarımızı tamamlamış tələbələrin həqiqi rəyləri.</p>
         </div>
 
-        <!-- SWIPER -->
-        <div class="swiper">
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide">
-                    <div class="card-general">
-                        <div class="header">
-                            <img src="~/assets/images/testimonials.jpg" alt="">
-                            <div>
-                                <h4>Nina Farel</h4>
-                                <span>@@smashingmagazine</span>
+        @if (Model != null && Model.Any())
+        {
+            <div class="swiper about-testimonial-swiper">
+                <div class="swiper-wrapper">
+                    @foreach (var review in Model)
+                    {
+                        <div class="swiper-slide">
+                            <div class="card-general">
+                                <div class="header">
+                                    @if (!string.IsNullOrEmpty(review.Photo))
+                                    {
+                                        <img src="/uploads/profiles/@review.Photo" alt="@review.Name"
+                                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                        <div class="about-avatar-fallback" style="display:none;">@review.Name[0].ToString().ToUpper()</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="about-avatar-fallback">@review.Name[0].ToString().ToUpper()</div>
+                                    }
+                                    <div>
+                                        <h4>@review.Name</h4>
+                                        <span class="about-course-name">@review.Course?.Title</span>
+                                        <div class="about-stars">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fa fa-star @(i <= review.Rating ? "filled" : "empty")"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>"@review.Message"</p>
+                                <div class="about-review-date">@review.CreatedAt.ToString("dd.MM.yyyy")</div>
                             </div>
                         </div>
-                        <p>
-                            "Choosing online studies was the best way to do it – the internet is fast,
-                            cheap & popular and it’s easy to communicate in social media with native speakers."
-                        </p>
-                    </div>
+                    }
                 </div>
-
-                <div class="swiper-slide">
-                    <div class="card-general">
-                        <div class="header">
-                            <img src="~/assets/images/testimonials.jpg" alt="">
-                            <div>
-                                <h4>Jina Grindevald</h4>
-                                <span>@@habrahabr</span>
-                            </div>
-                        </div>
-                        <p>
-                            "Online learning is simple and effective. I improved my English very fast!"
-                        </p>
-                    </div>
-                </div>
-
-                <div class="swiper-slide">
-                    <div class="card-general">
-                        <div class="header">
-                            <img src="~/assets/images/testimonials.jpg" alt="">
-                            <div>
-                                <h4>John Doe</h4>
-                                <span>@@john_doe</span>
-                            </div>
-                        </div>
-                        <p>
-                            "Flexible and convenient learning system. Highly recommended!"
-                        </p>
-                    </div>
-                </div>
-
+                <div class="swiper-pagination"></div>
             </div>
-
-            <div class="swiper-pagination"></div>
-        </div>
+        }
+        else
+        {
+            <div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 0;">
+                <i class="fa fa-star" style="font-size:40px;display:block;margin-bottom:12px;"></i>
+                <p>Hələ təsdiqlənmiş rəy yoxdur.</p>
+            </div>
+        }
 
     </div>
 </section>
+
 <style>
     #Testimonial {
         background: #1f2633;
@@ -74,61 +66,124 @@
         color: white;
     }
 
-    .testimonial-text {
-        text-align: center;
-        margin-bottom: 40px;
+    .testimonial-common {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
     }
 
-        .testimonial-text span {
-            color: orange;
-            font-size: 14px;
-        }
+    .testimonial-text {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .testimonial-text span {
+        color: orange;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .testimonial-text h1 {
+        font-size: 38px;
+        font-weight: 800;
+        margin: 12px 0 16px;
+        color: #fff;
+    }
+
+    .testimonial-text p {
+        color: rgba(255,255,255,0.55);
+        font-size: 15px;
+    }
 
     .card-general {
         background: #2b3242;
-        padding: 20px;
-        border-radius: 15px;
-        height: 240px;
-        margin-left:125px;
+        padding: 24px;
+        border-radius: 16px;
+        min-height: 220px;
+        border: 1px solid rgba(255,255,255,0.07);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-        .card-general .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
+    .card-general:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
 
-            .card-general .header img {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-            }
+    .card-general .header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .card-general .header img,
+    .about-avatar-fallback {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid rgba(255,255,255,0.15);
+    }
+
+    .about-avatar-fallback {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+    }
+
+    .card-general .header h4 {
+        margin: 0 0 2px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .about-course-name {
+        font-size: 12px;
+        color: #a5b4fc;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .about-stars .fa-star.filled { color: #f59e0b; font-size: 12px; }
+    .about-stars .fa-star.empty  { color: rgba(255,255,255,0.2); font-size: 12px; }
+
+    .card-general p {
+        color: rgba(255,255,255,0.7);
+        font-size: 14px;
+        line-height: 1.7;
+        font-style: italic;
+        margin-bottom: 12px;
+    }
+
+    .about-review-date {
+        font-size: 11px;
+        color: rgba(255,255,255,0.3);
+        text-align: right;
+    }
 </style>
 
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        new Swiper('.swiper', {
+        new Swiper('.about-testimonial-swiper', {
             slidesPerView: 2,
-            spaceBetween: 20,
+            spaceBetween: 24,
             loop: true,
-
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-
+            autoplay: { delay: 4000, disableOnInteraction: false },
+            pagination: { el: '.swiper-pagination', clickable: true },
             breakpoints: {
-                0: { slidesPerView: 1 },
+                0:   { slidesPerView: 1 },
                 768: { slidesPerView: 2 }
             }
         });
     });
 </script>
-
-

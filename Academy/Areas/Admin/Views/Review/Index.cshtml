@@ -1,0 +1,201 @@
+@model List<Academy.Models.CourseReview>
+@{
+    ViewData["Title"] = "Rəy İdarəetmə";
+    string? filter = ViewBag.Filter;
+}
+
+<div class="container-fluid px-4 mt-4">
+
+    <!-- Toast -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index:9999">
+        <div id="reviewToast" class="toast align-items-center border-0 text-white" role="alert">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold" id="reviewToastMsg"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+        <div>
+            <h3 class="fw-bold mb-1"><i class="fa fa-star me-2 text-warning"></i>Rəy İdarəetmə</h3>
+            <p class="text-muted mb-0 small">İstifadəçilərin kurs rəylərini idarə edin</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3" style="cursor:pointer" onclick="location.href='?'">
+                <div class="fs-2 fw-bold text-primary">@ViewBag.TotalCount</div>
+                <div class="small text-muted">Ümumi</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3" style="cursor:pointer" onclick="location.href='?filter=pending'">
+                <div class="fs-2 fw-bold text-warning">@ViewBag.PendingCount</div>
+                <div class="small text-muted">Gözlənilir</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3" style="cursor:pointer" onclick="location.href='?filter=approved'">
+                <div class="fs-2 fw-bold text-success">@ViewBag.ApprovedCount</div>
+                <div class="small text-muted">Təsdiqləndi</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 text-center py-3" style="cursor:pointer" onclick="location.href='?filter=rejected'">
+                <div class="fs-2 fw-bold text-danger">@ViewBag.RejectedCount</div>
+                <div class="small text-muted">Rədd edildi</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="d-flex gap-2 mb-3 flex-wrap">
+        <a href="?" class="btn btn-sm @(filter == null ? "btn-primary" : "btn-outline-secondary")">Hamısı</a>
+        <a href="?filter=pending" class="btn btn-sm @(filter == "pending" ? "btn-warning" : "btn-outline-warning")">⏳ Gözlənilir</a>
+        <a href="?filter=approved" class="btn btn-sm @(filter == "approved" ? "btn-success" : "btn-outline-success")">✅ Təsdiqləndi</a>
+        <a href="?filter=rejected" class="btn btn-sm @(filter == "rejected" ? "btn-danger" : "btn-outline-danger")">❌ Rədd edildi</a>
+    </div>
+
+    <!-- Reviews Grid -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="fa fa-star fa-3x mb-3 d-block"></i>
+            <p>Heç bir rəy tapılmadı.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var r in Model)
+            {
+                string statusBadge = r.Status switch {
+                    Academy.Models.ReviewStatus.Approved => "bg-success",
+                    Academy.Models.ReviewStatus.Rejected => "bg-danger",
+                    _ => "bg-warning text-dark"
+                };
+                string statusText = r.Status switch {
+                    Academy.Models.ReviewStatus.Approved => "Təsdiqləndi",
+                    Academy.Models.ReviewStatus.Rejected => "Rədd edildi",
+                    _ => "Gözlənilir"
+                };
+                <div class="col-12 col-md-6 col-lg-4" id="review-card-@r.Id">
+                    <div class="card border-0 shadow-sm rounded-3 h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                                         style="width:40px;height:40px;background:linear-gradient(135deg,#667eea,#764ba2);flex-shrink:0;">
+                                        @r.Name[0].ToString().ToUpper()
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold small">@r.Name</div>
+                                        <div class="text-muted" style="font-size:11px;">@r.AppUser?.Email</div>
+                                    </div>
+                                </div>
+                                <span class="badge @statusBadge rounded-pill">@statusText</span>
+                            </div>
+
+                            <!-- Stars -->
+                            <div class="mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fa fa-star @(i <= r.Rating ? "text-warning" : "text-muted")" style="font-size:13px;"></i>
+                                }
+                                <span class="small text-muted ms-1">(@r.Rating/5)</span>
+                            </div>
+
+                            <div class="small text-muted mb-1 fw-semibold">
+                                <i class="fa fa-book me-1"></i>@r.Course?.Title
+                            </div>
+
+                            <p class="small mb-2" style="line-height:1.5;color:#444;">
+                                @(r.Message.Length > 120 ? r.Message.Substring(0, 120) + "..." : r.Message)
+                            </p>
+
+                            <div class="small text-muted mb-3">
+                                <i class="fa fa-clock me-1"></i>@r.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="d-flex gap-2 flex-wrap">
+                                @if (r.Status != Academy.Models.ReviewStatus.Approved)
+                                {
+                                    <button class="btn btn-sm btn-success" onclick="approveReview(@r.Id)">
+                                        <i class="fa fa-check me-1"></i>Təsdiqlə
+                                    </button>
+                                }
+                                @if (r.Status != Academy.Models.ReviewStatus.Rejected)
+                                {
+                                    <button class="btn btn-sm btn-warning" onclick="rejectReview(@r.Id)">
+                                        <i class="fa fa-times me-1"></i>Rədd et
+                                    </button>
+                                }
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteReview(@r.Id)">
+                                    <i class="fa fa-trash me-1"></i>Sil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+@Html.AntiForgeryToken()
+<script>
+    function showToast(msg, type) {
+        var t = document.getElementById('reviewToast');
+        t.className = 'toast align-items-center border-0 text-white ' + (type === 'success' ? 'bg-success' : 'bg-danger');
+        document.getElementById('reviewToastMsg').textContent = msg;
+        new bootstrap.Toast(t, { delay: 4000 }).show();
+    }
+
+    function getToken() {
+        var t = document.querySelector('input[name="__RequestVerificationToken"]');
+        return t ? encodeURIComponent(t.value) : '';
+    }
+
+    function postAction(url, id, callback) {
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + id + '&__RequestVerificationToken=' + getToken()
+        }).then(r => r.json()).then(callback);
+    }
+
+    function approveReview(id) {
+        postAction('/Admin/Review/Approve', id, function(res) {
+            if (res.success) {
+                showToast('✅ ' + res.message, 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else showToast('❌ Xəta baş verdi.', 'error');
+        });
+    }
+
+    function rejectReview(id) {
+        postAction('/Admin/Review/Reject', id, function(res) {
+            if (res.success) {
+                showToast('⚠️ ' + res.message, 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else showToast('❌ Xəta baş verdi.', 'error');
+        });
+    }
+
+    function deleteReview(id) {
+        if (!confirm('Bu rəyi silmək istədiyinizə əminsiniz?')) return;
+        postAction('/Admin/Review/Delete', id, function(res) {
+            if (res.success) {
+                document.getElementById('review-card-' + id)?.remove();
+                showToast('🗑️ ' + res.message, 'success');
+            } else showToast('❌ Xəta baş verdi.', 'error');
+        });
+    }
+</script>
+}

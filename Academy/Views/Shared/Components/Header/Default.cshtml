@@ -19,14 +19,6 @@
                         <li><a asp-controller="Teacher" asp-action="Index">Teachers</a></li>
                         <li><a asp-controller="Blog" asp-action="Index">Blog</a></li>
                         <li><a asp-controller="Contact" asp-action="Index"> Contact</a></li>
-                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
-                        {
-                            <li><a href="/Admin">Admin Panel</a></li>
-                        }
-                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Muellim"))
-                        {
-                            <li><a href="/Admin/Course">Kurs İdarəetməsi</a></li>
-                        }
                     </ul>
 
                 </nav>

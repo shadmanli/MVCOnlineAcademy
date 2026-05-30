@@ -1201,63 +1201,20 @@ console.log(namess.getLength());
 // })
 
 
-const loginModal = document.getElementById("loginModal");
-const registerModal = document.getElementById("registerModal");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-
-const closeBtns = document.querySelectorAll(".closeBtn");
-
-
-loginBtn.addEventListener("click", () => {
-  registerModal.classList.remove("active");
-  loginModal.classList.add("active");
-});
-
-
-loginBtn.addEventListener("click", () => {
-  loginModal.classList.remove("active");
-  registerModal.classList.add("active");
-});
-
-
-closeBtns.forEach(btn => {
-  btn.addEventListener("click", () => {
-    loginModal.classList.remove("active");
-    registerModal.classList.remove("active");
-  });
-});
-
-
-window.addEventListener("click", (e)=>{
-  if(e.target === loginModal){
-    loginModal.classList.remove("active");
-  }
-  if(e.target === registerModal){
-    registerModal.classList.remove("active");
-  }
-});
-
-
-function openLogin(){
-  registerModal.classList.remove("active");
-  loginModal.classList.add("active");
-}
-
-function openRegister(){
-  loginModal.classList.remove("active");
-  registerModal.classList.add("active");
-}
 const searchToggle = document.getElementById('search-toggle');
 const searchPanel = document.getElementById('search-panel');
 const closeSearch = document.getElementById('close-search');
 
-searchToggle.addEventListener('click', function(e) {
-    e.preventDefault();
-    searchPanel.style.display =
-        searchPanel.style.display === 'flex' ? 'none' : 'flex';
-});
+if (searchToggle) {
+    searchToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        searchPanel.style.display =
+            searchPanel.style.display === 'flex' ? 'none' : 'flex';
+    });
+}
 
-closeSearch.addEventListener('click', function() {
-    searchPanel.style.display = 'none';
-});
+if (closeSearch) {
+    closeSearch.addEventListener('click', function() {
+        searchPanel.style.display = 'none';
+    });
+}

@@ -2,7 +2,7 @@
 
 namespace Academy.ViewComponents.Home
 {
-    public class FeedbackViewComponent:ViewComponent
+    public class FeedbackViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke()
         {

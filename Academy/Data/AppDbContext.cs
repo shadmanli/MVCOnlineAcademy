@@ -47,6 +47,7 @@ namespace Academy.Data
         public DbSet<LiveClassAttendance> LiveClassAttendances { get; set; }
         public DbSet<LiveClassEventLog> LiveClassEventLogs { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<CourseReview> CourseReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -87,6 +88,18 @@ namespace Academy.Data
                 .WithMany()
                 .HasForeignKey(a => a.AppUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<CourseReview>()
+                .HasOne(r => r.AppUser)
+                .WithMany()
+                .HasForeignKey(r => r.AppUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<CourseReview>()
+                .HasOne(r => r.Course)
+                .WithMany()
+                .HasForeignKey(r => r.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

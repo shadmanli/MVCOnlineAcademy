@@ -63,6 +63,20 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
+// Cookie ayarları — bütün səhifələrdə işləsin
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.Cookie.Name = "AcademyCookie";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.SlidingExpiration = true;
+});
+
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddSignalR();
@@ -94,7 +108,8 @@ using (var scope = app.Services.CreateScope())
 
     foreach (var u in users)
     {
-        if (await userManager.FindByEmailAsync(u.Email) == null)
+        var existingUser = await userManager.FindByEmailAsync(u.Email);
+        if (existingUser == null)
         {
             var user = new AppUser
             {
@@ -107,6 +122,20 @@ using (var scope = app.Services.CreateScope())
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(user, u.Role);
+            }
+        }
+        else
+        {
+            // Mövcud istifadəçinin emailini təsdiqlə və rolunu yoxla
+            if (!existingUser.EmailConfirmed)
+            {
+                existingUser.EmailConfirmed = true;
+                await userManager.UpdateAsync(existingUser);
+            }
+            var existingRoles = await userManager.GetRolesAsync(existingUser);
+            if (!existingRoles.Contains(u.Role))
+            {
+                await userManager.AddToRoleAsync(existingUser, u.Role);
             }
         }
     }
