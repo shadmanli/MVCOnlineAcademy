@@ -1,385 +1,354 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
-
+<html lang="az">
 <head>
     <meta charset="utf-8">
-    <title>DarkPan - Bootstrap 5 Admin Template</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
+    <title>Inzara Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="~/admin/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="~/admin/css/style.css" rel="stylesheet">
+    <link href="~/admin/css/premium.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-
 <body>
-    <div class="container-fluid position-relative d-flex p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
-        <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-secondary navbar-dark">
-                <a asp-area="Admin" asp-controller="DashBoard" asp-action="Index" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>Inzara</h3>
-                </a>
-                @inject Microsoft.AspNetCore.Identity.UserManager<Academy.Models.AppUser> UserManager
-                @{
-                    var currentUser = await UserManager.GetUserAsync(User);
-                    var currentRoles = currentUser != null ? await UserManager.GetRolesAsync(currentUser) : new List<string>();
-                    var isSuperAdmin = currentRoles.Contains("SuperAdmin");
-                    var isAdmin = currentRoles.Contains("Admin");
-                    var isMuellim = currentRoles.Contains("Muellim");
-                    var currentPath = Context.Request.Path.Value?.ToLower() ?? "";
-                }
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="position-relative">
-                        @if (!string.IsNullOrEmpty(currentUser?.ProfilePicture))
-                        {
-                            <img class="rounded-circle" src="/uploads/profiles/@currentUser.ProfilePicture"
-                                 alt="" style="width:40px;height:40px;object-fit:cover;">
-                        }
-                        else
-                        {
-                            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold"
-                                 style="width:40px;height:40px;font-size:16px;">
-                                @(currentUser?.FullName?.Length > 0 ? currentUser.FullName[0].ToString().ToUpper() : "A")
-                            </div>
-                        }
-                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0">@(currentUser?.FullName ?? "Admin")</h6>
-                        <span class="small">@(currentRoles.FirstOrDefault() ?? "Admin")</span>
-                    </div>
-                </div>
 
-                <div class="navbar-nav w-100">
+@inject Microsoft.AspNetCore.Identity.UserManager<Academy.Models.AppUser> UserManager
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var currentRoles = currentUser != null ? await UserManager.GetRolesAsync(currentUser) : new List<string>();
+    var isSuperAdmin = currentRoles.Contains("SuperAdmin");
+    var isAdmin      = currentRoles.Contains("Admin");
+    var isMuellim    = currentRoles.Contains("Muellim");
+    var currentPath  = Context.Request.Path.Value?.ToLower() ?? "";
+    var userInitial  = currentUser?.FullName?.Length > 0 ? currentUser.FullName[0].ToString().ToUpper() : "A";
+    var userRole     = currentRoles.FirstOrDefault() ?? "Admin";
+}
 
-                    <!-- Dashboard — hamı görür -->
-                    <a asp-area="Admin" asp-controller="DashBoard" asp-action="Index"
-                       class="nav-item nav-link @(currentPath.Contains("/admin/dashboard") || currentPath == "/admin" ? "active" : "")">
-                        <i class="fa fa-tachometer-alt me-2"></i>Dashboard
-                    </a>
+<!-- Sidebar Overlay (mobile) -->
+<div class="p-sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-                    @if (isSuperAdmin || isAdmin || isMuellim)
-                    {
-                        <!-- KURS İDARƏETMƏ -->
-                        <div class="sidebar-section-title">KURS</div>
+<div class="p-layout">
 
-                        <a asp-area="Admin" asp-controller="Course" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/course") ? "active" : "")">
-                            <i class="fa fa-book me-2"></i>Kurslar
-                        </a>
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="p-sidebar" id="sidebar">
 
-                        <a asp-area="Admin" asp-controller="Lesson" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/lesson") ? "active" : "")">
-                            <i class="fa fa-chalkboard me-2"></i>Dərslər
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="DemoLesson" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/demolesson") ? "active" : "")">
-                            <i class="fa fa-play-circle me-2"></i>Demo Dərslər
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="LiveClass" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/liveclass") ? "active" : "")">
-                            <i class="fa fa-video me-2"></i>Canlı Dərslər
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Quiz" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/quiz") ? "active" : "")">
-                            <i class="fa fa-question-circle me-2"></i>Quiz
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="AssessmentQuestion" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/assessmentquestion") ? "active" : "")">
-                            <i class="fa fa-tasks me-2"></i>Assessment Sualları
-                        </a>
-                    }
-
-                    @if (isSuperAdmin || isAdmin)
-                    {
-                        <!-- KATEQORİYA & MÜƏLLİM -->
-                        <div class="sidebar-section-title">KATEQORİYA & MÜƏLLİM</div>
-
-                        <a asp-area="Admin" asp-controller="Category" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/category") ? "active" : "")">
-                            <i class="fa fa-tags me-2"></i>Kateqoriyalar
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Instructor" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/instructor") ? "active" : "")">
-                            <i class="fa fa-user-tie me-2"></i>Müəllimlər
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Language" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/language") ? "active" : "")">
-                            <i class="fa fa-language me-2"></i>Dillər
-                        </a>
-
-                        <!-- KURS XÜSUSİYYƏTLƏRİ -->
-                        <div class="sidebar-section-title">KURS XÜSUSİYYƏTLƏRİ</div>
-
-                        <a asp-area="Admin" asp-controller="CourseFeature" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/coursefeature") ? "active" : "")">
-                            <i class="fa fa-list-check me-2"></i>Kurs Xüsusiyyətləri
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="CourseRequirement" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/courserequirement") ? "active" : "")">
-                            <i class="fa fa-clipboard-list me-2"></i>Kurs Tələbləri
-                        </a>
-
-                        <!-- MƏZMUN -->
-                        <div class="sidebar-section-title">MƏZMUN</div>
-
-                        <a asp-area="Admin" asp-controller="Slider" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/slider") ? "active" : "")">
-                            <i class="fa fa-images me-2"></i>Slider
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Banner" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/banner") ? "active" : "")">
-                            <i class="fa fa-flag me-2"></i>Banner
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Blog" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/blog") ? "active" : "")">
-                            <i class="fa fa-newspaper me-2"></i>Blog
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Article" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/article") ? "active" : "")">
-                            <i class="fa fa-file-alt me-2"></i>Məqalələr
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Topic" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/topic") ? "active" : "")">
-                            <i class="fa fa-bookmark me-2"></i>Mövzular
-                        </a>
-
-                        <!-- HAQQIMIZDA -->
-                        <div class="sidebar-section-title">HAQQIMIZDA</div>
-
-                        <a asp-area="Admin" asp-controller="AboutUs" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/aboutus") ? "active" : "")">
-                            <i class="fa fa-info-circle me-2"></i>Haqqımızda
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="About" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/about") && !currentPath.Contains("aboutus") ? "active" : "")">
-                            <i class="fa fa-building me-2"></i>About
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Mission" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/mission") ? "active" : "")">
-                            <i class="fa fa-bullseye me-2"></i>Missiya
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Feature" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/feature") && !currentPath.Contains("coursefeature") ? "active" : "")">
-                            <i class="fa fa-star me-2"></i>Xüsusiyyətlər
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="Statistic" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/statistic") ? "active" : "")">
-                            <i class="fa fa-chart-bar me-2"></i>Statistika
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="ImpactSection" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/impactsection") ? "active" : "")">
-                            <i class="fa fa-bolt me-2"></i>Impact Section
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="ImpactItem" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/impactitem") ? "active" : "")">
-                            <i class="fa fa-list me-2"></i>Impact Items
-                        </a>
-
-                        <!-- ƏLAQƏ -->
-                        <div class="sidebar-section-title">ƏLAQƏ</div>
-
-                        <a asp-area="Admin" asp-controller="ContactSection" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/contactsection") ? "active" : "")">
-                            <i class="fa fa-address-card me-2"></i>Əlaqə Bölməsi
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="ContactItem" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/contactitem") ? "active" : "")">
-                            <i class="fa fa-phone me-2"></i>Əlaqə Elementləri
-                        </a>
-
-                        <a asp-area="Admin" asp-controller="ContactMessage" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/contactmessage") ? "active" : "")">
-                            <i class="fa fa-envelope me-2"></i>Gələn Mesajlar
-                        </a>
-
-                        <!-- RƏYLƏr -->
-                        <div class="sidebar-section-title">RƏYLƏr</div>
-
-                        <a asp-area="Admin" asp-controller="Review" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/review") ? "active" : "")">
-                            <i class="fa fa-star-half-alt me-2"></i>Rəy İdarəetmə
-                        </a>
-                    }
-
-                    @if (isSuperAdmin)
-                    {
-                        <!-- SİSTEM -->
-                        <div class="sidebar-section-title">SİSTEM</div>
-
-                        <a asp-area="Admin" asp-controller="Role" asp-action="Index"
-                           class="nav-item nav-link @(currentPath.Contains("/admin/role") ? "active" : "")">
-                            <i class="fa fa-shield-alt me-2"></i>Rol İdarəetmə
-                        </a>
-                    }
-
-                </div>
-            </nav>
-        </div>
-        <!-- Sidebar End -->
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
-                </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-                </form>
-                <div class="navbar-nav align-items-center ms-auto">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-envelope me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Message</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all message</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">New user added</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Password changed</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all notifications</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Navbar End -->
-        @RenderBody()
-
-
-            <!-- Footer Start -->
-          
-            <!-- Footer End -->
-        </div>
-        <!-- Content End -->
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Logo -->
+    <div class="p-sidebar-logo">
+      <a asp-area="Admin" asp-controller="DashBoard" asp-action="Index">
+        <div class="p-logo-icon"><i class="fa fa-graduation-cap"></i></div>
+        <span class="p-logo-text">Inzara</span>
+      </a>
     </div>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/admin/lib/chart/chart.min.js"></script>
-    <script src="~/admin/lib/easing/easing.min.js"></script>
-    <script src="~/admin/lib/waypoints/waypoints.min.js"></script>
-    <script src="~/admin/lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Nav -->
+    <nav class="p-sidebar-nav">
 
-    <!-- Template Javascript -->
-    <script src="~/admin/js/main.js"></script>
+      <a asp-area="Admin" asp-controller="DashBoard" asp-action="Index"
+         class="p-nav-link @(currentPath == "/admin" || currentPath.Contains("/admin/dashboard") ? "active" : "")">
+        <i class="fa fa-gauge-high"></i> Dashboard
+      </a>
 
-    @await RenderSectionAsync("Scripts", required: false)
+      @if (isSuperAdmin || isAdmin || isMuellim)
+      {
+        <div class="p-nav-section">Kurs</div>
+        <a asp-area="Admin" asp-controller="Course" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/course") ? "active" : "")">
+          <i class="fa fa-book-open"></i> Kurslar
+        </a>
+        <a asp-area="Admin" asp-controller="Lesson" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/lesson") ? "active" : "")">
+          <i class="fa fa-chalkboard"></i> Dərslər
+        </a>
+        <a asp-area="Admin" asp-controller="DemoLesson" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/demolesson") ? "active" : "")">
+          <i class="fa fa-circle-play"></i> Demo Dərslər
+        </a>
+        <a asp-area="Admin" asp-controller="LiveClass" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/liveclass") ? "active" : "")">
+          <i class="fa fa-video"></i> Canlı Dərslər
+        </a>
+        <a asp-area="Admin" asp-controller="Quiz" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/quiz") ? "active" : "")">
+          <i class="fa fa-circle-question"></i> Quiz
+        </a>
+        <a asp-area="Admin" asp-controller="AssessmentQuestion" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/assessmentquestion") ? "active" : "")">
+          <i class="fa fa-list-check"></i> Assessment
+        </a>
+      }
+
+      @if (isSuperAdmin || isAdmin)
+      {
+        <div class="p-nav-section">Kateqoriya & Müəllim</div>
+        <a asp-area="Admin" asp-controller="Category" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/category") ? "active" : "")">
+          <i class="fa fa-tags"></i> Kateqoriyalar
+        </a>
+        <a asp-area="Admin" asp-controller="Instructor" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/instructor") ? "active" : "")">
+          <i class="fa fa-user-tie"></i> Müəllimlər
+        </a>
+        <a asp-area="Admin" asp-controller="Language" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/language") ? "active" : "")">
+          <i class="fa fa-language"></i> Dillər
+        </a>
+
+        <div class="p-nav-section">Kurs Xüsusiyyətləri</div>
+        <a asp-area="Admin" asp-controller="CourseFeature" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/coursefeature") ? "active" : "")">
+          <i class="fa fa-star"></i> Xüsusiyyətlər
+        </a>
+        <a asp-area="Admin" asp-controller="CourseRequirement" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/courserequirement") ? "active" : "")">
+          <i class="fa fa-clipboard-list"></i> Tələblər
+        </a>
+
+        <div class="p-nav-section">Məzmun</div>
+        <a asp-area="Admin" asp-controller="Slider" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/slider") ? "active" : "")">
+          <i class="fa fa-images"></i> Slider
+        </a>
+        <a asp-area="Admin" asp-controller="Banner" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/banner") ? "active" : "")">
+          <i class="fa fa-flag"></i> Banner
+        </a>
+        <a asp-area="Admin" asp-controller="Blog" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/blog") ? "active" : "")">
+          <i class="fa fa-newspaper"></i> Blog
+        </a>
+        <a asp-area="Admin" asp-controller="Article" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/article") ? "active" : "")">
+          <i class="fa fa-file-lines"></i> Məqalələr
+        </a>
+        <a asp-area="Admin" asp-controller="Topic" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/topic") ? "active" : "")">
+          <i class="fa fa-bookmark"></i> Mövzular
+        </a>
+
+        <div class="p-nav-section">Haqqımızda</div>
+        <a asp-area="Admin" asp-controller="AboutUs" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/aboutus") ? "active" : "")">
+          <i class="fa fa-circle-info"></i> Haqqımızda
+        </a>
+        <a asp-area="Admin" asp-controller="Mission" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/mission") ? "active" : "")">
+          <i class="fa fa-bullseye"></i> Missiya
+        </a>
+        <a asp-area="Admin" asp-controller="Statistic" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/statistic") ? "active" : "")">
+          <i class="fa fa-chart-bar"></i> Statistika
+        </a>
+        <a asp-area="Admin" asp-controller="ImpactSection" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/impactsection") ? "active" : "")">
+          <i class="fa fa-bolt"></i> Impact Section
+        </a>
+        <a asp-area="Admin" asp-controller="ImpactItem" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/impactitem") ? "active" : "")">
+          <i class="fa fa-list"></i> Impact Items
+        </a>
+
+        <div class="p-nav-section">Əlaqə</div>
+        <a asp-area="Admin" asp-controller="ContactSection" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/contactsection") ? "active" : "")">
+          <i class="fa fa-address-card"></i> Əlaqə Bölməsi
+        </a>
+        <a asp-area="Admin" asp-controller="ContactItem" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/contactitem") ? "active" : "")">
+          <i class="fa fa-phone"></i> Əlaqə Elementləri
+        </a>
+        <a asp-area="Admin" asp-controller="ContactMessage" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/contactmessage") ? "active" : "")">
+          <i class="fa fa-envelope"></i> Gələn Mesajlar
+        </a>
+
+        <div class="p-nav-section">Rəylər</div>
+        <a asp-area="Admin" asp-controller="Review" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/review") ? "active" : "")">
+          <i class="fa fa-star-half-stroke"></i> Rəy İdarəetmə
+        </a>
+      }
+
+      @if (isSuperAdmin)
+      {
+        <div class="p-nav-section">Sistem</div>
+        <a asp-area="Admin" asp-controller="Role" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/role") ? "active" : "")">
+          <i class="fa fa-shield-halved"></i> Rol İdarəetmə
+        </a>
+      }
+
+    </nav>
+
+    <!-- User -->
+    <div class="p-sidebar-user">
+      <div class="p-user-avatar">
+        @if (!string.IsNullOrEmpty(currentUser?.ProfilePicture))
+        {
+          <img src="/uploads/profiles/@currentUser.ProfilePicture" alt="">
+        }
+        else
+        {
+          @userInitial
+        }
+        <span class="p-user-online"></span>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="p-user-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          @(currentUser?.FullName ?? "Admin")
+        </div>
+        <span class="p-user-role">@userRole</span>
+      </div>
+      <form asp-controller="Account" asp-action="Logout" asp-area="" method="post" style="margin:0;">
+        <button type="submit" title="Çıxış"
+                style="background:none;border:none;color:#64748b;cursor:pointer;padding:4px;font-size:14px;transition:color 0.2s;"
+                onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'">
+          <i class="fa fa-right-from-bracket"></i>
+        </button>
+      </form>
+    </div>
+
+  </aside>
+  <!-- ===== SIDEBAR END ===== -->
+
+  <!-- ===== MAIN ===== -->
+  <div class="p-main">
+
+    <!-- Header -->
+    <header class="p-header">
+      <button class="p-hamburger" id="hamburgerBtn" onclick="toggleSidebar()">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <div class="p-search">
+        <i class="fa fa-magnifying-glass p-search-icon"></i>
+        <input type="text" placeholder="Axtar...">
+      </div>
+
+      <div class="p-header-right">
+        <a href="/" class="p-header-btn" title="Sayta qayıt" target="_blank">
+          <i class="fa fa-arrow-up-right-from-square" style="font-size:12px;"></i>
+        </a>
+        <div class="p-header-btn" title="Bildirişlər">
+          <i class="fa fa-bell" style="font-size:13px;"></i>
+          <span class="p-notif-dot"></span>
+        </div>
+        <div class="p-header-avatar">
+          @if (!string.IsNullOrEmpty(currentUser?.ProfilePicture))
+          {
+            <img src="/uploads/profiles/@currentUser.ProfilePicture" alt="">
+          }
+          else
+          {
+            @userInitial
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="p-content">
+      @RenderBody()
+    </div>
+
+  </div>
+  <!-- ===== MAIN END ===== -->
+
+</div>
+
+<!-- Toast Container -->
+<div class="p-toast-container" id="pToastContainer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // ===== SIDEBAR TOGGLE =====
+  function toggleSidebar() {
+    var s = document.getElementById('sidebar');
+    var o = document.getElementById('sidebarOverlay');
+    s.classList.toggle('open');
+    o.classList.toggle('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+  }
+
+  // ===== HEADER SCROLL BLUR =====
+  window.addEventListener('scroll', function() {
+    var h = document.querySelector('.p-header');
+    if (h) h.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // ===== PREMIUM TOAST =====
+  function showPToast(message, type, title) {
+    type  = type  || 'info';
+    title = title || { success:'Uğurlu', danger:'Xəta', info:'Məlumat', warning:'Xəbərdarlıq' }[type];
+    var icons = { success:'fa-circle-check', danger:'fa-circle-xmark', info:'fa-circle-info', warning:'fa-triangle-exclamation' };
+    var container = document.getElementById('pToastContainer');
+    var toast = document.createElement('div');
+    toast.className = 'p-toast p-toast-' + type;
+    toast.innerHTML =
+      '<div class="p-toast-bar"></div>' +
+      '<i class="fa ' + (icons[type]||icons.info) + ' p-toast-icon"></i>' +
+      '<div class="p-toast-body">' +
+        '<div class="p-toast-title">' + title + '</div>' +
+        '<div class="p-toast-msg">' + message + '</div>' +
+      '</div>' +
+      '<button class="p-toast-close" onclick="this.closest(\'.p-toast\').remove()"><i class="fa fa-xmark"></i></button>' +
+      '<div class="p-toast-progress"></div>';
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.style.transition = 'all 0.3s ease';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(110%)';
+      setTimeout(function() { if (toast.parentNode) toast.remove(); }, 300);
+    }, 4200);
+  }
+
+  // ===== COUNT UP ANIMATION =====
+  function countUp(el) {
+    var target = parseInt(el.dataset.target || el.textContent) || 0;
+    var duration = 1200;
+    var start = 0;
+    var step = target / (duration / 16);
+    var timer = setInterval(function() {
+      start += step;
+      if (start >= target) { el.textContent = target.toLocaleString(); clearInterval(timer); }
+      else { el.textContent = Math.floor(start).toLocaleString(); }
+    }, 16);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // TempData toasts
+    var s = document.getElementById('_tempSuccess');
+    var e = document.getElementById('_tempError');
+    if (s) showPToast(s.dataset.msg, 'success');
+    if (e) showPToast(e.dataset.msg, 'danger');
+
+    // CountUp for stat numbers
+    document.querySelectorAll('[data-countup]').forEach(function(el) {
+      setTimeout(function() { countUp(el); }, 300);
+    });
+
+    // Stagger animation for cards
+    document.querySelectorAll('.p-stagger > *').forEach(function(el, i) {
+      el.style.animationDelay = (i * 80) + 'ms';
+    });
+  });
+</script>
+
+@if (TempData["Success"] != null)
+{
+  <div id="_tempSuccess" data-msg="@TempData["Success"]" style="display:none"></div>
+}
+@if (TempData["Error"] != null)
+{
+  <div id="_tempError" data-msg="@TempData["Error"]" style="display:none"></div>
+}
+
+@await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
