@@ -11,6 +11,8 @@ namespace Academy.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("DELETE FROM AssessmentQuestions; DELETE FROM UserAssessmentResults;");
+
             migrationBuilder.AddColumn<int>(
                 name: "QuizId",
                 table: "UserAssessmentResults",
@@ -68,7 +70,7 @@ namespace Academy.Migrations
                 column: "QuizId",
                 principalTable: "Quizzes",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_UserAssessmentResults_Quizzes_QuizId",
