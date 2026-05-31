@@ -3,7 +3,6 @@ using Academy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Academy.Models;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
@@ -22,281 +21,393 @@ namespace Academy.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index(int? categoryId)
+        public IActionResult Index(int? categoryId, int? courseId)
         {
             ViewBag.CategoryId = categoryId;
+            ViewBag.CourseId = courseId;
             return View();
         }
 
+        // ─────────────────────────────────────────────────────────────
+        // GET /Assessment/GetRecommendedLessons?courseId=5&level=Beginner
+        // Həmin kursun videolarını istifadəçinin səviyyəsinə görə qaytarır
+        // ─────────────────────────────────────────────────────────────
+        [HttpGet]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> GetRecommendedLessons(int courseId, string level)
+        {
+            if (courseId <= 0)
+                return BadRequest("CourseId lazımdır.");
+
+            // Level-i VideoLevel enum-a çevir
+            VideoLevel targetLevel = level switch {
+                "Advanced"     => VideoLevel.Advanced,
+                "Intermediate" => VideoLevel.Intermediate,
+                _              => VideoLevel.Beginner
+            };
+
+            // Həmin kursun videolarını tap
+            var course = await _context.Courses
+                .Include(c => c.Videos)
+                .Include(c => c.Lessons)
+                .FirstOrDefaultAsync(c => c.Id == courseId);
+
+            if (course == null)
+                return NotFound("Kurs tapılmadı.");
+
+            // İstifadəçinin səviyyəsinə uyğun videolar
+            // Beginner → Beginner videolar
+            // Intermediate → Beginner + Intermediate videolar
+            // Advanced → hamısı
+            var filteredVideos = course.Videos
+                .Where(v => level == "Advanced"
+                    ? true
+                    : level == "Intermediate"
+                        ? v.Level == VideoLevel.Beginner || v.Level == VideoLevel.Intermediate
+                        : v.Level == VideoLevel.Beginner)
+                .OrderBy(v => v.Level)
+                .ThenBy(v => v.Id)
+                .Select(v => new {
+                    id    = v.Id,
+                    title = v.Title,
+                    url   = v.Url,
+                    level = v.Level.ToString()
+                })
+                .ToList();
+
+            // Dərslər (Lessons) — kursun bütün dərsləri
+            var lessons = course.Lessons
+                .OrderBy(l => l.Id)
+                .Select(l => new {
+                    id    = l.Id,
+                    title = l.Title
+                })
+                .ToList();
+
+            return Json(new {
+                courseId    = course.Id,
+                courseTitle = course.Title,
+                userLevel   = level,
+                videos      = filteredVideos,
+                lessons     = lessons,
+                totalVideos = filteredVideos.Count,
+                message     = filteredVideos.Any()
+                    ? $"{level} səviyyəsi üçün {filteredVideos.Count} video tövsiyə edilir."
+                    : "Bu kursda sizin səviyyənizə uyğun video tapılmadı."
+            });
+        }
         [HttpGet]
         [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> GetQuestions(int courseId)
         {
-            var quiz = await _context.Quizzes
-                .Include(q => q.Questions)
-                .ThenInclude(q => q.Options)
-                .FirstOrDefaultAsync(q => q.CourseId == courseId);
-
-            if (quiz == null || !quiz.Questions.Any())
-                return NotFound();
-
             var rng = new Random();
 
-            // Anti-repeat/Randomize: Shuffle questions and take max 15
-            var shuffledQuestions = quiz.Questions.OrderBy(x => rng.Next()).Take(15).Select(q => new
+            // 1. Kursun quiz-ini tap
+            if (courseId > 0)
             {
-                id = q.Id,
-                text = q.Text,
-                difficulty = q.Difficulty,
-                points = q.Points,
-                // Randomize options for each question
-                options = q.Options.OrderBy(x => rng.Next()).Select(o => new { id = o.Id, text = o.Text }).ToList()
-            }).ToList();
+                var quiz = await _context.Quizzes
+                    .Include(q => q.Questions)
+                    .ThenInclude(q => q.Options)
+                    .FirstOrDefaultAsync(q => q.CourseId == courseId);
 
-            return Json(shuffledQuestions);
+                if (quiz != null && quiz.Questions.Any(q => q.Options.Any()))
+                {
+                    var list = quiz.Questions
+                        .Where(q => q.Options.Any())
+                        .OrderBy(_ => rng.Next())
+                        .Take(15)
+                        .Select(q => new {
+                            id         = q.Id,
+                            text       = q.Text,
+                            difficulty = (int)q.Difficulty,
+                            points     = q.Points,
+                            options    = q.Options
+                                .OrderBy(_ => rng.Next())
+                                .Select(o => new { id = o.Id, text = o.Text })
+                                .ToList()
+                        });
+                    return Json(list);
+                }
+            }
+
+            // 2. Kurs quiz-i yoxdursa — bütün sualları qaytart
+            var all = await _context.AssessmentQuestions
+                .Include(q => q.Options)
+                .Where(q => q.Options.Any())
+                .ToListAsync();
+
+            if (!all.Any())
+                return NotFound("Hələ sual əlavə edilməyib.");
+
+            var result = all
+                .OrderBy(_ => rng.Next()).Take(15)
+                .Select(q => new {
+                    id         = q.Id,
+                    text       = q.Text,
+                    difficulty = (int)q.Difficulty,
+                    points     = q.Points,
+                    options    = q.Options
+                        .OrderBy(_ => rng.Next())
+                        .Select(o => new { id = o.Id, text = o.Text })
+                        .ToList()
+                });
+
+            return Json(result);
         }
 
+        // ─────────────────────────────────────────────────────────────
+        // POST /Assessment/SubmitAssessment
+        // ─────────────────────────────────────────────────────────────
         [HttpPost]
         [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> SubmitAssessment([FromBody] AssessmentSubmissionDto submission)
         {
-            if (submission == null || submission.Answers == null || !submission.Answers.Any())
-                return BadRequest("Cavablar bo? ola bilm?z.");
+            if (submission?.Answers == null || !submission.Answers.Any())
+                return BadRequest("Cavablar boş ola bilməz.");
 
-            if (!submission.CourseId.HasValue)
-                return BadRequest("CourseId m�tl?qdir.");
+            // ── 1. Quiz tap ──────────────────────────────────────────
+            Quiz? quiz = null;
+            if (submission.CourseId.HasValue && submission.CourseId > 0)
+                quiz = await _context.Quizzes
+                    .FirstOrDefaultAsync(q => q.CourseId == submission.CourseId.Value);
 
-            var quiz = await _context.Quizzes.FirstOrDefaultAsync(q => q.CourseId == submission.CourseId.Value);
             if (quiz == null)
-                return BadRequest("Bu kursun quiz-i yoxdur.");
+            {
+                var firstQId = submission.Answers.FirstOrDefault()?.QuestionId ?? 0;
+                if (firstQId > 0)
+                {
+                    var fq = await _context.AssessmentQuestions
+                        .Include(q => q.Quiz)
+                        .FirstOrDefaultAsync(q => q.Id == firstQId);
+                    quiz = fq?.Quiz;
+                }
+            }
 
-            int correctCount = 0;
-            int total = submission.Answers.Count;
-            double finalScore = 0;
-            int wrongCount = 0;
-            
-            // We need Combo Bonus. Let's assume frontend sends answers in order of submission for real combo, or we just calculate overall combo if sequential
-            // Actually, usually frontend tracks Combo and Speed, but since we are doing it securely backend-side, 
-            // the DTO needs to provide TimeTaken per question, and we evaluate them in order.
-            
-            int currentCombo = 0;
+            if (quiz == null)
+                quiz = await _context.Quizzes.FirstOrDefaultAsync();
+
+            if (quiz == null)
+                return BadRequest("Quiz tapılmadı. Əvvəlcə admin paneldən quiz yaradın.");
+
+            // ── 2. Bütün sualları bir dəfəyə yüklə ──────────────────
+            var questionIds = submission.Answers
+                .Select(a => a.QuestionId).Distinct().ToList();
+
+            var questions = await _context.AssessmentQuestions
+                .Include(q => q.Options)
+                .Where(q => questionIds.Contains(q.Id))
+                .ToDictionaryAsync(q => q.Id);
+
+            // ── 3. Cavabları qiymətləndir ────────────────────────────
+            int correctCount  = 0;
+            int wrongCount    = 0;
+            int total         = submission.Answers.Count;
+            int currentCombo  = 0;
+            int maxCombo      = 0;
+            var wrongQIds     = new List<int>();
 
             foreach (var answer in submission.Answers)
             {
-                var question = await _context.AssessmentQuestions
-                    .Include(q => q.Options)
-                    .FirstOrDefaultAsync(q => q.Id == answer.QuestionId);
+                if (!questions.TryGetValue(answer.QuestionId, out var q)) continue;
 
-                if (question == null) continue;
+                var opt = q.Options.FirstOrDefault(o => o.Id == answer.OptionId);
+                bool correct = opt?.IsCorrect ?? false;
 
-                var isCorrect = question.Options
-                    .Where(o => o.Id == answer.OptionId)
-                    .Select(o => o.IsCorrect)
-                    .FirstOrDefault();
-
-                if (isCorrect) 
+                if (correct)
                 {
                     correctCount++;
                     currentCombo++;
-                    
-                    double basePoints = question.Difficulty == DifficultyLevel.Easy ? 1 :
-                                        question.Difficulty == DifficultyLevel.Medium ? 2 :
-                                        question.Difficulty == DifficultyLevel.Hard ? 3 : 1;
-                    
-                    double questionScore = basePoints;
-                    
-                    // SpeedBonus logic: if TimeTaken is fast enough (e.g., < 10s gives extra 10%)
-                    if (answer.TimeTakenSeconds > 0 && answer.TimeTakenSeconds <= 10)
-                    {
-                        questionScore += 0.5; // Speed bonus
-                    }
-                    
-                    // ComboBonus logic: currentCombo > 2 gives +0.5 multiplier per extra streak (capped)
-                    if (currentCombo >= 3)
-                    {
-                        questionScore += 0.5;
-                    }
-
-                    finalScore += questionScore;
+                    if (currentCombo > maxCombo) maxCombo = currentCombo;
                 }
                 else
                 {
                     wrongCount++;
                     currentCombo = 0;
-                   
-                    finalScore -= 0.5;
+                    wrongQIds.Add(answer.QuestionId);
                 }
             }
 
-            if (finalScore < 0) finalScore = 0;
+            // ── 4. Dəqiqlik: correctCount / total * 100 ──────────────
+            double percentage = total > 0
+                ? Math.Round((double)correctCount / total * 100, 1)
+                : 0;
 
-            double percentage = total == 0 ? 0 : (double)correctCount / total;
+            // ── 5. Level məntiqi ─────────────────────────────────────
+            // 0-40%  → Beginner
+            // 41-70% → Intermediate
+            // 71-100%→ Advanced
+            string level = percentage >= 71 ? "Advanced"
+                         : percentage >= 41 ? "Intermediate"
+                         : "Beginner";
 
-            double percentageForLevel = percentage * 100;
-            string level = "Beginner";
+            // ── 6. XP: faiz əsaslı, max 500 XP ──────────────────────
+            // Kombo bonusu: hər 3+ ardıcıl düzgün cavab +10 XP
+            int baseXp  = (int)Math.Round(percentage * 5);
+            int comboXp = maxCombo >= 3 ? (maxCombo / 3) * 10 : 0;
+            int xp      = Math.Min(baseXp + comboXp, 500);
 
-            if (percentageForLevel >= 71) level = "Advanced";
-            else if (percentageForLevel >= 41) level = "Intermediate";
+            // ── 7. CategoryId tap ────────────────────────────────────
+            int categoryId = submission.CategoryId ?? 0;
+            if (categoryId == 0 && questions.Any())
+                categoryId = questions.Values.First().CategoryId;
+            if (categoryId == 0 && submission.CourseId.HasValue)
+            {
+                var course = await _context.Courses.FindAsync(submission.CourseId.Value);
+                categoryId = course?.CategoryId ?? 0;
+            }
+            if (categoryId == 0)
+            {
+                var firstCat = await _context.Categories.FirstOrDefaultAsync();
+                categoryId = firstCat?.Id ?? 1;
+            }
 
-            int xp = (int)Math.Round(finalScore * 50);
-
-            AppUser appUser = await _userManager.GetUserAsync(User);
+            // ── 8. Nəticəni DB-yə yaz ───────────────────────────────
+            var appUser = await _userManager.GetUserAsync(User);
             if (appUser != null)
             {
-                // CategoryId-ni quiz suallarından tap
-                int categoryId = 0;
-                if (submission.CategoryId.HasValue && submission.CategoryId > 0)
-                {
-                    categoryId = submission.CategoryId.Value;
-                }
-                else
-                {
-                    // Cavablardan birinin kateqoriyasını tap
-                    var firstQuestionId = submission.Answers.FirstOrDefault()?.QuestionId ?? 0;
-                    if (firstQuestionId > 0)
-                    {
-                        var firstQ = await _context.AssessmentQuestions
-                            .FirstOrDefaultAsync(q => q.Id == firstQuestionId);
-                        categoryId = firstQ?.CategoryId ?? 0;
-                    }
-                }
-
-                // Əgər hələ də 0-dırsa, kursun kateqoriyasını götür
-                if (categoryId == 0 && submission.CourseId.HasValue)
-                {
-                    var course = await _context.Courses.FindAsync(submission.CourseId.Value);
-                    categoryId = course?.CategoryId ?? 0;
-                }
-
-                // Son çarə — ilk kateqoriyanı götür
-                if (categoryId == 0)
-                {
-                    var firstCat = await _context.Categories.FirstOrDefaultAsync();
-                    categoryId = firstCat?.Id ?? 1;
-                }
-
                 var newResult = new UserAssessmentResult
                 {
-                    AppUserId = appUser.Id,
-                    CategoryId = categoryId,
-                    CourseId = submission.CourseId,
-                    QuizId = quiz.Id,
-                    Score = (int)Math.Round(finalScore),
+                    AppUserId      = appUser.Id,
+                    CategoryId     = categoryId,
+                    CourseId       = submission.CourseId,
+                    QuizId         = quiz.Id,
+                    Score          = correctCount,
                     TotalQuestions = total,
-                    Percentage = percentageForLevel,
-                    Level = level,
-                    XP = xp
+                    Percentage     = percentage,
+                    Level          = level,
+                    XP             = xp,
+                    CreatedAt      = DateTime.Now
                 };
                 _context.UserAssessmentResults.Add(newResult);
                 await _context.SaveChangesAsync();
             }
 
-            // Create Recommendation System
-            var wrongQuestionIds = submission.Answers.Where(a => 
-            {
-                var isCorrect = _context.AssessmentOptions.Where(o => o.Id == a.OptionId).Select(o => o.IsCorrect).FirstOrDefault();
-                return !isCorrect;
-            }).Select(a => a.QuestionId).ToList();
+            // ── 9. Zəif kateqoriyalar ────────────────────────────────
+            var weakCatIds = questions.Values
+                .Where(q => wrongQIds.Contains(q.Id))
+                .Select(q => q.CategoryId)
+                .Distinct()
+                .ToList();
 
-            var wrongCategories = await _context.AssessmentQuestions
-                                        .Where(q => wrongQuestionIds.Contains(q.Id) && q.CategoryId > 0)
-                                        .Select(q => q.CategoryId)
-                                        .Distinct()
-                                        .ToListAsync();
-
-            if (submission.CategoryId.HasValue && submission.CategoryId > 0)
-                wrongCategories.Add(submission.CategoryId.Value);
-
-            // Fetch Courses dynamically based on performance
-            var recommendationQuery = _context.Courses
+            // ── 10. Tövsiyə sistemi ──────────────────────────────────
+            // Məntiqi:
+            // a) İstifadəçinin zəif olduğu kateqoriyalardakı kurslar (ən yüksək prioritet)
+            // b) İstifadəçinin level-inə uyğun kurslar
+            // c) Hazırda baxdığı kursdan fərqli kurslar
+            var allCourses = await _context.Courses
                 .Include(c => c.Category)
-                .Where(c => c.IsActive && !c.IsDeleted && c.Id != submission.CourseId)
-                .AsQueryable();
+                .Where(c => c.IsActive && !c.IsDeleted
+                         && c.Id != (submission.CourseId ?? 0))
+                .ToListAsync();
 
-            var allCourses = await recommendationQuery.ToListAsync();
+            var ranked = allCourses
+                .Select(c => {
+                    int score = 0;
 
-            // Simple recommendation ranking
-            var rankedCourses = allCourses.Select(c => 
+                    // Zəif kateqoriyaya uyğundursa +30
+                    if (weakCatIds.Contains(c.CategoryId)) score += 30;
+
+                    // Level uyğunluğu
+                    if (c.Level == level) score += 20;
+
+                    // Beginner üçün Beginner kurslar əlavə boost
+                    if (level == "Beginner" && c.Level == "Beginner") score += 10;
+
+                    // Intermediate üçün həm Beginner həm Intermediate
+                    if (level == "Intermediate" && c.Level == "Intermediate") score += 5;
+
+                    // Advanced üçün Advanced kurslar
+                    if (level == "Advanced" && c.Level == "Advanced") score += 10;
+
+                    return new { Course = c, Score = score };
+                })
+                .Where(x => x.Score > 0)
+                .OrderByDescending(x => x.Score)
+                .Take(4)
+                .ToList();
+
+            // Əgər heç uyğun kurs yoxdursa — ən azı level-ə görə göstər
+            if (!ranked.Any())
             {
-                int score = 0;
-                // Boost if course matches weak topic
-                if (wrongCategories.Contains(c.CategoryId)) score += 10;
-                
-                // Boost based on title/level match
-                if (level == c.Level) score += 20;
-                
-                return new { Course = c, Score = score };
-            })
-            // YALNIZ ger?k uy?unlu?u olan xsusi kurslar? qaytar (Score > 0). 
-            // ?g?r uy?unluq yoxdursa siyah? bo? qals?n ki, UI-da "tap?lmad?" funksionall??? g�r�ns�n.
-            .Where(x => x.Score > 0)
-            .OrderByDescending(x => x.Score)
-            .Take(4)
-            .Select(x => x.Course)
-            .ToList();
-
-            var recommendedCourses = rankedCourses.Select(c => new
-            {
-                title = c.Title,
-                imageUrl = c.ImageUrl, // Assuming ImageUrl is needed for UI
-                url = Url.Action("Index", "CourseDetail", new { id = c.Id }), // Getting URL to course
-                shortDescription = !string.IsNullOrEmpty(c.Description) && c.Description.Length > 80 
-                                    ? c.Description.Substring(0, 80) + "..." 
-                                    : c.Description,
-                level = c.Level,
-                category = c.Category?.Name ?? "General",
-                reason = wrongCategories.Contains(c.CategoryId) 
-                         ? "Sizin ���n x�susi: M?hz s?naqda s?hv etdiyiniz m�vzular? dolduracaq ?n uy?un kurs."
-                         : level == "Intermediate"
-                           ? "Haz?rk? bilikl?rinizi real layih?l?rd? t?tbiq etm?yiniz ���n �n?ririk."
-                           : "Se�diyiniz sah? �zr? bacar?qlar? inki?af etdirm?y? k�m?k ed?c?k."
-            }).ToList();
-
-            // Generate Recommendations based on calculated Level
-            string roadmap = level == "Beginner" 
-                ? "T?m?l proqramla?d?rma anlay??lar?, Syntax, OOP prinsipl?ri �zr? baza yarad?n." 
-                : level == "Intermediate" 
-                ? "Data Structures, LINQ, Asinxron proqramla?d?rma v? Database arxitekturas?n? d?rind?n �yr?nin." 
-                : "System Design, Microservices, Cloud Architecture (Azure/AWS) v? Design Patterns t?tbiq edin.";
-
-            string strengths = level == "Advanced" ? "Analitik d�?�nc?, Kompleks M?ntiq" : level == "Intermediate" ? "Baza bilikl?ri, Alqoritmik yana?ma" : "�yr?nm?y? h?v?s, T?m?l m?ntiq";
-            string weaknesses = level == "Advanced" ? "Sistem Arxitekturas? (B?lk?)" : level == "Intermediate" ? "Performance Optimization" : "D?rin OOP Prinsipl?ri, Design Patterns";
-
-            if (wrongCategories.Any())
-            {
-                var weakCatNames = await _context.Categories.Where(c => wrongCategories.Contains(c.Id)).Select(c => c.Name).ToListAsync();
-                if (weakCatNames.Any()) weaknesses += $" � Z?if M�vzular: {string.Join(", ", weakCatNames)}";
+                ranked = allCourses
+                    .Select(c => new { Course = c, Score = c.Level == level ? 1 : 0 })
+                    .Where(x => x.Score > 0)
+                    .Take(4)
+                    .ToList();
             }
 
-            return Json(new
-            {
-                level = level,
-                score = Math.Round(finalScore, 2),
-                correctCount = correctCount,
-                wrongCount = wrongCount,
-                total = total,
-                percentage = Math.Round(percentage * 100),
-                xp = xp,
-                roadmap = roadmap,
-                strengths = strengths,
-                weaknesses = weaknesses,
-                recommendedCourses = recommendedCourses // Newly integrated data-driven recommendation
+            var weakCatNames = await _context.Categories
+                .Where(c => weakCatIds.Contains(c.Id))
+                .Select(c => c.Name)
+                .ToListAsync();
+
+            var recommendedCourses = ranked.Select(x => new {
+                title            = x.Course.Title,
+                imageUrl         = x.Course.ImageUrl,
+                url              = Url.Action("Index", "CourseDetail", new { id = x.Course.Id }),
+                shortDescription = x.Course.Description?.Length > 100
+                    ? x.Course.Description.Substring(0, 100) + "..."
+                    : x.Course.Description,
+                level    = x.Course.Level,
+                category = x.Course.Category?.Name ?? "Ümumi",
+                reason   = weakCatIds.Contains(x.Course.CategoryId)
+                    ? $"Sınaqda zəif olduğunuz \"{x.Course.Category?.Name}\" mövzusunu gücləndirir."
+                    : x.Course.Level == level
+                        ? $"Hazırkı {level} səviyyənizə tam uyğun kurs."
+                        : "Biliklərinizi genişləndirmək üçün tövsiyə edilir."
+            }).ToList();
+
+            // ── 11. Yol xəritəsi ─────────────────────────────────────
+            string roadmap = level switch {
+                "Advanced"     => "System Design, Microservices, Cloud Architecture (Azure/AWS) və Design Patterns tətbiq edin.",
+                "Intermediate" => "Data Structures, LINQ, Asinxron proqramlaşdırma və Database arxitekturasını dərindən öyrənin.",
+                _              => "Təməl proqramlaşdırma anlayışları, Syntax, OOP prinsipləri üzrə baza yaradın."
+            };
+
+            string strengths = level switch {
+                "Advanced"     => "Analitik düşüncə, Kompleks məntiq, Alqoritmik yanaşma",
+                "Intermediate" => "Baza bilikləri, Alqoritmik yanaşma, Problem həll etmə",
+                _              => "Öyrənməyə həvəs, Təməl məntiq, Yeni başlayanlar üçün güclü baza"
+            };
+
+            string weaknesses = level switch {
+                "Advanced"     => "Sistem Arxitekturası, Distributed Systems",
+                "Intermediate" => "Performance Optimization, Advanced Design Patterns",
+                _              => "Dərin OOP Prinsipləri, Design Patterns, Alqoritmlər"
+            };
+
+            if (weakCatNames.Any())
+                weaknesses += $" — Zəif mövzular: {string.Join(", ", weakCatNames)}";
+
+            return Json(new {
+                level,
+                score          = correctCount,
+                correctCount,
+                wrongCount,
+                total,
+                percentage,
+                xp,
+                maxCombo,
+                roadmap,
+                strengths,
+                weaknesses,
+                recommendedCourses
             });
         }
     }
 
     public class AssessmentSubmissionDto
     {
-        public int? CategoryId { get; set; }
-        public int? CourseId { get; set; }
-        public int CheatAttempts { get; set; } 
-        public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
+        public int? CategoryId    { get; set; }
+        public int? CourseId      { get; set; }
+        public int  CheatAttempts { get; set; }
+        public List<AnswerDto> Answers { get; set; } = new();
     }
 
     public class AnswerDto
     {
-        public int QuestionId { get; set; }
-        public int OptionId { get; set; }
-        public int TimeTakenSeconds { get; set; } // Added for SpeedBonus
+        public int QuestionId       { get; set; }
+        public int OptionId         { get; set; }
+        public int TimeTakenSeconds { get; set; }
     }
 }

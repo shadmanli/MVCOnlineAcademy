@@ -75,6 +75,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
     options.SlidingExpiration = true;
+    // Security stamp dəyişdikdə cookie 30 saniyə ərzində invalidate olur
+    options.ValidationInterval = TimeSpan.FromSeconds(30);
 });
 
 builder.Services.AddScoped<IEmailService, EmailService>();

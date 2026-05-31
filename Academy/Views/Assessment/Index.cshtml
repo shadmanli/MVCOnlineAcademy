@@ -624,7 +624,10 @@
 
         const fetchQuestions = async () => {
              try {
-                const res = await fetch('/Assessment/GetQuestions');
+                // URL-dən courseId al (məsələn: /Assessment/Index?courseId=5)
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseId = urlParams.get('courseId') || 0;
+                const res = await fetch('/Assessment/GetQuestions?courseId=' + courseId);
                 if(res.ok) {
                     questions = await res.json();
                 } else {
@@ -778,12 +781,18 @@
 
                 try {
                     // SECURE POST TO BACKEND TO EVALUATE SCORE
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const courseId = parseInt(urlParams.get('courseId')) || 0;
+                    const categoryId = parseInt(urlParams.get('categoryId')) || 0;
+
                     const response = await fetch('/Assessment/SubmitAssessment', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
                             Answers: answersData,
-                            CheatAttempts: cheatAttempts
+                            CheatAttempts: cheatAttempts,
+                            CourseId: courseId > 0 ? courseId : null,
+                            CategoryId: categoryId > 0 ? categoryId : null
                         })
                     });
                     
@@ -806,10 +815,57 @@
                         // BUILD AI RECOMMENDED COURSES UI
                         const coursesGrid = document.getElementById('dynamic-courses-grid');
                         coursesGrid.innerHTML = '';
+
+                        // ── Əvvəlcə həmin kursun tövsiyə edilən dərslərini göstər ──
+                        const urlParams2 = new URLSearchParams(window.location.search);
+                        const currentCourseId = parseInt(urlParams2.get('courseId')) || 0;
+
+                        if (currentCourseId > 0) {
+                            try {
+                                const lessonsRes = await fetch(`/Assessment/GetRecommendedLessons?courseId=${currentCourseId}&level=${encodeURIComponent(resultData.level)}`);
+                                if (lessonsRes.ok) {
+                                    const lessonsData = await lessonsRes.json();
+                                    if (lessonsData.videos && lessonsData.videos.length > 0) {
+                                        const levelColor = resultData.level === 'Beginner' ? '#10B981' : resultData.level === 'Intermediate' ? '#fbbf24' : '#ef4444';
+                                        let lessonsHtml = `
+                                            <div style="background:rgba(0,240,255,0.04);border:1px solid rgba(0,240,255,0.15);border-radius:16px;padding:20px;margin-bottom:20px;">
+                                                <h4 style="font-family:'Sora';margin-bottom:4px;font-size:17px;">
+                                                    <i class="fa-solid fa-graduation-cap" style="color:var(--accent);"></i>
+                                                    ${lessonsData.courseTitle} — Tövsiyə Edilən Dərslər
+                                                </h4>
+                                                <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">${lessonsData.message}</p>
+                                                <div style="display:flex;flex-direction:column;gap:8px;">`;
+
+                                        lessonsData.videos.forEach((v, i) => {
+                                            const lvlColor = v.level === 'Beginner' ? '#10B981' : v.level === 'Intermediate' ? '#fbbf24' : '#ef4444';
+                                            lessonsHtml += `
+                                                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.06);">
+                                                    <div style="width:28px;height:28px;border-radius:50%;background:${lvlColor}22;color:${lvlColor};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${i+1}</div>
+                                                    <div style="flex:1;">
+                                                        <div style="font-size:14px;font-weight:600;color:#fff;">${v.title}</div>
+                                                        <div style="font-size:11px;color:${lvlColor};margin-top:2px;">${v.level}</div>
+                                                    </div>
+                                                    <a href="/CourseDetail/Index/${currentCourseId}" style="font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap;">
+                                                        İzlə <i class="fa-solid fa-play" style="font-size:10px;"></i>
+                                                    </a>
+                                                </div>`;
+                                        });
+
+                                        lessonsHtml += `</div>
+                                                <a href="/CourseDetail/Index/${currentCourseId}" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;color:var(--accent);font-weight:600;">
+                                                    Kursun bütün dərslərinə bax <i class="fa-solid fa-arrow-right"></i>
+                                                </a>
+                                            </div>`;
+                                        coursesGrid.insertAdjacentHTML('beforeend', lessonsHtml);
+                                    }
+                                }
+                            } catch(e) { console.error('Lessons fetch error:', e); }
+                        }
+
+                        // ── Digər tövsiyə edilən kurslar ──
                         if (resultData.recommendedCourses && resultData.recommendedCourses.length > 0) {
                             resultData.recommendedCourses.forEach((c) => {
                                 const levelColor = c.level === 'Beginner' ? '#10B981' : c.level === 'Intermediate' ? '#fbbf24' : '#ef4444';
-                                
                                 const html = `
                                     <a href="${c.url}" style="text-decoration: none; color: inherit; display: block;" class="course-rec-link">
                                         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; text-align: left; transition: 0.3s; position:relative; overflow:hidden;" class="course-rec-card">
@@ -824,18 +880,16 @@
                                                 <span style="color: rgba(255,255,255,0.8);">${c.reason}</span>
                                             </div>
                                         </div>
-                                    </a>
-                                `;
+                                    </a>`;
                                 coursesGrid.insertAdjacentHTML('beforeend', html);
                             });
-                        } else {
+                        } else if (coursesGrid.innerHTML === '') {
                             coursesGrid.innerHTML = `
-                                <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 40px 20px; text-align: center; margin-top: 10px;">
-                                    <i class="fa-solid fa-folder-open" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));"></i>
-                                    <h4 style="font-family:'Sora'; margin-bottom:8px; font-size:20px; color: var(--text-main);">Xüsusi Kurs Tapılmadı</h4>
-                                    <p style="color:var(--text-muted); font-size:14px; line-height: 1.6; max-width: 400px; margin: 0 auto;">Hal-hazırda sistemdə sizin nəticələrinizə və səviyyənizə tamamilə uyğun gələn spesifik bir kurs mövcud deyil. Aşağıdakı düymədən istifadə edərək ümumi kataloqa göz ata bilərsiniz.</p>
-                                </div>
-                            `;
+                                <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 40px 20px; text-align: center;">
+                                    <i class="fa-solid fa-folder-open" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                                    <h4 style="font-family:'Sora'; margin-bottom:8px; font-size:20px;">Xüsusi Kurs Tapılmadı</h4>
+                                    <p style="color:var(--text-muted); font-size:14px; line-height: 1.6; max-width: 400px; margin: 0 auto;">Ümumi kataloqa göz ata bilərsiniz.</p>
+                                </div>`;
                         }
                         
                         const glassCard = document.querySelector('.glass-card');

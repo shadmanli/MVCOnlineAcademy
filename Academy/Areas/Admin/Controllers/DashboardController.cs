@@ -25,7 +25,7 @@ namespace Academy.Areas.Admin.Controllers
                 .Include(r => r.Category)
                 .ToListAsync();
 
-            ViewBag.TotalStudents = results.Select(r => r.AppUserId).Distinct().Count();
+            ViewBag.TotalStudents = results.Count; // Ümumi quiz sayı
             ViewBag.BeginnerCount = results.Count(r => r.Level == "Beginner");
             ViewBag.IntermediateCount = results.Count(r => r.Level == "Intermediate");
             ViewBag.AdvancedCount = results.Count(r => r.Level == "Advanced");

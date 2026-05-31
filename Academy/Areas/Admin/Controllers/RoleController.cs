@@ -156,6 +156,10 @@ namespace Academy.Areas.Admin.Controllers
             var result = await _userManager.AddToRoleAsync(user, newRole);
             if (result.Succeeded)
             {
+                // Security stamp yenilə — köhnə cookie invalidate olur,
+                // istifadəçi növbəti requestdə yeni rolunu alır
+                await _userManager.UpdateSecurityStampAsync(user);
+
                 TempData["Success"] = $"{user.FullName} istifadəçisinin rolu '{oldRole}' → '{newRole}' olaraq dəyişdirildi.";
             }
             else

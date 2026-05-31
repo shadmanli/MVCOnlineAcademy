@@ -2,28 +2,37 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWishlistBadge();
     updateHeartIcons();
 
-    // S?hif? yükl?n?nd? mesaj varsa göst?r (Yönl?ndirm?d?n g?libs?)
     const msg = sessionStorage.getItem('wishlistMsg');
     if (msg) {
         showCustomToast(msg, true);
         sessionStorage.removeItem('wishlistMsg');
     }
 
-    // ?g?r wishlist s?hif?sind?yiks? kurslar? render et
     if (document.getElementById('wishlist-container')) {
         renderWishlistPage();
     }
 });
 
-// Mövcud wishlist m?lumatlar?n? al?r?q (array of objects)
+// â”€â”€ HÉ™r istifadÉ™Ã§i Ã¼Ã§Ã¼n ayrÄ±ca localStorage key â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function getWishlistKey() {
+    // Layout-da meta tag vasitÉ™silÉ™ user ID oxunur
+    const meta = document.querySelector('meta[name="user-id"]');
+    const userId = meta ? meta.content : 'guest';
+    return 'wishlist_' + userId;
+}
+
 function getWishlist() {
-    const list = localStorage.getItem('wishlist');
+    const list = localStorage.getItem(getWishlistKey());
     return list ? JSON.parse(list) : [];
+}
+
+function saveWishlist(wishlist) {
+    localStorage.setItem(getWishlistKey(), JSON.stringify(wishlist));
 }
 
 // Kursu wishlist-? ?lav? edir v? ya ordan silir
 function toggleWishlist(event, btnElement) {
-    event.preventDefault(); // href qar??s?n? almaq üçün
+    event.preventDefault(); // href qar??s?n? almaq ï¿½ï¿½ï¿½n
     event.stopPropagation();
 
     // HTML5 data atributlardan m?lumatlar? oxuyuruq
@@ -49,20 +58,18 @@ function toggleWishlist(event, btnElement) {
             checkEmptyWishlist(); // say? v? bo? ekran? yenil?
         }
 
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        saveWishlist(wishlist);
         updateWishlistBadge();
         updateHeartIcons();
 
-        // Wishlist s?hif?sind?ki say?ac? da yenil? (?g?r oraday??sa)
         const pageCount = document.getElementById('wishlist-page-count');
         if (pageCount) {
             pageCount.innerText = wishlist.length;
         }
 
-        showCustomToast("Kurs u?urla wishlist-d?n silindi!", false);
+        showCustomToast("Kurs uÄŸurla wishlist-dÉ™n silindi!", false);
 
     } else {
-        // Yoxdursa, ?lav? et
         wishlist.push({
             id: id,
             title: title,
@@ -71,16 +78,16 @@ function toggleWishlist(event, btnElement) {
             instructor: instructor || "Unknown Instructor"
         });
 
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        saveWishlist(wishlist);
 
-        // Yeni t?l?b: wishlist s?hif?sin? yönl?ndir v? mesaj ötür
+        // Yeni t?l?b: wishlist s?hif?sin? yï¿½nl?ndir v? mesaj ï¿½tï¿½r
         sessionStorage.setItem('wishlistMsg', 'Kurs u?urla wishlist-? ?lav? edildi!');
         window.location.href = '/Wishlist';
         return;
     }
 }
 
-// Xüsusi x?b?rdarl?q (Toast) funksiyas?
+// Xï¿½susi x?b?rdarl?q (Toast) funksiyas?
 function showCustomToast(message, isSuccess = true) {
     let toastContainer = document.getElementById('js-toast-container');
     if (!toastContainer) {
@@ -136,12 +143,12 @@ function showCustomToast(message, isSuccess = true) {
     }, 3000);
 }
 
-// ?konu bo? (b?y?nilm?yib) v? ya dolu (b?y?nilib) göst?rir
+// ?konu bo? (b?y?nilm?yib) v? ya dolu (b?y?nilib) gï¿½st?rir
 function updateHeartIcons() {
     const wishlist = getWishlist();
     const courseIds = wishlist.map(c => c.id);
 
-    // S?hif?d?ki bütün heart ikonlar?n? yoxla
+    // S?hif?d?ki bï¿½tï¿½n heart ikonlar?n? yoxla
     document.querySelectorAll('[data-wishlist-btn]').forEach(btn => {
         const id = parseInt(btn.getAttribute('data-wishlist-id'));
         const icon = btn.querySelector('i');
@@ -173,7 +180,7 @@ function updateWishlistBadge() {
     }
 }
 
-// Wishlist s?hif?sind? kurslar? m?hdud HTML il? çap edir (CourseCard dizayn?na uy?un)
+// Wishlist s?hif?sind? kurslar? m?hdud HTML il? ï¿½ap edir (CourseCard dizayn?na uy?un)
 function renderWishlistPage() {
     const wishlist = getWishlist();
     const container = document.getElementById('wishlist-container');

@@ -130,6 +130,9 @@ namespace Academy.Controllers
 
             if (result.Succeeded)
             {
+                // Yeni qeydiyyat → avtomatik "User" rolu
+                await _userManager.AddToRoleAsync(user, "User");
+
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                 var confirmationLink = Url.Action("ConfirmEmail", "Account",
