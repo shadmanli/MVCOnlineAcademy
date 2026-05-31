@@ -48,6 +48,8 @@ namespace Academy.Data
         public DbSet<LiveClassEventLog> LiveClassEventLogs { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
         public DbSet<CourseReview> CourseReviews { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

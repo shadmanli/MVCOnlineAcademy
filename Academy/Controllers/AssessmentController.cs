@@ -64,7 +64,7 @@ namespace Academy.Controllers
                 return BadRequest("Cavablar bo? ola bilm?z.");
 
             if (!submission.CourseId.HasValue)
-                return BadRequest("CourseId mütl?qdir.");
+                return BadRequest("CourseId mï¿½tl?qdir.");
 
             var quiz = await _context.Quizzes.FirstOrDefaultAsync(q => q.CourseId == submission.CourseId.Value);
             if (quiz == null)
@@ -143,9 +143,42 @@ namespace Academy.Controllers
             AppUser appUser = await _userManager.GetUserAsync(User);
             if (appUser != null)
             {
+                // CategoryId-ni quiz suallarÄ±ndan tap
+                int categoryId = 0;
+                if (submission.CategoryId.HasValue && submission.CategoryId > 0)
+                {
+                    categoryId = submission.CategoryId.Value;
+                }
+                else
+                {
+                    // Cavablardan birinin kateqoriyasÄ±nÄ± tap
+                    var firstQuestionId = submission.Answers.FirstOrDefault()?.QuestionId ?? 0;
+                    if (firstQuestionId > 0)
+                    {
+                        var firstQ = await _context.AssessmentQuestions
+                            .FirstOrDefaultAsync(q => q.Id == firstQuestionId);
+                        categoryId = firstQ?.CategoryId ?? 0;
+                    }
+                }
+
+                // ÆgÉ™r hÉ™lÉ™ dÉ™ 0-dÄ±rsa, kursun kateqoriyasÄ±nÄ± gÃ¶tÃ¼r
+                if (categoryId == 0 && submission.CourseId.HasValue)
+                {
+                    var course = await _context.Courses.FindAsync(submission.CourseId.Value);
+                    categoryId = course?.CategoryId ?? 0;
+                }
+
+                // Son Ã§arÉ™ â€” ilk kateqoriyanÄ± gÃ¶tÃ¼r
+                if (categoryId == 0)
+                {
+                    var firstCat = await _context.Categories.FirstOrDefaultAsync();
+                    categoryId = firstCat?.Id ?? 1;
+                }
+
                 var newResult = new UserAssessmentResult
                 {
                     AppUserId = appUser.Id,
+                    CategoryId = categoryId,
                     CourseId = submission.CourseId,
                     QuizId = quiz.Id,
                     Score = (int)Math.Round(finalScore),
@@ -195,7 +228,7 @@ namespace Academy.Controllers
                 return new { Course = c, Score = score };
             })
             // YALNIZ ger?k uy?unlu?u olan xsusi kurslar? qaytar (Score > 0). 
-            // ?g?r uy?unluq yoxdursa siyah? bo? qals?n ki, UI-da "tap?lmad?" funksionall??? görünsün.
+            // ?g?r uy?unluq yoxdursa siyah? bo? qals?n ki, UI-da "tap?lmad?" funksionall??? gï¿½rï¿½nsï¿½n.
             .Where(x => x.Score > 0)
             .OrderByDescending(x => x.Score)
             .Take(4)
@@ -213,26 +246,26 @@ namespace Academy.Controllers
                 level = c.Level,
                 category = c.Category?.Name ?? "General",
                 reason = wrongCategories.Contains(c.CategoryId) 
-                         ? "Sizin üçün xüsusi: M?hz s?naqda s?hv etdiyiniz mövzular? dolduracaq ?n uy?un kurs."
+                         ? "Sizin ï¿½ï¿½ï¿½n xï¿½susi: M?hz s?naqda s?hv etdiyiniz mï¿½vzular? dolduracaq ?n uy?un kurs."
                          : level == "Intermediate"
-                           ? "Haz?rk? bilikl?rinizi real layih?l?rd? t?tbiq etm?yiniz üçün ön?ririk."
-                           : "Seçdiyiniz sah? üzr? bacar?qlar? inki?af etdirm?y? köm?k ed?c?k."
+                           ? "Haz?rk? bilikl?rinizi real layih?l?rd? t?tbiq etm?yiniz ï¿½ï¿½ï¿½n ï¿½n?ririk."
+                           : "Seï¿½diyiniz sah? ï¿½zr? bacar?qlar? inki?af etdirm?y? kï¿½m?k ed?c?k."
             }).ToList();
 
             // Generate Recommendations based on calculated Level
             string roadmap = level == "Beginner" 
-                ? "T?m?l proqramla?d?rma anlay??lar?, Syntax, OOP prinsipl?ri üzr? baza yarad?n." 
+                ? "T?m?l proqramla?d?rma anlay??lar?, Syntax, OOP prinsipl?ri ï¿½zr? baza yarad?n." 
                 : level == "Intermediate" 
-                ? "Data Structures, LINQ, Asinxron proqramla?d?rma v? Database arxitekturas?n? d?rind?n öyr?nin." 
+                ? "Data Structures, LINQ, Asinxron proqramla?d?rma v? Database arxitekturas?n? d?rind?n ï¿½yr?nin." 
                 : "System Design, Microservices, Cloud Architecture (Azure/AWS) v? Design Patterns t?tbiq edin.";
 
-            string strengths = level == "Advanced" ? "Analitik dü?ünc?, Kompleks M?ntiq" : level == "Intermediate" ? "Baza bilikl?ri, Alqoritmik yana?ma" : "Öyr?nm?y? h?v?s, T?m?l m?ntiq";
+            string strengths = level == "Advanced" ? "Analitik dï¿½?ï¿½nc?, Kompleks M?ntiq" : level == "Intermediate" ? "Baza bilikl?ri, Alqoritmik yana?ma" : "ï¿½yr?nm?y? h?v?s, T?m?l m?ntiq";
             string weaknesses = level == "Advanced" ? "Sistem Arxitekturas? (B?lk?)" : level == "Intermediate" ? "Performance Optimization" : "D?rin OOP Prinsipl?ri, Design Patterns";
 
             if (wrongCategories.Any())
             {
                 var weakCatNames = await _context.Categories.Where(c => wrongCategories.Contains(c.Id)).Select(c => c.Name).ToListAsync();
-                if (weakCatNames.Any()) weaknesses += $" • Z?if Mövzular: {string.Join(", ", weakCatNames)}";
+                if (weakCatNames.Any()) weaknesses += $" ï¿½ Z?if Mï¿½vzular: {string.Join(", ", weakCatNames)}";
             }
 
             return Json(new

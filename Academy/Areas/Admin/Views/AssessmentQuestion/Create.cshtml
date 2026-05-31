@@ -8,9 +8,24 @@
 
         <form asp-action="Create" method="post" id="questionForm">
             <div class="mb-3">
-                <label for="categoryId" class="form-label">Kurs / F?nn</label>
+                <label for="courseId" class="form-label">Kurs <span class="text-danger">*</span></label>
+                <select name="courseId" id="courseId" class="form-select bg-dark text-white" required>
+                    <option value="">-- Kurs Seçin --</option>
+                    @if (ViewBag.Courses != null)
+                    {
+                        foreach (var course in ViewBag.Courses)
+                        {
+                            <option value="@course.Id">@course.Title</option>
+                        }
+                    }
+                </select>
+                <div class="form-text text-muted">Sual hansı kursun quiz-inə aid olacaq</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">Kateqoriya <span class="text-danger">*</span></label>
                 <select name="categoryId" id="categoryId" class="form-select bg-dark text-white" required>
-                    <option value="">-- F?nn Se�in --</option>
+                    <option value="">-- Kateqoriya Seçin --</option>
                     @if (ViewBag.Categories != null)
                     {
                         foreach (var cat in ViewBag.Categories)
@@ -22,8 +37,23 @@
             </div>
             
             <div class="mb-3">
-                <label for="DefaultText" class="form-label">Sual M?tni</label>
-                <input type="text" class="form-control bg-dark" name="DefaultText" id="DefaultText" required placeholder="M?s?l?n: C#-da 'readonly' v? 'const' f?rqi n?dir?">
+                <label for="DefaultText" class="form-label">Sual Mətni <span class="text-danger">*</span></label>
+                <input type="text" class="form-control bg-dark text-white" name="DefaultText" id="DefaultText" required placeholder="Məsələn: C#-da 'readonly' və 'const' fərqi nədir?">
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Çətinlik Dərəcəsi</label>
+                    <select name="difficulty" class="form-select bg-dark text-white">
+                        <option value="1">Asan</option>
+                        <option value="2" selected>Orta</option>
+                        <option value="3">Çətin</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Xal</label>
+                    <input type="number" name="points" class="form-control bg-dark text-white" value="10" min="1" max="100">
+                </div>
             </div>
 
             <h6 class="mb-3 mt-4">Cavab Variantlar?</h6>

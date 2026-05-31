@@ -149,6 +149,128 @@ namespace Academy.Controllers
 
             return BadRequest();
         }
+
+        // GET: /api/user/quiz-results
+        [HttpGet]
+        [Route("api/user/quiz-results")]
+        public async Task<IActionResult> GetQuizResults([FromServices] Data.AppDbContext context)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var results = await context.UserAssessmentResults
+                .Include(r => r.Category)
+                .Where(r => r.AppUserId == user.Id)
+                .OrderByDescending(r => r.CreatedAt)
+                .Select(r => new {
+                    courseId = r.CategoryId,
+                    courseName = r.Category != null ? r.Category.Name : "Ümumi",
+                    score = r.Score,
+                    totalQuestions = r.TotalQuestions,
+                    percentage = r.Percentage,
+                    level = r.Level,
+                    xp = r.XP,
+                    date = r.CreatedAt.ToString("dd.MM.yyyy")
+                })
+                .ToListAsync();
+
+            return Ok(results);
+        }
+
+        // GET: /api/user/enrollments
+        [HttpGet]
+        [Route("api/user/enrollments")]
+        public async Task<IActionResult> GetEnrollments([FromServices] Data.AppDbContext context)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            // Ödənilmiş sifarişlərdən kursları çək
+            var orderItems = await context.OrderItems
+                .Include(oi => oi.Order)
+                .Include(oi => oi.Course)
+                .ThenInclude(c => c.Instructor)
+                .Include(oi => oi.Course)
+                .ThenInclude(c => c.Category)
+                .Where(oi => oi.Order.AppUserId == user.Id && oi.Order.Status == OrderStatus.Paid)
+                .Select(oi => new {
+                    courseId = oi.CourseId,
+                    title = oi.Course.Title,
+                    instructor = oi.Course.Instructor != null ? oi.Course.Instructor.FullName : "Inzara Academy",
+                    category = oi.Course.Category != null ? oi.Course.Category.Name : "",
+                    thumbnail = oi.Course.ImageUrl,
+                    progress = 0,
+                    status = "active",
+                    enrollDate = oi.Order.CreatedAt.ToString("dd.MM.yyyy")
+                })
+                .Distinct()
+                .ToListAsync();
+
+            return Ok(orderItems);
+        }
+
+        // GET: /api/user/activity
+        [HttpGet]
+        [Route("api/user/activity")]
+        public async Task<IActionResult> GetActivity([FromServices] Data.AppDbContext context)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var activities = new List<object>();
+
+            // Quiz nəticələri
+            var quizResults = await context.UserAssessmentResults
+                .Include(r => r.Category)
+                .Where(r => r.AppUserId == user.Id)
+                .OrderByDescending(r => r.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
+            foreach (var q in quizResults)
+            {
+                activities.Add(new {
+                    type = "quiz",
+                    description = $"\"{q.Category?.Name}\" quizini tamamladınız — {q.Percentage}%",
+                    timestamp = q.CreatedAt,
+                    timeAgo = GetTimeAgo(q.CreatedAt),
+                    icon = "fa-check-circle",
+                    color = "#10b981"
+                });
+            }
+
+            // Sifarişlər
+            var orders = await context.Orders
+                .Where(o => o.AppUserId == user.Id)
+                .OrderByDescending(o => o.CreatedAt)
+                .Take(3)
+                .ToListAsync();
+
+            foreach (var o in orders)
+            {
+                activities.Add(new {
+                    type = "purchase",
+                    description = $"Sifariş tamamlandı — {o.TotalAmount} AZN",
+                    timestamp = o.CreatedAt,
+                    timeAgo = GetTimeAgo(o.CreatedAt),
+                    icon = "fa-shopping-bag",
+                    color = "#6366f1"
+                });
+            }
+
+            return Ok(activities.OrderByDescending(a => ((dynamic)a).timestamp).Take(10));
+        }
+
+        private string GetTimeAgo(DateTime dt)
+        {
+            var diff = DateTime.Now - dt;
+            if (diff.TotalMinutes < 1) return "İndi";
+            if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes} dəq əvvəl";
+            if (diff.TotalHours < 24) return $"{(int)diff.TotalHours} saat əvvəl";
+            if (diff.TotalDays < 2) return "Dünən";
+            if (diff.TotalDays < 7) return $"{(int)diff.TotalDays} gün əvvəl";
+            return dt.ToString("dd.MM.yyyy");
+        }
     }
 }
 

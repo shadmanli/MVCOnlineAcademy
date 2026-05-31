@@ -43,13 +43,66 @@ namespace Academy.Areas.Admin.Controllers
             if (string.IsNullOrWhiteSpace(DefaultText) || optionTexts == null || optionTexts.Count == 0 || categoryId == 0)
                 return BadRequest("Invalid question data or mapping");
 
-            // Ignore empty strings in options
             var validOptions = optionTexts.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-            if(validOptions.Count < 2) return BadRequest("At least 2 options are required.");
+            if (validOptions.Count < 2) return BadRequest("At least 2 options are required.");
 
-            var question = new AssessmentQuestion { Text = DefaultText, CategoryId = categoryId, CourseId = courseId, Difficulty = difficulty, Points = points };
+            // QuizId-ni courseId üzərindən tap, yoxdursa yarat
+            int quizId = 0;
+            if (courseId.HasValue)
+            {
+                var quiz = await _context.Quizzes
+                    .FirstOrDefaultAsync(q => q.CourseId == courseId.Value);
 
-            for(int i = 0; i < validOptions.Count; i++)
+                if (quiz == null)
+                {
+                    // Kurs üçün avtomatik Quiz yarat
+                    var course = await _context.Courses.FindAsync(courseId.Value);
+                    if (course == null)
+                        return BadRequest($"CourseId={courseId} tapılmadı.");
+
+                    quiz = new Quiz
+                    {
+                        Title = $"{course.Title} — Quiz",
+                        CourseId = courseId.Value
+                    };
+                    _context.Quizzes.Add(quiz);
+                    await _context.SaveChangesAsync();
+                }
+
+                quizId = quiz.Id;
+            }
+            else
+            {
+                // courseId yoxdursa — ilk mövcud quiz-i götür, yoxdursa avtomatik yarat
+                var defaultQuiz = await _context.Quizzes.FirstOrDefaultAsync();
+                if (defaultQuiz == null)
+                {
+                    var firstCourse = await _context.Courses.FirstOrDefaultAsync();
+                    if (firstCourse == null)
+                        return BadRequest("Əvvəlcə ən azı bir kurs yaradın.");
+
+                    defaultQuiz = new Quiz
+                    {
+                        Title = $"{firstCourse.Title} — Quiz",
+                        CourseId = firstCourse.Id
+                    };
+                    _context.Quizzes.Add(defaultQuiz);
+                    await _context.SaveChangesAsync();
+                }
+                quizId = defaultQuiz.Id;
+            }
+
+            var question = new AssessmentQuestion
+            {
+                Text = DefaultText,
+                CategoryId = categoryId,
+                CourseId = courseId,
+                QuizId = quizId,
+                Difficulty = difficulty,
+                Points = points
+            };
+
+            for (int i = 0; i < validOptions.Count; i++)
             {
                 question.Options.Add(new AssessmentOption
                 {
@@ -91,7 +144,32 @@ namespace Academy.Areas.Admin.Controllers
                 return BadRequest("Invalid question data");
 
             var validOptions = optionTexts.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-            if(validOptions.Count < 2) return BadRequest("At least 2 options are required.");
+            if (validOptions.Count < 2) return BadRequest("At least 2 options are required.");
+
+            // QuizId-ni yenilə (courseId dəyişibsə)
+            if (courseId.HasValue && courseId != question.CourseId)
+            {
+                var quiz = await _context.Quizzes
+                    .FirstOrDefaultAsync(q => q.CourseId == courseId.Value);
+
+                if (quiz == null)
+                {
+                    var course = await _context.Courses.FindAsync(courseId.Value);
+                    if (course != null)
+                    {
+                        quiz = new Quiz
+                        {
+                            Title = $"{course.Title} — Quiz",
+                            CourseId = courseId.Value
+                        };
+                        _context.Quizzes.Add(quiz);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                if (quiz != null)
+                    question.QuizId = quiz.Id;
+            }
 
             question.Text = DefaultText;
             question.CategoryId = categoryId;
@@ -99,11 +177,10 @@ namespace Academy.Areas.Admin.Controllers
             question.Difficulty = difficulty;
             question.Points = points;
 
-            // Remove old options and insert new
             _context.AssessmentOptions.RemoveRange(question.Options);
 
             var newOptions = new List<AssessmentOption>();
-            for(int i = 0; i < validOptions.Count; i++)
+            for (int i = 0; i < validOptions.Count; i++)
             {
                 newOptions.Add(new AssessmentOption
                 {

@@ -95,11 +95,9 @@
                         <strong class="total-price">@Model.Sum(x => x.Price) <span>AZN</span></strong>
                     </div>
 
-                    <form asp-controller="Order" asp-action="Checkout" method="post">
-                        <button type="submit" class="checkout-btn">
-                            Sifarişi Tamamla <i class="fas fa-check-circle checkout-icon"></i>
-                        </button>
-                    </form>
+                    <a href="/Order/Checkout" class="checkout-btn" style="display:block;text-align:center;text-decoration:none;">
+                        Sifarişi Tamamla <i class="fas fa-check-circle checkout-icon"></i>
+                    </a>
                 </div>
             </div>
         </div>

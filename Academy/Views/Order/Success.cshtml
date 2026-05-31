@@ -1,0 +1,73 @@
+@model Academy.Models.Order
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Sifariş Uğurlu";
+    ViewData["HideFooter"] = true;
+}
+
+@section css {
+<style>
+.success-page { background: #020408; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; font-family: 'Inter',sans-serif; }
+.success-card { background: #0d1117; border: 1px solid rgba(255,255,255,0.07); border-radius: 24px; padding: 48px 40px; max-width: 560px; width: 100%; text-align: center; }
+.success-icon { width: 80px; height: 80px; background: rgba(16,185,129,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+.success-icon svg { width: 40px; height: 40px; }
+.checkmark-path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: drawCheck 0.8s 0.3s ease forwards; }
+@@keyframes drawCheck { to { stroke-dashoffset: 0; } }
+.success-title { font-size: 26px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: #64748b; margin-bottom: 28px; }
+.order-num { display: inline-block; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); color: #a78bfa; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 28px; }
+.order-items { text-align: left; margin-bottom: 24px; }
+.order-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+.order-item-name { color: #94a3b8; }
+.order-item-price { color: #a78bfa; font-weight: 600; }
+.order-total { display: flex; justify-content: space-between; padding: 14px 0 0; font-weight: 700; }
+.order-total-label { color: #f1f5f9; }
+.order-total-amount { font-size: 20px; background: linear-gradient(135deg,#6366f1,#0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.success-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; background: linear-gradient(135deg,#6366f1,#0ea5e9); color: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; margin-top: 24px; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(99,102,241,0.3); }
+.success-btn:hover { box-shadow: 0 0 20px rgba(99,102,241,0.5); transform: translateY(-1px); color: #fff; }
+</style>
+}
+
+<div class="success-page">
+  <div class="success-card">
+    <div class="success-icon">
+      <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="26" cy="26" r="25" stroke="#10b981" stroke-width="2"/>
+        <path class="checkmark-path" d="M14 27l8 8 16-16" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+
+    <h1 class="success-title">Ödəniş Uğurlu! 🎉</h1>
+    <p class="success-sub">Sifarişiniz qəbul edildi. Email ünvanınıza təsdiq göndərildi.</p>
+
+    <div class="order-num">Sifariş: @Model.OrderNumber</div>
+
+    <div class="order-items">
+      @foreach (var item in Model.OrderItems)
+      {
+        <div class="order-item">
+          <span class="order-item-name">@item.CourseTitle</span>
+          <span class="order-item-price">@item.Price AZN</span>
+        </div>
+      }
+      <div class="order-total">
+        <span class="order-total-label">Ümumi</span>
+        <span class="order-total-amount">@Model.TotalAmount AZN</span>
+      </div>
+    </div>
+
+    <a href="/Course" class="success-btn">
+      <i class="fa fa-graduation-cap"></i> Kurslara Keç
+    </a>
+  </div>
+</div>
+
+@section Scripts {
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof window.launchConfetti === 'function') {
+      setTimeout(window.launchConfetti, 400);
+    }
+  });
+</script>
+}

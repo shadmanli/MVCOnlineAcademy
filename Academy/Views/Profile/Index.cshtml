@@ -537,7 +537,7 @@
         cp.addEventListener("input", checkPwd);
         np.addEventListener("input", checkPwd);
 
-        // Thumbnail preview restriction
+        // Thumbnail preview
         document.getElementById("ProfilePicture").addEventListener("change", function(e) {
             const file = e.target.files[0];
             if(file && file.size > 2 * 1024 * 1024) { 
@@ -547,7 +547,126 @@
             if(file) document.getElementById("profilePreview").src = URL.createObjectURL(file);
         });
 
-        // 2. Fetch API Mocks/Real calls (Preserving backend connection paths)
+        // ── REAL DATA LOADERS ──────────────────────────────────────
+
+        // Load Quiz Results from real API
+        async function loadQuizResults() {
+            const sec = document.getElementById('assessment-sec');
+            try {
+                const res = await fetch('/api/user/quiz-results');
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data.length) return;
+
+                const grid = sec.querySelector('.form-grid');
+                if (!grid) return;
+                grid.innerHTML = '';
+
+                data.forEach(r => {
+                    const levelColor = r.level === 'Beginner' ? '#10b981' : r.level === 'Intermediate' ? '#f59e0b' : '#ef4444';
+                    const levelEmoji = r.level === 'Beginner' ? '🟢' : r.level === 'Intermediate' ? '🟡' : '🔴';
+                    grid.innerHTML += `
+                    <div class="device-card" style="border:1px solid #e5e5e5;padding:20px;border-radius:12px;display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h4 style="font-size:16px;font-weight:700;">${r.courseName}</h4>
+                            <span style="background:${levelColor}18;color:${levelColor};padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">${levelEmoji} ${r.level}</span>
+                        </div>
+                        <div style="font-size:14px;color:var(--text-muted);display:flex;gap:16px;">
+                            <span><i class="fa-solid fa-star" style="color:#ffc107;"></i> XP: ${r.xp}</span>
+                            <span><i class="fa-solid fa-bullseye" style="color:#007bff;"></i> ${r.score} / ${r.totalQuestions}</span>
+                            <span><i class="fa-regular fa-calendar" style="color:#6366f1;"></i> ${r.date}</span>
+                        </div>
+                        <div class="cc-progress">
+                            <div class="cc-bar"><div class="cc-fill" style="width:${r.percentage}%;background:${levelColor};"></div></div>
+                            <span class="cc-progress-text">${r.percentage}%</span>
+                        </div>
+                    </div>`;
+                });
+            } catch(e) { console.error('Quiz results error:', e); }
+        }
+
+        // Load Enrollments from real API
+        async function loadEnrollments() {
+            try {
+                const res = await fetch('/api/user/enrollments');
+                if (!res.ok) return;
+                const data = await res.json();
+                
+                const list = document.querySelector('.course-list');
+                const empty = document.getElementById('emptyCourses');
+                if (!list) return;
+
+                if (!data.length) {
+                    list.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+                list.innerHTML = '';
+
+                data.forEach(e => {
+                    const img = e.thumbnail ? `/uploads/course/${e.thumbnail}` : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop';
+                    const isCompleted = e.status === 'completed';
+                    const progressColor = e.progress === 0 ? '#ef4444' : e.progress === 100 ? '#10b981' : '#f59e0b';
+                    const actionBtn = isCompleted
+                        ? `<a href="/CourseDetail/Index/${e.courseId}" class="btn-course" style="background:#fff;border:1px solid #E5E5E5;color:var(--text-main);">Sertifikata Bax 🏆</a>`
+                        : `<a href="/CourseDetail/Index/${e.courseId}" class="btn-course">Davam et <i class="fa-solid fa-arrow-right"></i></a>`;
+
+                    list.innerHTML += `
+                    <div class="course-card" data-status="${isCompleted ? 'completed' : 'pinned'}">
+                        <img src="${img}" class="cc-img" alt="${e.title}" onerror="this.src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop'">
+                        <div class="cc-body">
+                            <span class="cc-cat">${e.category || 'Kurs'}</span>
+                            <div class="cc-title">${e.title}</div>
+                            <div class="cc-meta">
+                                <span><i class="fa-solid fa-graduation-cap"></i> ${e.instructor}</span>
+                                <span><i class="fa-regular fa-calendar"></i> ${e.enrollDate}</span>
+                                ${isCompleted ? '<span style="color:var(--brand);"><i class="fa-solid fa-check-circle"></i> Tamamlanıb</span>' : ''}
+                            </div>
+                            <div class="cc-progress">
+                                <div class="cc-bar"><div class="cc-fill" style="width:${e.progress}%;background:${progressColor};"></div></div>
+                                <div class="cc-progress-text">${e.progress}%</div>
+                            </div>
+                        </div>
+                        ${actionBtn}
+                    </div>`;
+                });
+
+                // Re-init tabs after loading
+                initTabs();
+            } catch(e) { console.error('Enrollments error:', e); }
+        }
+
+        // Load Activity from real API
+        async function loadActivity() {
+            try {
+                const res = await fetch('/api/user/activity?limit=10');
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data.length) return;
+
+                const list = document.querySelector('.activity-list');
+                if (!list) return;
+                list.innerHTML = '';
+
+                data.forEach(a => {
+                    list.innerHTML += `
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background:${a.color}18;color:${a.color};">
+                            <i class="fa-solid ${a.icon}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>${a.description}</h4>
+                            <p>${a.timeAgo}</p>
+                        </div>
+                    </div>`;
+                });
+            } catch(e) { console.error('Activity error:', e); }
+        }
+
+        // ── FORM SUBMISSIONS ──────────────────────────────────────
+
         document.getElementById("profileForm").addEventListener("submit", async e => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -564,7 +683,7 @@
                 let pfile = document.getElementById("ProfilePicture").files[0];
                 if(pfile) formData.append("ProfilePicture", pfile);
 
-                const res = await fetch("/api/user/profile", { method: "PUT", body: formData });
+                const res = await fetch("/api/user/profile", { method: "PATCH", body: formData });
                 const pr = document.getElementById("profResponse");
                 if(res.ok) {
                     pr.innerHTML = '<i class="fa-solid fa-check"></i> Məlumatlar saxlanıldı';
@@ -598,7 +717,7 @@
             btn.innerHTML = originalText; btn.disabled = false;
         });
 
-        // 3. Modals & Toggles
+        // Notification toggles
         let to;
         document.querySelectorAll(".notif-toggle").forEach(el => {
             el.addEventListener("change", () => {
@@ -618,6 +737,7 @@
             });
         });
 
+        // Delete modal
         const modal = document.getElementById("delModalOverlay");
         document.getElementById("openModalBtn").onclick = () => { modal.classList.add("active"); document.body.style.overflow = "hidden"; };
         document.getElementById("closeModalBtn").onclick = () => { modal.classList.remove("active"); document.body.style.overflow = "auto"; };
@@ -635,27 +755,34 @@
             else { alert("Email yanlışdır. Proses rədd edildi."); btn.innerHTML = 'Təsdiqləyirəm, Sil'; btn.disabled = false; }
         };
 
-        // 4. Custom Minimal Tabs for Courses
-        const tabs = document.querySelectorAll(".g-tab");
-        const cards = document.querySelectorAll(".course-card");
-        const empty = document.getElementById("emptyCourses");
+        // Tabs
+        function initTabs() {
+            const tabs = document.querySelectorAll(".g-tab");
+            const cards = document.querySelectorAll(".course-card");
+            const empty = document.getElementById("emptyCourses");
 
-        tabs.forEach(tab => {
-            tab.addEventListener("click", () => {
-                // Update active tab UI
-                tabs.forEach(t => t.classList.remove("active"));
-                tab.classList.add("active");
-                
-                // Filter logic
-                const filter = tab.getAttribute("data-filter");
-                let count = 0;
-                cards.forEach(card => {
-                    const status = card.getAttribute("data-status");
-                    if(filter === "all" || filter === status) { card.style.display = "flex"; count++; }
-                    else card.style.display = "none";
+            tabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    tabs.forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+                    const filter = tab.getAttribute("data-filter");
+                    let count = 0;
+                    cards.forEach(card => {
+                        const status = card.getAttribute("data-status");
+                        if(filter === "all" || filter === status) { card.style.display = "flex"; count++; }
+                        else card.style.display = "none";
+                    });
+                    empty.style.display = count === 0 ? "block" : "none";
                 });
-                empty.style.display = count === 0 ? "block" : "none";
             });
+        }
+
+        // ── INIT ──────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuizResults();
+            loadEnrollments();
+            loadActivity();
+            initTabs();
         });
     </script>
 </body>

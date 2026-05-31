@@ -1,0 +1,346 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Ödəniş";
+    ViewData["HideFooter"] = true;
+    var user    = ViewBag.User    as Academy.Models.AppUser;
+    var courses = ViewBag.Courses as List<Academy.Models.Course>;
+    var total   = (decimal)ViewBag.Total;
+    var stripeKey = (string)ViewBag.StripePublishableKey;
+}
+
+@section css {
+    <link rel="stylesheet" href="~/assets/css/checkout.css" />
+}
+
+<div class="checkout-page">
+<div class="ck-wrap">
+
+  <!-- Progress -->
+  <div class="ck-progress-wrap">
+    <div class="ck-steps">
+      <div class="ck-step active" id="si1">
+        <div class="ck-step-circle" id="sc1">1</div>
+        <div class="ck-step-label">Məlumatlar</div>
+      </div>
+      <div class="ck-step-line" id="sl1"><div class="ck-step-line-fill"></div></div>
+      <div class="ck-step" id="si2">
+        <div class="ck-step-circle" id="sc2">2</div>
+        <div class="ck-step-label">Ödəniş</div>
+      </div>
+      <div class="ck-step-line" id="sl2"><div class="ck-step-line-fill"></div></div>
+      <div class="ck-step" id="si3">
+        <div class="ck-step-circle" id="sc3">3</div>
+        <div class="ck-step-label">Təsdiq</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="ck-grid">
+
+    <!-- LEFT -->
+    <div>
+
+      <!-- Step 1 -->
+      <div id="step1" class="ck-card ck-from-left">
+        <div class="ck-card-title">
+          <div class="ck-title-icon" style="background:rgba(99,102,241,0.12);color:#818cf8;">
+            <i class="fa fa-user"></i>
+          </div>
+          Şəxsi Məlumatlar
+        </div>
+
+        <div class="ck-form-row">
+          <div class="ck-field">
+            <div class="ck-field-wrap">
+              <input type="text" class="ck-input" id="fullName"
+                     value="@(user?.FullName ?? "")" placeholder=" ">
+              <label class="ck-fl-label">Ad Soyad *</label>
+              <span class="ck-field-ico" id="ico-fullName"><i class="fa fa-user"></i></span>
+            </div>
+            <div class="ck-err" id="err-fullName">Ad soyad daxil edin</div>
+          </div>
+          <div class="ck-field">
+            <div class="ck-field-wrap">
+              <input type="tel" class="ck-input" id="phone" placeholder=" ">
+              <label class="ck-fl-label">Telefon *</label>
+              <span class="ck-field-ico" id="ico-phone"><i class="fa fa-phone"></i></span>
+            </div>
+            <div class="ck-err" id="err-phone">Telefon daxil edin</div>
+          </div>
+        </div>
+
+        <div class="ck-field">
+          <div class="ck-field-wrap">
+            <input type="email" class="ck-input" id="email"
+                   value="@(user?.Email ?? "")" placeholder=" ">
+            <label class="ck-fl-label">Email *</label>
+            <span class="ck-field-ico" id="ico-email"><i class="fa fa-envelope"></i></span>
+          </div>
+          <div class="ck-err" id="err-email">Düzgün email daxil edin</div>
+        </div>
+
+        <button class="ck-btn ck-btn-primary" onclick="goToStep2()">
+          Davam et <i class="fa fa-arrow-right ck-arr"></i>
+        </button>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="step2" class="ck-card" style="display:none;">
+        <div class="ck-card-title">
+          <div class="ck-title-icon" style="background:rgba(14,165,233,0.12);color:#38bdf8;">
+            <i class="fa fa-credit-card"></i>
+          </div>
+          Ödəniş Üsulu
+        </div>
+
+        <div class="ck-pay-list">
+          <label class="ck-pay-opt sel" onclick="selPay('card',this)">
+            <input type="radio" name="pm" value="card" checked>
+            <div class="ck-pay-ico card"><i class="fa fa-credit-card"></i></div>
+            <div class="ck-pay-info"><h4>Kredit / Debit Kart</h4><p>Visa, Mastercard, Amex</p></div>
+            <div class="ck-pay-radio"><i class="fa fa-check"></i></div>
+          </label>
+          <label class="ck-pay-opt" onclick="selPay('bank',this)">
+            <input type="radio" name="pm" value="bank">
+            <div class="ck-pay-ico bank"><i class="fa fa-building-columns"></i></div>
+            <div class="ck-pay-info"><h4>Bank Köçürməsi</h4><p>IBAN ilə birbaşa köçürmə</p></div>
+            <div class="ck-pay-radio"><i class="fa fa-check"></i></div>
+          </label>
+          <label class="ck-pay-opt" onclick="selPay('mobile',this)">
+            <input type="radio" name="pm" value="mobile">
+            <div class="ck-pay-ico mobile"><i class="fa fa-mobile-screen"></i></div>
+            <div class="ck-pay-info"><h4>Mobil Ödəniş</h4><p>Azərpay, M10, E-manat</p></div>
+            <div class="ck-pay-radio"><i class="fa fa-check"></i></div>
+          </label>
+        </div>
+
+        <div id="stripe-section">
+          <label style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:6px;">Kart Məlumatları</label>
+          <div id="stripe-card-element"></div>
+          <div id="card-errors"></div>
+        </div>
+
+        <div id="bank-section" class="ck-info blue" style="display:none;">
+          <strong>Bank: Kapital Bank</strong><br>
+          IBAN: AZ21AIIB33440079300100000944<br>Alıcı: Inzara Academy MMC
+        </div>
+
+        <div id="mobile-section" class="ck-info green" style="display:none;">
+          <strong>Azərpay / M10 / E-manat</strong><br>
+          Nömrə: +994 50 123 45 67<br>
+          Məbləğ: <span class="amt">@total AZN</span>
+        </div>
+
+        <div class="ck-btn-row">
+          <button class="ck-btn ck-btn-ghost" onclick="goToStep1()">
+            <i class="fa fa-arrow-left"></i> Geri
+          </button>
+          <button class="ck-btn ck-btn-primary" id="payBtn" onclick="processPayment()" style="flex:1;">
+            <i class="fa fa-lock"></i> Ödənişi Tamamla — @total AZN
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="step3" class="ck-card" style="display:none;">
+        <div class="ck-card-title">
+          <div class="ck-title-icon" style="background:rgba(16,185,129,0.12);color:#34d399;">
+            <i class="fa fa-circle-check"></i>
+          </div>
+          Sifariş Xülasəsi
+        </div>
+        <div id="confirm-items"></div>
+        <div class="ck-total-row">
+          <span class="ck-total-lbl">Ümumi Məbləğ</span>
+          <span class="ck-total-amt">@total AZN</span>
+        </div>
+        <div class="ck-confirm-note">
+          <i class="fa fa-shield-halved" style="color:#818cf8;flex-shrink:0;margin-top:1px;"></i>
+          Ödəniş məlumatlarınız Stripe tərəfindən şifrələnir. Kart məlumatları serverimizə göndərilmir.
+        </div>
+        <div class="ck-btn-row">
+          <button class="ck-btn ck-btn-ghost" onclick="goToStep2()">
+            <i class="fa fa-arrow-left"></i> Geri
+          </button>
+          <button class="ck-btn ck-btn-primary" id="confirmBtn" onclick="confirmOrder()" style="flex:1;">
+            <i class="fa fa-check"></i> Sifarişi Tamamla
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Summary -->
+    <div class="ck-summary-col">
+      <div class="ck-sum-sticky">
+        <div class="ck-card ck-from-right">
+          <div class="ck-card-title">
+            <div class="ck-title-icon" style="background:rgba(167,139,250,0.12);color:#a78bfa;">
+              <i class="fa fa-receipt"></i>
+            </div>
+            Sifariş (@(courses?.Count ?? 0) kurs)
+          </div>
+
+          @if (courses != null)
+          {
+              foreach (var c in courses)
+              {
+                  <div class="ck-sum-item">
+                      <img class="ck-sum-img"
+                           src="@(string.IsNullOrEmpty(c.ImageUrl) ? "/images/default.png" : "/uploads/course/" + c.ImageUrl)"
+                           alt="@c.Title">
+                      <div class="ck-sum-info">
+                        <div class="ck-sum-title">@c.Title</div>
+                        <div class="ck-sum-sub">@(c.Instructor?.FullName ?? "Inzara Academy")</div>
+                      </div>
+                      <span class="ck-sum-price">@c.Price AZN</span>
+                  </div>
+              }
+          }
+
+          <div class="ck-total-row">
+            <span class="ck-total-lbl">Ümumi</span>
+            <span class="ck-total-amt">@total AZN</span>
+          </div>
+
+          <div class="ck-badge green">
+            <i class="fa fa-shield-halved"></i> 30 günlük pulsuz iade zəmanəti
+          </div>
+          <div class="ck-badge blue">
+            <i class="fa fa-lock"></i> SSL şifrəli təhlükəsiz ödəniş
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+@section Scripts {
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+var stripe = Stripe('@stripeKey');
+var elements = stripe.elements({
+  appearance:{theme:'night',variables:{colorPrimary:'#6366f1',colorBackground:'#161d2e',colorText:'#f1f5f9',colorDanger:'#ef4444',fontFamily:'Inter,sans-serif',borderRadius:'10px'}}
+});
+var cardEl = elements.create('card');
+cardEl.mount('#stripe-card-element');
+cardEl.on('change',function(e){ document.getElementById('card-errors').textContent = e.error ? e.error.message : ''; });
+
+var selMethod = 'card';
+
+// Floating label + valid check
+document.querySelectorAll('.ck-input').forEach(function(inp){
+  inp.addEventListener('blur', function(){
+    if(this.value.trim()){
+      this.classList.add('valid'); this.classList.remove('error');
+      var ico = document.getElementById('ico-' + this.id);
+      if(ico) ico.innerHTML = '<i class="fa fa-check" style="color:#10b981;"></i>';
+    }
+  });
+  inp.addEventListener('focus', function(){
+    var card = this.closest('.ck-card');
+    if(card){ card.style.transform='scale(1.008)'; card.style.transition='transform 0.3s ease'; }
+  });
+  inp.addEventListener('blur', function(){
+    var card = this.closest('.ck-card');
+    if(card) card.style.transform='scale(1)';
+  });
+});
+
+function selPay(m, el){
+  selMethod = m;
+  document.querySelectorAll('.ck-pay-opt').forEach(function(o){ o.classList.remove('sel'); });
+  el.classList.add('sel');
+  document.getElementById('stripe-section').style.display = m==='card'   ? 'block' : 'none';
+  document.getElementById('bank-section').style.display   = m==='bank'   ? 'block' : 'none';
+  document.getElementById('mobile-section').style.display = m==='mobile' ? 'block' : 'none';
+}
+
+function updateSteps(step){
+  for(var i=1;i<=3;i++){
+    var si=document.getElementById('si'+i), sc=document.getElementById('sc'+i);
+    si.classList.remove('active','done');
+    if(i<step){
+      si.classList.add('done');
+      sc.innerHTML='<i class="fa fa-check" style="font-size:11px;"></i>';
+      var sl=document.getElementById('sl'+i);
+      if(sl) sl.classList.add('done');
+    } else if(i===step){
+      si.classList.add('active');
+      sc.textContent=i;
+    } else {
+      sc.textContent=i;
+    }
+  }
+}
+
+function showStep(n){
+  [1,2,3].forEach(function(i){
+    document.getElementById('step'+i).style.display = i===n ? 'block' : 'none';
+  });
+  if(n>1){
+    var el=document.getElementById('step'+n);
+    el.classList.add('ck-step-in');
+    setTimeout(function(){ el.classList.remove('ck-step-in'); },400);
+  }
+  updateSteps(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function valEmail(e){ var at=e.indexOf('\x40'); return at>0 && e.lastIndexOf('.')>at; }
+
+function showErr(id){ document.getElementById(id).classList.add('error'); document.getElementById('err-'+id).style.display='block'; }
+function hideErr(id){ document.getElementById(id).classList.remove('error'); document.getElementById('err-'+id).style.display='none'; }
+
+function goToStep1(){ showStep(1); }
+
+function goToStep2(){
+  var fn=document.getElementById('fullName').value.trim();
+  var em=document.getElementById('email').value.trim();
+  var ph=document.getElementById('phone').value.trim();
+  var ok=true;
+  if(!fn){showErr('fullName');ok=false;}else hideErr('fullName');
+  if(!em||!valEmail(em)){showErr('email');ok=false;}else hideErr('email');
+  if(!ph){showErr('phone');ok=false;}else hideErr('phone');
+  if(!ok) return;
+  showStep(2);
+}
+
+async function processPayment(){
+  if(selMethod!=='card'){goToStep3();return;}
+  var btn=document.getElementById('payBtn');
+  btn.disabled=true; btn.innerHTML='<div class="ck-spinner"></div> Emal edilir...';
+  try{
+    var r=await fetch('/Order/CreatePaymentIntent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullName:document.getElementById('fullName').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value})});
+    var d=await r.json();
+    if(d.error){document.getElementById('card-errors').textContent=d.error;btn.disabled=false;btn.innerHTML='<i class="fa fa-lock"></i> Ödənişi Tamamla — @total AZN';return;}
+    var res=await stripe.confirmCardPayment(d.clientSecret,{payment_method:{card:cardEl}});
+    if(res.error){document.getElementById('card-errors').textContent=res.error.message;btn.disabled=false;btn.innerHTML='<i class="fa fa-lock"></i> Ödənişi Tamamla — @total AZN';}
+    else if(res.paymentIntent.status==='succeeded'){window._pid=res.paymentIntent.id;goToStep3();}
+  }catch(e){document.getElementById('card-errors').textContent='Xəta: '+e.message;btn.disabled=false;btn.innerHTML='<i class="fa fa-lock"></i> Ödənişi Tamamla — @total AZN';}
+}
+
+function goToStep3(){
+  var html='';
+  document.querySelectorAll('.ck-sum-item').forEach(function(i){html+=i.outerHTML;});
+  document.getElementById('confirm-items').innerHTML=html;
+  showStep(3);
+}
+
+async function confirmOrder(){
+  var btn=document.getElementById('confirmBtn');
+  btn.disabled=true; btn.innerHTML='<div class="ck-spinner"></div> Tamamlanır...';
+  try{
+    var token=document.querySelector('input[name="__RequestVerificationToken"]');
+    var r=await fetch('/Order/ConfirmOrder',{method:'POST',headers:{'Content-Type':'application/json','RequestVerificationToken':token?token.value:''},body:JSON.stringify({paymentIntentId:window._pid||('manual_'+Date.now()),fullName:document.getElementById('fullName').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value})});
+    var d=await r.json();
+    if(d.success){if(typeof window.launchConfetti==='function')window.launchConfetti();window.location.href='/Order/Success/'+d.orderId;}
+    else{alert('Xəta: '+d.message);btn.disabled=false;btn.innerHTML='<i class="fa fa-check"></i> Sifarişi Tamamla';}
+  }catch(e){alert('Xəta baş verdi.');btn.disabled=false;btn.innerHTML='<i class="fa fa-check"></i> Sifarişi Tamamla';}
+}
+</script>
+@Html.AntiForgeryToken()
+}

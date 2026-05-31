@@ -22,7 +22,10 @@
 
             @RenderBody()
 
-    @await Component.InvokeAsync("Footer")
+    @if (ViewData["HideFooter"] == null)
+    {
+        @await Component.InvokeAsync("Footer")
+    }
 
     <div class="modal" id="loginModal">
         <div class="modal-box login-box">

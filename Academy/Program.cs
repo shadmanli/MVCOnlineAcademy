@@ -86,6 +86,41 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Orders və OrderItems cədvəllərini avtomatik yarat
+    try
+    {
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Orders' AND xtype='U')
+            CREATE TABLE Orders (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                AppUserId NVARCHAR(450) NOT NULL,
+                OrderNumber NVARCHAR(MAX) NOT NULL,
+                FullName NVARCHAR(MAX) NOT NULL,
+                Email NVARCHAR(MAX) NOT NULL,
+                Phone NVARCHAR(MAX) NOT NULL,
+                TotalAmount DECIMAL(18,2) NOT NULL DEFAULT 0,
+                PaymentMethod NVARCHAR(MAX) NOT NULL DEFAULT 'card',
+                StripePaymentIntentId NVARCHAR(MAX) NULL,
+                Status INT NOT NULL DEFAULT 0,
+                CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()
+            )");
+
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='OrderItems' AND xtype='U')
+            CREATE TABLE OrderItems (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                OrderId INT NOT NULL,
+                CourseId INT NOT NULL,
+                CourseTitle NVARCHAR(MAX) NOT NULL,
+                Price DECIMAL(18,2) NOT NULL DEFAULT 0,
+                CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
+                CONSTRAINT FK_OrderItems_Orders FOREIGN KEY (OrderId) REFERENCES Orders(Id) ON DELETE CASCADE
+            )");
+    }
+    catch { /* Cədvəl artıq varsa keç */ }
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
