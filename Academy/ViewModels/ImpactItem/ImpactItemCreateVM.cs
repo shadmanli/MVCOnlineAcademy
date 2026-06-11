@@ -1,19 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Academy.ViewModels.ImpactItem
 {
-
-
     public class ImpactItemCreateVM
     {
-        public string Title { get; set; }       
-        public string Description { get; set; }   
+        [Required(ErrorMessage = "Başlıq mütləqdir.")]
+        [StringLength(200, MinimumLength = 2, ErrorMessage = "Başlıq 2-200 simvol arasında olmalıdır.")]
+        public string Title { get; set; } = null!;
 
-        public int? ImpactSectionId { get; set; }  
+        [Required(ErrorMessage = "Təsvir mütləqdir.")]
+        [StringLength(1000, MinimumLength = 5, ErrorMessage = "Təsvir 5-1000 simvol arasında olmalıdır.")]
+        public string Description { get; set; } = null!;
 
-        public IFormFile Image { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Impact bölməsi seçilməlidir.")]
+        public int? ImpactSectionId { get; set; }
 
-        public List<SelectListItem> Sections { get; set; }
+        [Required(ErrorMessage = "Şəkil mütləqdir.")]
+        public IFormFile Image { get; set; } = null!;
+
+        public List<SelectListItem>? Sections { get; set; }
     }
 }

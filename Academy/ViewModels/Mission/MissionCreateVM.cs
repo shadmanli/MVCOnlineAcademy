@@ -1,9 +1,18 @@
-﻿namespace Academy.ViewModels.Mission
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Academy.ViewModels.Mission
 {
     public class MissionCreateVM
     {
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public IFormFile Image { get; set; }
+        [Required(ErrorMessage = "Başlıq mütləqdir.")]
+        [StringLength(200, MinimumLength = 2, ErrorMessage = "Başlıq 2-200 simvol arasında olmalıdır.")]
+        public string Title { get; set; } = null!;
+
+        [Required(ErrorMessage = "Təsvir mütləqdir.")]
+        [StringLength(2000, MinimumLength = 5, ErrorMessage = "Təsvir 5-2000 simvol arasında olmalıdır.")]
+        public string Description { get; set; } = null!;
+
+        [Required(ErrorMessage = "Şəkil mütləqdir.")]
+        public IFormFile Image { get; set; } = null!;
     }
 }

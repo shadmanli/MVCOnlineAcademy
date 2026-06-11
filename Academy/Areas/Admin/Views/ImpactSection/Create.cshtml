@@ -1,34 +1,31 @@
-﻿
+﻿@using Academy.ViewModels.ImpactSection
 @model ImpactSectionCreateVM
+@{ ViewData["Title"] = "Yeni Impact Bölməsi"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<div class="container mt-5">
-
-    <h2 class="mb-4">Impact Section əlavə et</h2>
-
-    <form method="post">
-
-    
-        <div class="mb-3">
-            <label>Title</label>
-            <input asp-for="Title" class="form-control" placeholder="Title daxil et" />
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-
-
-        <div class="mb-3">
-            <label>SubTitle</label>
-            <input asp-for="SubTitle" class="form-control" placeholder="SubTitle daxil et" />
-            <span asp-validation-for="SubTitle" class="text-danger"></span>
-        </div>
-
-        <div class="mt-3">
-            <button type="submit" class="btn btn-success">Create</button>
-
-            <a asp-action="Index" class="btn btn-secondary ms-2">
-                Geri qayıt
-            </a>
-        </div>
-
-    </form>
-
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Impact Bölməsi</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="ImpactSection" asp-action="Index">Impact Bölmələri</a> / Yeni</div>
 </div>
+
+<div class="p-card" style="max-width:560px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Bölmə başlığı" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Alt Başlıq</label>
+            <input asp-for="SubTitle" class="form-control" placeholder="Alt başlıq (isteğe bağlı)" />
+            <span asp-validation-for="SubTitle" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

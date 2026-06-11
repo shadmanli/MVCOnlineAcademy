@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 namespace Academy.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin,Admin,Muellim")]
     public class MissionController : Controller
     {
         private readonly IMissionService _missionService;

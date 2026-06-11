@@ -1,8 +1,15 @@
-﻿namespace Academy.ViewModels.Feature
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Academy.ViewModels.Feature
 {
     public class FeatureCreateVM
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
+        [Required(ErrorMessage = "Başlıq mütləqdir.")]
+        [StringLength(200, MinimumLength = 2, ErrorMessage = "Başlıq 2-200 simvol arasında olmalıdır.")]
+        public string Title { get; set; } = null!;
+
+        [Required(ErrorMessage = "Təsvir mütləqdir.")]
+        [StringLength(1000, MinimumLength = 5, ErrorMessage = "Təsvir 5-1000 simvol arasında olmalıdır.")]
+        public string Description { get; set; } = null!;
     }
 }

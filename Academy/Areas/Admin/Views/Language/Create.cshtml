@@ -1,7 +1,26 @@
 ﻿@using Academy.ViewModels.Language
 @model LanguageCreateVM
+@{ ViewData["Title"] = "Yeni Dil"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<form method="post">
-    <input asp-for="Name" class="form-control" placeholder="Language name" />
-    <button type="submit" class="btn btn-success mt-2">Create</button>
-</form>
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Dil</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Language" asp-action="Index">Dillər</a> / Yeni</div>
+</div>
+
+<div class="p-card" style="max-width:480px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Dil Adı <span class="req">*</span></label>
+            <input asp-for="Name" class="form-control" placeholder="Məs: Azərbaycan dili" data-no-whitespace />
+            <span asp-validation-for="Name" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

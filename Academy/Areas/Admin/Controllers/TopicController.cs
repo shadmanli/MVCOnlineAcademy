@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Academy.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin,Admin,Muellim")]
     public class TopicController : Controller
     {
         private readonly ITopicService _topicService;

@@ -13,15 +13,7 @@ header{
   font-family:Georgia, 'Times New Roman', Times, serif;
 }
 
-#top-bar {
-width: 100%;
-position: fixed;
-top: 0;
-left: 0;
-z-index: 1000;
-background: rgba(10,10,20,0.95);
-backdrop-filter: blur(10px);
-}
+/* #top-bar — header komponentinə köçürüldü */
 .search-panel {
     position: absolute;
     top: 75px;

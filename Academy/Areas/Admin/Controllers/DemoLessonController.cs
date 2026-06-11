@@ -1,6 +1,7 @@
 using Academy.Data;
 using Academy.Models;
 using Academy.ViewModels.DemoLesson;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.IO;
 
 namespace Academy.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "SuperAdmin,Admin,Muellim")]
     [Area("Admin")]
     public class DemoLessonController : Controller
     {
@@ -41,7 +43,19 @@ namespace Academy.Areas.Admin.Controllers
         {
             if (model.VideoFile == null || model.ThumbnailFile == null || model.CourseId == 0)
             {
-                ModelState.AddModelError("", "Bütün fayllar? v? aid oldu?u kursu seçin.");
+                ModelState.AddModelError("", "Bï¿½tï¿½n fayllar? v? aid oldu?u kursu seï¿½in.");
+                model.Courses = await _context.Courses.Select(x => new SelectListItem(x.Title, x.Id.ToString())).ToListAsync();
+                return View(model);
+            }
+
+            try
+            {
+                Academy.Helpers.FileHelper.ValidateVideo(model.VideoFile);
+                Academy.Helpers.FileHelper.ValidateImage(model.ThumbnailFile);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
                 model.Courses = await _context.Courses.Select(x => new SelectListItem(x.Title, x.Id.ToString())).ToListAsync();
                 return View(model);
             }
@@ -54,27 +68,11 @@ namespace Academy.Areas.Admin.Controllers
                 CourseId = model.CourseId
             };
 
-            // Save Video
-            string vidFolder = Path.Combine(_env.WebRootPath, "uploads/demovideos");
-            if (!Directory.Exists(vidFolder)) Directory.CreateDirectory(vidFolder);
-            string vidName = Guid.NewGuid() + "_" + model.VideoFile.FileName;
-            string vidPath = Path.Combine(vidFolder, vidName);
-            using (var vidStream = new FileStream(vidPath, FileMode.Create))
-            {
-                await model.VideoFile.CopyToAsync(vidStream);
-            }
-            demo.VideoUrl = vidName;
-
-            // Save Thumbnail
+            string vidFolder   = Path.Combine(_env.WebRootPath, "uploads/demovideos");
             string thumbFolder = Path.Combine(_env.WebRootPath, "uploads/demothumbnails");
-            if (!Directory.Exists(thumbFolder)) Directory.CreateDirectory(thumbFolder);
-            string thumbName = Guid.NewGuid() + "_" + model.ThumbnailFile.FileName;
-            string thumbPath = Path.Combine(thumbFolder, thumbName);
-            using (var thumbStream = new FileStream(thumbPath, FileMode.Create))
-            {
-                await model.ThumbnailFile.CopyToAsync(thumbStream);
-            }
-            demo.ThumbnailUrl = thumbName;
+
+            demo.VideoUrl     = await Academy.Helpers.FileHelper.SaveFileAsync(model.VideoFile, vidFolder);
+            demo.ThumbnailUrl = await Academy.Helpers.FileHelper.SaveFileAsync(model.ThumbnailFile, thumbFolder);
 
             _context.DemoLessons.Add(demo);
             await _context.SaveChangesAsync();

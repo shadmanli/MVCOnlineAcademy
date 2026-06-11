@@ -20,19 +20,15 @@ namespace Academy.Services
             _mapper = mapper;
         }
 
-        public   async Task CreateAsycn(BlogCreateVM model)
+        public async Task CreateAsycn(BlogCreateVM model)
         {
+            if (model.Image == null)
+                throw new ArgumentNullException(nameof(model.Image), "Şəkil mütləqdir.");
+
+            Academy.Helpers.FileHelper.ValidateImage(model.Image);
+
             string folderPath = Path.Combine(_env.WebRootPath, "uploads", "blog");
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            string fileName = $"{Guid.NewGuid()}_{model.Image.FileName}";
-            string path = Path.Combine(folderPath, fileName);
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await model.Image.CopyToAsync(stream);
-            }
+            string fileName = await Academy.Helpers.FileHelper.SaveFileAsync(model.Image, folderPath);
             var aboutusData = _mapper.Map<Blog>(model);
             aboutusData.Image = fileName;
             aboutusData.CreatedAt = DateTime.Now;
@@ -44,11 +40,14 @@ namespace Academy.Services
         public async Task DeleteAsync(int id)
         {
             var data = await _context.Blog.FindAsync(id);
-            var path = Path.Combine(_env.WebRootPath, "uploads", "blog", data.Image);
-            if (File.Exists(path))
+            if (data == null) return;
+
+            if (!string.IsNullOrEmpty(data.Image))
             {
-                File.Delete(path);
+                var path = Path.Combine(_env.WebRootPath, "uploads", "blog", data.Image);
+                if (File.Exists(path)) File.Delete(path);
             }
+
             _context.Blog.Remove(data);
             await _context.SaveChangesAsync();
         }

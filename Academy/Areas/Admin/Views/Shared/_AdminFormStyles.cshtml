@@ -1,0 +1,84 @@
+<style>
+/* ── Admin Form Validation Styles ── */
+.af-field { margin-bottom: 18px; }
+.af-label { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; display: block; margin-bottom: 6px; }
+.af-label .req { color: #ef4444; margin-left: 2px; }
+
+.form-control, .form-select {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    color: #f1f5f9 !important;
+    font-size: 14px !important;
+    padding: 10px 14px !important;
+    transition: all .25s ease !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #6366f1 !important;
+    background: rgba(99,102,241,0.05) !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+    color: #f1f5f9 !important;
+}
+
+.form-control::placeholder { color: #475569 !important; }
+.form-select option { background: #1a1f2e !important; color: #f1f5f9 !important; }
+
+/* Valid / Invalid states */
+.form-control.input-valid, .form-select.input-valid { border-color: #10b981 !important; }
+.form-control.input-invalid, .form-select.input-invalid {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.12) !important;
+}
+
+/* Validation messages */
+.field-validation-error,
+span[data-valmsg-for].field-validation-error {
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: #ef4444;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.field-validation-error::before { content: '⚠ '; }
+
+.field-validation-valid { display: none !important; }
+
+/* File input */
+input[type="file"].form-control {
+    padding: 8px 14px !important;
+    cursor: pointer;
+}
+
+/* Textarea */
+textarea.form-control { min-height: 100px; resize: vertical; }
+
+/* Submit button */
+.af-submit {
+    background: linear-gradient(135deg, #6366f1, #0ea5e9);
+    color: #fff; border: none; border-radius: 12px;
+    padding: 12px 28px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all .25s ease;
+    box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.af-submit:hover { box-shadow: 0 0 22px rgba(99,102,241,0.5); transform: translateY(-1px); }
+.af-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+.af-cancel {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8; border-radius: 12px; padding: 12px 24px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: all .2s ease;
+}
+.af-cancel:hover { background: rgba(255,255,255,0.09); color: #f1f5f9; }
+
+.af-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@@media(max-width:640px) { .af-row-2 { grid-template-columns: 1fr; } }
+
+.af-section { font-size: 15px; font-weight: 700; color: #f1f5f9; margin: 22px 0 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 10px; }
+</style>

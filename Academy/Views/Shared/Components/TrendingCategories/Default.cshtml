@@ -1,65 +1,57 @@
-﻿
+﻿@model List<(int Id, string Name, int CourseCount)>
+
+@{
+    // Hər kateqoriyaya rəng təyin et
+    var colors = new[] { "orange", "green", "light-green", "yellow", "blue", "purple", "pink", "teal" };
+    var icons  = new[] {
+        "fa-code", "fa-palette", "fa-language", "fa-flask",
+        "fa-chart-line", "fa-music", "fa-camera", "fa-globe",
+        "fa-brain", "fa-laptop", "fa-pen-nib", "fa-calculator"
+    };
+}
+
 <section id="many-card">
-
     <div class="container">
-
         <div class="header">
             <div class="title">
                 <span>BROWSE TOP</span>
                 <h2>Trending Categories</h2>
             </div>
-            <a href="courses.html" class="view-all">View All</a>
+            <a asp-controller="Course" asp-action="Index" class="view-all">Hamısına Bax</a>
         </div>
 
-
-        <div class="carousel-wrapper">
-
-            <button class="prev-btn">❮</button>
-
-            <div class="carousel">
-                <div class="cards">
-
-                    <div class="card orange">
-                        <i class="flaticon-design"></i>
-                        <h4>Design</h4>
-                        <span>3 Courses</span>
+        @if (Model != null && Model.Any())
+        {
+            <div class="carousel-wrapper">
+                <button class="prev-btn">❮</button>
+                <div class="carousel">
+                    <div class="cards">
+                        @{ int idx = 0; }
+                        @foreach (var cat in Model)
+                        {
+                            var colorClass = colors[idx % colors.Length];
+                            var iconClass  = icons[idx % icons.Length];
+                            var courseText = cat.CourseCount == 1 ? "1 Kurs" : $"{cat.CourseCount} Kurs";
+                            <a href="/Course?categoryId=@cat.Id" style="text-decoration:none;">
+                                <div class="card @colorClass">
+                                    <i class="fa-solid @iconClass" style="font-size:28px;margin-bottom:10px;"></i>
+                                    <h4>@cat.Name</h4>
+                                    <span>@courseText</span>
+                                </div>
+                            </a>
+                            idx++;
+                        }
                     </div>
-
-                    <div class="card green">
-                        <i class="flaticon-world"></i>
-                        <h4>Languages</h4>
-                        <span>2 Courses</span>
-                    </div>
-                    <div class="card green">
-                        <i class="flaticon-world"></i>
-                        <h4>Languages</h4>
-                        <span>2 Courses</span>
-                    </div>
-                    <div class="card green">
-                        <i class="flaticon-world"></i>
-                        <h4>Languages</h4>
-                        <span>2 Courses</span>
-                    </div>
-
-                    <div class="card light-green">
-                        <i class="flaticon-scientific"></i>
-                        <h4>Technology</h4>
-                        <span>1 Course</span>
-                    </div>
-
-                    <div class="card yellow">
-                        <i class="flaticon-book"></i>
-                        <h4>Psychology</h4>
-                        <span>2 Courses</span>
-                    </div>
-
                 </div>
+                <button class="next-btn">❯</button>
             </div>
-
-            <button class="next-btn">❯</button>
-
-        </div>
-
-
+        }
+        else
+        {
+            <div style="text-align:center;padding:40px;color:#64748b;">
+                <i class="fa-solid fa-tags" style="font-size:36px;margin-bottom:12px;display:block;"></i>
+                <p>Hələ kateqoriya əlavə edilməyib.</p>
+            </div>
+        }
     </div>
 </section>

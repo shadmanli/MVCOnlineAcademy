@@ -136,6 +136,39 @@ namespace Academy.Hubs
             await Clients.Client(targetConnectionId).SendAsync("ReceiveSignal", Context.ConnectionId, signal);
         }
 
+        // ── WebRTC Signaling ─────────────────────────────────────────
+        // Peer A → B: "offer" SDP göndərir
+        public async Task SendOffer(string targetConnectionId, string sdp)
+        {
+            await Clients.Client(targetConnectionId).SendAsync(
+                "ReceiveOffer", Context.ConnectionId, sdp);
+        }
+
+        // Peer B → A: "answer" SDP göndərir
+        public async Task SendAnswer(string targetConnectionId, string sdp)
+        {
+            await Clients.Client(targetConnectionId).SendAsync(
+                "ReceiveAnswer", Context.ConnectionId, sdp);
+        }
+
+        // ICE candidate mübadiləsi
+        public async Task SendIceCandidate(string targetConnectionId, string candidate)
+        {
+            await Clients.Client(targetConnectionId).SendAsync(
+                "ReceiveIceCandidate", Context.ConnectionId, candidate);
+        }
+
+        // Ekran paylaşması başladı/bitdi
+        public async Task ToggleScreenShare(string roomId, bool isSharing)
+        {
+            if (_roomParticipants.TryGetValue(roomId, out var room) &&
+                room.TryGetValue(Context.ConnectionId, out var p))
+            {
+                await Clients.Group(roomId).SendAsync(
+                    "ScreenShareToggled", Context.ConnectionId, p.FullName, isSharing);
+            }
+        }
+
         public async Task ToggleMic(string roomId, bool state)
         {
             if (_roomParticipants.TryGetValue(roomId, out var room) && room.TryGetValue(Context.ConnectionId, out var p))

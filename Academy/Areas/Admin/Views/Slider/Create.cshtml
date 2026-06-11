@@ -1,36 +1,41 @@
 ﻿@model SliderCreateVM
+@{ ViewData["Title"] = "Yeni Slider"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<div class="container mt-5" style="margin-top:60px;">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-
-            <h2 class="mb-3" style="margin-top:50px;">Yeni Slayder Yarat</h2>
-
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
-
-                <div class="mb-3">
-                    <label asp-for="Title" class="form-label">Başlıq</label>
-                    <input asp-for="Title" class="form-control" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-
-
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label">Təsvir</label>
-                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Image" class="form-label">Şəkil</label>
-                    <input asp-for="Image" type="file" class="form-control" />
-                    <span asp-validation-for="Image" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Təsdiqlə</button>
-                <a asp-action="Index" class="btn btn-secondary">İmtina et</a>
-
-            </form>
-        </div>
-    </div>
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Slider</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Slider" asp-action="Index">Slider</a> / Yeni</div>
 </div>
+
+<div class="p-card" style="max-width:640px;">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Slider başlığı" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+
+        <div class="af-field">
+            <label class="af-label">Təsvir</label>
+            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Qısa təsvir..."></textarea>
+            <span asp-validation-for="Description" class="field-validation-error"></span>
+        </div>
+
+        <div class="af-field">
+            <label class="af-label">Şəkil <span class="req">*</span> <small style="color:#64748b;">(jpg, jpeg, png, webp — max 5MB)</small></label>
+            <input asp-for="Image" type="file" accept=".jpg,.jpeg,.png,.webp" class="form-control"
+                   data-file-type="image" data-err-target="imgErr" />
+            <span asp-validation-for="Image" class="field-validation-error"></span>
+            <span id="imgErr" class="field-validation-error" style="display:none;"></span>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

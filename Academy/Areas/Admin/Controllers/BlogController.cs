@@ -3,10 +3,12 @@ using Academy.Models;
 using Academy.Services.Interfaces;
 using Academy.ViewModels.Blog;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Academy.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "SuperAdmin,Admin,Muellim")]
     [Area("Admin")]
     public class BlogController : Controller
     {
@@ -33,10 +35,19 @@ namespace Academy.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(BlogCreateVM model)
         {
+            if (!ModelState.IsValid) return View(model);
 
-            await _blogService.CreateAsycn(model);
+            try
+            {
+                await _blogService.CreateAsycn(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
+
             return RedirectToAction(nameof(Index));
-
         }
 
         [HttpGet]

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Academy.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class LiveClassController : Controller
     {
         private readonly AppDbContext _context;
@@ -18,7 +19,7 @@ namespace Academy.Controllers
             _userManager = userManager;
         }
 
-        // T?l?b? v? Mü?llim üçün Canl? Otaq (UI)
+        // T?l?b? v? Mï¿½?llim ï¿½ï¿½ï¿½n Canl? Otaq (UI)
         public async Task<IActionResult> Room(string id)
         {
             var liveClass = await _context.LiveClasses
@@ -29,9 +30,9 @@ namespace Academy.Controllers
             bool isTeacher = false;
             if (liveClass == null) 
             {
-                // UI yoxlamaq üçün mock m?lumat (?g?r ID uy?un g?lirs? v? ya yoxdursa)
+                // UI yoxlamaq ï¿½ï¿½ï¿½n mock m?lumat (?g?r ID uy?un g?lirs? v? ya yoxdursa)
                 ViewBag.Title = "Demo Canl? D?rs";
-                ViewBag.Instructor = "Proqramla?d?rma Mü?llimi";
+                ViewBag.Instructor = "Proqramla?d?rma Mï¿½?llimi";
                 ViewBag.RoomId = id ?? "demo-room";
             }
             else
@@ -55,7 +56,7 @@ namespace Academy.Controllers
                     
                     if (liveClass != null && liveClass.TeacherId == appUser.Id)
                     {
-                        isTeacher = true; // Sadece o d?rsi yaradan mü?llim admin ola bil?r
+                        isTeacher = true; // Sadece o d?rsi yaradan mï¿½?llim admin ola bil?r
                     }
                 }
             }

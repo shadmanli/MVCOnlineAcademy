@@ -6,21 +6,26 @@ namespace Academy.ViewModels.LiveClass
 {
     public class LiveClassCreateVM
     {
-        [Required(ErrorMessage = "Z?hm?t olmasa kursu se�in.")]
+        [Required(ErrorMessage = "Kurs seçilməlidir.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Kurs seçilməlidir.")]
         public int CourseId { get; set; }
 
-        [Required(ErrorMessage = "Ba?l?q daxil edilm?lidir.")]
-        public string Title { get; set; }
+        [Required(ErrorMessage = "Başlıq mütləqdir.")]
+        [StringLength(200, MinimumLength = 2, ErrorMessage = "Başlıq 2-200 simvol arasında olmalıdır.")]
+        public string Title { get; set; } = null!;
 
-        public string Topic { get; set; }
+        [StringLength(500, ErrorMessage = "Mövzu maksimum 500 simvol ola bilər.")]
+        public string? Topic { get; set; }
 
-        [Required(ErrorMessage = "Tarix v? vaxt daxil edilm?lidir.")]
+        [Required(ErrorMessage = "Tarix və vaxt mütləqdir.")]
+        [DataType(DataType.DateTime, ErrorMessage = "Tarix formatı düzgün deyil.")]
         public DateTime ScheduledDate { get; set; }
 
-        [Required(ErrorMessage = "M�dd?t (d?qiq? il?) daxil edilm?lidir.")]
+        [Required(ErrorMessage = "Müddət mütləqdir.")]
+        [Range(15, 480, ErrorMessage = "Müddət 15-480 dəqiqə arasında olmalıdır.")]
         public int DurationMinutes { get; set; }
 
         [ValidateNever]
-        public List<SelectListItem> Courses { get; set; }
+        public List<SelectListItem>? Courses { get; set; }
     }
 }

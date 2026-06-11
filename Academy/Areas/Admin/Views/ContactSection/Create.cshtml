@@ -1,24 +1,31 @@
-﻿
+﻿@using Academy.ViewModels.ContactSection
 @model ContactSectionCreateVM
+@{ ViewData["Title"] = "Yeni Əlaqə Bölməsi"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<div class="container mt-5">
-
-    <h2 class="mb-4">Contact Section əlavə et</h2>
-
-    <form method="post">
-
-        <div class="mb-3">
-            <label>Title</label>
-            <input asp-for="Title" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label>SubTitle</label>
-            <input asp-for="SubTitle" class="form-control" />
-        </div>
-
-        <button type="submit" class="btn btn-success">Create</button>
-
-    </form>
-
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Əlaqə Bölməsi</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="ContactSection" asp-action="Index">Əlaqə Bölmələri</a> / Yeni</div>
 </div>
+
+<div class="p-card" style="max-width:560px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Bölmə başlığı" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Alt Başlıq</label>
+            <input asp-for="SubTitle" class="form-control" placeholder="Alt başlıq (isteğe bağlı)" />
+            <span asp-validation-for="SubTitle" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

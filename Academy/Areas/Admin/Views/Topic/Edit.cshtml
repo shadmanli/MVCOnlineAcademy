@@ -1,23 +1,29 @@
-﻿@model TopicEditVM
-
-<div class="container mt-5">
-    <h2>Topic yenilə</h2>
+﻿@using Academy.ViewModels.Topic
+@model TopicEditVM
+@{ ViewData["Title"] = "Mövzu Redaktə"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
+<div class="p-page-header">
+    <div class="p-page-title">Mövzu Redaktə</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Topic" asp-action="Index">Mövzular</a> / Redaktə</div>
+</div>
+<div class="p-card" style="max-width:560px;">
     <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="Id" />
-
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="SubTitle" class="form-label"></label>
+        <div class="af-field">
+            <label class="af-label">Alt Başlıq</label>
             <input asp-for="SubTitle" class="form-control" />
-            <span asp-validation-for="SubTitle" class="text-danger"></span>
+            <span asp-validation-for="SubTitle" class="field-validation-error"></span>
         </div>
-
-        <button type="submit" class="btn btn-primary">Yadda saxla</button>
-        <a asp-action="Index" class="btn btn-secondary">İmtina et</a>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
     </form>
 </div>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

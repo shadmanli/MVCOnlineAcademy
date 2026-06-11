@@ -1,294 +1,323 @@
-﻿<section id="cards">
+﻿@model List<Academy.Models.Course>
+@{
+    var categories = ViewBag.Categories as List<Academy.Models.Category> ?? new List<Academy.Models.Category>();
+}
+
+<section id="cards">
+<style>
+#cards { padding: 80px 20px; background: var(--bg-base, #080b14); }
+
+.cards-common { max-width: 1200px; margin: 0 auto 40px; text-align: center; }
+
+.card-top span {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: #00c4a8;
+}
+
+.card-top h1 {
+    font-size: clamp(28px, 4vw, 40px); font-weight: 800;
+    color: #f1f5f9; margin: 10px 0 16px;
+    letter-spacing: -0.5px;
+}
+
+.card-top p { font-size: 15px; color: #64748b; max-width: 560px; margin: 0 auto; line-height: 1.7; }
+
+/* ── Filter tabs ── */
+.filter-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+}
+
+.filter-menu li {
+    padding: 8px 18px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+.filter-menu li:hover {
+    color: #fff;
+    border-color: rgba(0,196,168,0.3);
+    background: rgba(0,196,168,0.06);
+}
+
+.filter-menu li.active {
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(0,196,168,0.3);
+}
+
+/* ── Cards grid ── */
+.cards-commons {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 22px;
+    position: relative;
+}
+
+.tc-card {
+    background: #0d1117;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.tc-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0,196,168,0.25);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+
+.tc-card-img {
+    width: 100%; height: 190px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #0d1117, #1a2035);
+    position: relative;
+    overflow: hidden;
+}
+
+.tc-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.tc-card:hover .tc-card-img img { transform: scale(1.05); }
+
+.tc-card-img .tc-cat-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: rgba(0,196,168,0.85);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+}
+
+.tc-card-body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.tc-card-instructor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.tc-card-instructor span {
+    font-size: 12.5px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.tc-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.45;
+    margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+}
+
+.tc-card:hover .tc-card-title { color: #00c4a8; }
+
+.tc-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.tc-rating {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 13px; color: #f59e0b; font-weight: 600;
+}
+
+.tc-price {
+    font-size: 16px; font-weight: 800;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Empty state */
+.tc-empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #475569;
+}
+
+.tc-empty i { font-size: 40px; margin-bottom: 14px; display: block; }
+
+/* View all btn */
+.tc-view-all {
+    display: block;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.tc-view-all a {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 32px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    border-radius: 12px;
+    font-size: 14px; font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0,196,168,0.25);
+}
+
+.tc-view-all a:hover {
+    box-shadow: 0 0 24px rgba(0,196,168,0.45);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+/* Hidden */
+.tc-card.hidden { display: none; }
+
+@@media (max-width: 640px) {
+    .cards-commons { grid-template-columns: 1fr; }
+}
+</style>
+
     <div class="cards-common">
         <div class="card-top">
             <span>DISCOVER NEW</span>
-            <h1>
-                Our Top Online Courses
-            </h1>
-            <p>
-                We’ll then ask you to tell us your current level of English or invite you to take our quick 20 minute
-                <br> placement test so we can make sure you start learning English at the level that’s right for you.
-            </p>
+            <h1>Ən Yaxşı Online Kurslar</h1>
+            <p>Biliklərinizi inkişaf etdirin, karyeranızı qurun. Peşəkar müəllimlərdən öyrənin.</p>
         </div>
-        <ul class="filter-menu">
-            <li class="all">ALL</li>
-            <li>Math</li>
-            <li>Physics</li>
-            <li>Chemistry</li>
-            <li>Biology</li>
-            <li>Geography</li>
-            <li>Literature</li>
-            <li>History</li>
-            <li>English</li>
+
+        <!-- Filter tabs -->
+        <ul class="filter-menu" id="topCourseFilter">
+            <li class="active" data-filter="all">Hamısı</li>
+            @foreach (var cat in categories)
+            {
+                <li data-filter="@cat.Id">@cat.Name</li>
+            }
         </ul>
     </div>
-    <div class="cards-commons">
-        <div class="card" style="background-image: url('./assets/images/blog-02-600x486.jpg')">
-            <span class="category">Math</span>
 
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/tina-brown-380x422.jpg" alt="">
-                    <span>Chriss Moore</span>
-                </div>
+    <!-- Cards -->
+    <div class="cards-commons" id="topCourseGrid">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var course in Model)
+            {
+                var imgSrc = string.IsNullOrEmpty(course.ImageUrl)
+                    ? "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop"
+                    : "/uploads/course/" + course.ImageUrl;
+                var catId   = course.Category?.Id ?? 0;
+                var catName = course.Category?.Name ?? "";
+                var instrName = course.Instructor?.FullName ?? "Inzara Academy";
+                var instrInit = instrName.Length > 0 ? instrName[0].ToString().ToUpper() : "I";
+                var stars = Math.Min(5, Math.Max(1, (int)Math.Round(course.Rating)));
 
-                <h3>Visual Elements of User Interface Design</h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>2</span>
+                <a href="/CourseDetail/Index/@course.Id" class="tc-card" data-cat="@catId">
+                    <div class="tc-card-img">
+                        <img src="@imgSrc" alt="@course.Title"
+                             onerror="this.src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600'">
+                        @if (!string.IsNullOrEmpty(catName))
+                        {
+                            <span class="tc-cat-badge">@catName</span>
+                        }
                     </div>
-                    <span class="price">$200</span>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-            <span class="category">Physics</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/2ci user.jpeg" alt="">
-                    <span>Jons Wendom</span>
-                </div>
-
-                <h3>
-                    Photography Techniques: Light, Content & Sharing
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>0</span>
+                    <div class="tc-card-body">
+                        <div class="tc-card-instructor">
+                            <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#00c4a8,#6366f1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">
+                                @instrInit
+                            </div>
+                            <span>@instrName</span>
+                        </div>
+                        <div class="tc-card-title">@course.Title</div>
+                        <div class="tc-card-footer">
+                            <div class="tc-rating">
+                                @for (int i = 0; i < stars; i++) { <i class="fa-solid fa-star" style="font-size:11px;"></i> }
+                                @for (int i = stars; i < 5; i++) { <i class="fa-regular fa-star" style="font-size:11px;color:#334155;"></i> }
+                                <span style="color:#94a3b8;font-size:12px;margin-left:2px;">(@course.StudentCount)</span>
+                            </div>
+                            <div class="tc-price">@course.Price AZN</div>
+                        </div>
                     </div>
-                    <span class="price">$300</span>
-                </div>
+                </a>
+            }
+        }
+        else
+        {
+            <div class="tc-empty">
+                <i class="fa-solid fa-book-open"></i>
+                <p style="font-size:16px;font-weight:600;color:#94a3b8;">Hələ kurs əlavə edilməyib.</p>
             </div>
-        </div>
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-            <span class="category">Literature</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/3cu card adam.jpeg" alt="">
-                    <span>Taylor</span>
-                </div>
-
-                <h3>
-                    Teach English Now! Foundational Principles
-
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>0</span>
-                    </div>
-                    <span class="price">$100</span>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-
-
-            <span class="category">History</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/4cu user.jpeg" alt="">
-                    <span>
-
-                        Nicole Brown
-                    </span>
-                </div>
-
-                <h3>
-                    Responsive Website Development & Design
-
-
-
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>0</span>
-                    </div>
-                    <span class="price">$100</span>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-
-
-            <span class="category">English</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/5ci user.jpeg" alt="">
-                    <span>
-
-                    </span>
-                </div>
-
-                <h3>
-
-                    Positive Psychology: Character & Research
-
-
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>
-                            0
-                        </span>
-                    </div>
-                    <span class="price">$100</span>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-
-            <span class="category">English</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/5ci user.jpeg" alt="">
-                    <span>
-
-                    </span>
-                </div>
-
-                <h3>
-
-                    Developing Android Apps with App Inventor
-
-
-
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>
-                            3
-                        </span>
-                    </div>
-                    <span class="price">$500</span>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-
-            <span class="category">Russian</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/4cu user.jpeg" alt="">
-                    <span>
-
-                    </span>
-                </div>
-
-                <h3>
-
-                    Google IT Support Professional Certificate
-
-
-
-
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>
-                            3
-                        </span>
-                    </div>
-                    <span class="price">$500</span>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="card" style="background-image: url(./assets/images/blog-02-600x486.jpg);">
-
-
-            <span class="category">Russian</span>
-
-
-            <div class="card-content">
-                <div class="author">
-                    <img src="~/assets/images/4cu user.jpeg" alt="">
-                    <span>
-
-                    </span>
-                </div>
-
-                <h3>
-
-                    Managerial Economics & Business Analysis
-
-
-
-
-
-
-                </h3>
-
-                <div class="card-footer">
-                    <div class="rating">
-                        <i class="fa-regular fa-star"></i>
-                        <span>
-                            2
-                        </span>
-                    </div>
-                    <span class="price">$400</span>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <a href="#" class="view-btn">View Courses</a>
-
-
+        }
     </div>
 
+    <div class="tc-view-all">
+        <a asp-controller="Course" asp-action="Index">
+            Bütün Kurslara Bax <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
 
 </section>
+
+<script>
+(function() {
+    var tabs  = document.querySelectorAll('#topCourseFilter li');
+    var cards = document.querySelectorAll('#topCourseGrid .tc-card');
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            // Aktiv tab
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+
+            var filter = this.dataset.filter;
+
+            var visible = 0;
+            cards.forEach(function(card) {
+                if (filter === 'all' || card.dataset.cat === filter) {
+                    card.classList.remove('hidden');
+                    visible++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Boş vəziyyət
+            var empty = document.querySelector('.tc-empty');
+            if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+        });
+    });
+})();
+</script>

@@ -34,29 +34,26 @@ namespace Academy.Services
         public async Task CreateAsync(CourseCreateVM model)
         {
             string folder = Path.Combine(_env.WebRootPath, "uploads/course");
-
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
             string fileName = null;
 
             if (model.Image != null)
             {
-                fileName = Guid.NewGuid() + "_" + model.Image.FileName;
-                string path = Path.Combine(folder, fileName);
-
-                using var stream = new FileStream(path, FileMode.Create);
-                await model.Image.CopyToAsync(stream);
+                Academy.Helpers.FileHelper.ValidateImage(model.Image);
+                fileName = await Academy.Helpers.FileHelper.SaveFileAsync(model.Image, folder);
             }
 
             var data = _mapper.Map<Course>(model);
-
             data.ImageUrl = fileName;
             data.CreatedDate = DateTime.Now;
 
             if (model.VideoTitles != null && model.VideoTitles.Count > 0)
             {
                 data.Videos = new List<Video>();
+                string vidFolder = Path.Combine(_env.WebRootPath, "uploads/videos");
+                if (!Directory.Exists(vidFolder)) Directory.CreateDirectory(vidFolder);
+
                 for (int i = 0; i < model.VideoTitles.Count; i++)
                 {
                     if (!string.IsNullOrWhiteSpace(model.VideoTitles[i]))
@@ -64,19 +61,17 @@ namespace Academy.Services
                         string vidName = null;
                         if (model.VideoFiles != null && model.VideoFiles.Count > i && model.VideoFiles[i] != null)
                         {
-                            string vidFolder = Path.Combine(_env.WebRootPath, "uploads/videos");
-                            if (!Directory.Exists(vidFolder)) Directory.CreateDirectory(vidFolder);
-                            vidName = Guid.NewGuid() + "_" + model.VideoFiles[i].FileName;
-                            string vidPath = Path.Combine(vidFolder, vidName);
-                            using var vidStream = new FileStream(vidPath, FileMode.Create);
-                            await model.VideoFiles[i].CopyToAsync(vidStream);
+                            Academy.Helpers.FileHelper.ValidateVideo(model.VideoFiles[i]);
+                            vidName = await Academy.Helpers.FileHelper.SaveFileAsync(model.VideoFiles[i], vidFolder);
                         }
 
                         data.Videos.Add(new Video
                         {
                             Title = model.VideoTitles[i],
                             Url = vidName,
-                            Level = model.VideoLevels != null && model.VideoLevels.Count > i ? model.VideoLevels[i] : Academy.Models.VideoLevel.Beginner
+                            Level = model.VideoLevels != null && model.VideoLevels.Count > i
+                                ? model.VideoLevels[i]
+                                : Academy.Models.VideoLevel.Beginner
                         });
                     }
                 }
@@ -116,6 +111,7 @@ namespace Academy.Services
         public async Task DeleteAsync(int id)
         {
             var data = await _context.Courses.FindAsync(id);
+            if (data == null) return;
 
             _context.Courses.Remove(data);
             await _context.SaveChangesAsync();
@@ -132,25 +128,11 @@ namespace Academy.Services
            
             if (model.ImageFile != null)
             {
+                Academy.Helpers.FileHelper.ValidateImage(model.ImageFile);
                 string folder = Path.Combine(_env.WebRootPath, "uploads/course");
-
-                if (!Directory.Exists(folder))
-                    Directory.CreateDirectory(folder);
-
-                if (!string.IsNullOrEmpty(data.ImageUrl))
-                {
-                    string oldPath = Path.Combine(folder, data.ImageUrl);
-                    if (File.Exists(oldPath))
-                        File.Delete(oldPath);
-                }
-
-                string fileName = Guid.NewGuid() + "_" + model.ImageFile.FileName;
-                string newPath = Path.Combine(folder, fileName);
-
-                using var stream = new FileStream(newPath, FileMode.Create);
-                await model.ImageFile.CopyToAsync(stream);
-
-                data.ImageUrl = fileName;
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                Academy.Helpers.FileHelper.DeleteFile(folder, data.ImageUrl);
+                data.ImageUrl = await Academy.Helpers.FileHelper.SaveFileAsync(model.ImageFile, folder);
             }
 
            

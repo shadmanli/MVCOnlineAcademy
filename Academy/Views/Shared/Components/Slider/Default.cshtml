@@ -2,23 +2,139 @@
 
 @if (Model != null && Model.Any())
 {
-    <section id="main-start" class="main-intro">
-        <div class="slider">
-            <div class="top-line"></div>
+    var slides = Model.ToList();
+    <section id="main-start" style="position:relative;overflow:hidden;height:100vh;min-height:560px;">
 
-            @{ int slideIndex = 0; }
-            @foreach (var slide in Model)
+        <!-- Slides -->
+        <div id="heroSlider" style="position:relative;width:100%;height:100%;">
+            @{ int i = 0; }
+            @foreach (var slide in slides)
             {
-                string slideClass = slideIndex == 0 ? "slide-active" : "slide";
-                <div class="@slideClass" style="background: url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;">
-                    <div class="slide-text">
-                        <h2>@slide.Title</h2>
-                        <p>@slide.Description</p>
-                        <a href="courses.html">View Courses</a>
+                <div class="hero-slide @(i == 0 ? "slide-active" : "slide")"
+                     style="position:absolute;inset:0;background:url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;transition:opacity 0.9s ease;">
+
+                    <!-- Dark overlay -->
+                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,20,0.82) 0%,rgba(4,8,20,0.5) 60%,rgba(4,8,20,0.3) 100%);"></div>
+
+                    <!-- Content -->
+                    <div style="position:relative;z-index:2;height:100%;display:flex;align-items:center;padding:0 6% 0;">
+                        <div style="max-width:620px;">
+                            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:99px;padding:6px 16px;margin-bottom:20px;animation:heroFadeUp 0.7s ease @(i * 0.1)s both;">
+                                <span style="width:6px;height:6px;border-radius:50%;background:#F5A623;display:inline-block;"></span>
+                                <span style="font-size:12px;font-weight:600;color:#F5A623;letter-spacing:0.1em;text-transform:uppercase;font-family:'Inter',sans-serif;">Inzara Academy</span>
+                            </div>
+
+                            <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(32px,5vw,58px);font-weight:800;color:#f8fafc;line-height:1.15;margin-bottom:18px;letter-spacing:-1px;animation:heroFadeUp 0.7s ease @(i * 0.1 + 0.1)s both;">
+                                @slide.Title
+                            </h1>
+
+                            @if (!string.IsNullOrEmpty(slide.Description))
+                            {
+                                <p style="font-family:'Inter',sans-serif;font-size:clamp(15px,2vw,18px);color:rgba(248,250,252,0.7);line-height:1.7;margin-bottom:32px;max-width:480px;animation:heroFadeUp 0.7s ease @(i * 0.1 + 0.2)s both;">
+                                    @slide.Description
+                                </p>
+                            }
+
+                            <div style="display:flex;gap:14px;flex-wrap:wrap;animation:heroFadeUp 0.7s ease @(i * 0.1 + 0.3)s both;">
+                                <a asp-controller="Course" asp-action="Index"
+                                   style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#F5A623,#E8940F);color:#0F1B2D;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;border-radius:12px;text-decoration:none;transition:all .25s ease;box-shadow:0 4px 20px rgba(245,166,35,0.35);"
+                                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(245,166,35,0.5)'"
+                                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(245,166,35,0.35)'">
+                                    <i class="fa fa-graduation-cap"></i> Kurslara Bax
+                                </a>
+                                <a href="#cards"
+                                   style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);color:#f8fafc;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border-radius:12px;text-decoration:none;transition:all .25s ease;backdrop-filter:blur(6px);"
+                                   onmouseover="this.style.background='rgba(255,255,255,0.14)'"
+                                   onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+                                    Daha Ətraflı <i class="fa fa-arrow-right" style="font-size:12px;"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                slideIndex++;
+                i++;
             }
         </div>
+
+        <!-- Navigation arrows -->
+        @if (slides.Count > 1)
+        {
+            <button id="heroPrev" onclick="heroSlide(-1)"
+                    style="position:absolute;left:24px;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:all .2s ease;"
+                    onmouseover="this.style.background='rgba(245,166,35,0.25)';this.style.borderColor='rgba(245,166,35,0.5)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.15)'">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+            <button id="heroNext" onclick="heroSlide(1)"
+                    style="position:absolute;right:24px;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:all .2s ease;"
+                    onmouseover="this.style.background='rgba(245,166,35,0.25)';this.style.borderColor='rgba(245,166,35,0.5)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.15)'">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+
+            <!-- Dots -->
+            <div style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;">
+                @for (int d = 0; d < slides.Count; d++)
+                {
+                    <button class="hero-dot @(d == 0 ? "hero-dot-active" : "")"
+                            onclick="heroGoTo(@d)"
+                            style="width:@(d == 0 ? "24" : "8")px;height:8px;border-radius:99px;border:none;background:@(d == 0 ? "#F5A623" : "rgba(255,255,255,0.35)");cursor:pointer;transition:all .3s ease;padding:0;"></button>
+                }
+            </div>
+        }
+
+        <!-- Scroll indicator -->
+        <div style="position:absolute;bottom:20px;right:32px;z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.5;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;color:#fff;letter-spacing:0.1em;writing-mode:vertical-rl;text-transform:uppercase;">Scroll</span>
+            <div style="width:1px;height:32px;background:linear-gradient(to bottom,rgba(255,255,255,0.6),transparent);"></div>
+        </div>
+
     </section>
+
+    <style>
+    .hero-slide { opacity: 0; pointer-events: none; }
+    .hero-slide.slide-active { opacity: 1; pointer-events: all; }
+
+    @@keyframes heroFadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @@media (max-width: 768px) {
+        #main-start { height: 100svh; min-height: 500px; }
+    }
+    </style>
+
+    <script>
+    (function() {
+        var total   = @slides.Count;
+        var current = 0;
+        var timer;
+
+        var slides  = document.querySelectorAll('.hero-slide');
+        var dots    = document.querySelectorAll('.hero-dot');
+
+        function goTo(n) {
+            slides[current].classList.remove('slide-active');
+            slides[current].classList.add('slide');
+            dots[current] && (dots[current].style.width = '8px', dots[current].style.background = 'rgba(255,255,255,0.35)');
+
+            current = (n + total) % total;
+
+            slides[current].classList.remove('slide');
+            slides[current].classList.add('slide-active');
+            dots[current] && (dots[current].style.width = '24px', dots[current].style.background = '#F5A623');
+        }
+
+        window.heroSlide = function(dir) { clearInterval(timer); goTo(current + dir); startAuto(); };
+        window.heroGoTo  = function(n)   { clearInterval(timer); goTo(n); startAuto(); };
+
+        function startAuto() {
+            if (total <= 1) return;
+            timer = setInterval(function() { goTo(current + 1); }, 5000);
+        }
+
+        startAuto();
+    })();
+    </script>
 }

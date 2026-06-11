@@ -1,32 +1,38 @@
-﻿@model BannerCreateVM
+﻿@using Academy.ViewModels.Banner
+@model BannerCreateVM
+@{ ViewData["Title"] = "Yeni Banner"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<h2>Yeni Banner Əlavə Et</h2>
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Banner</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Banner" asp-action="Index">Bannerlər</a> / Yeni</div>
+</div>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
+<div class="p-card" style="max-width:560px;">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Banner başlığı" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Səhifə <span class="req">*</span></label>
+            <input asp-for="Page" class="form-control" placeholder="Məs: Courses" data-no-whitespace />
+            <span asp-validation-for="Page" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Şəkil <span class="req">*</span> <small style="color:#64748b;">(jpg, jpeg, png, webp — max 5MB)</small></label>
+            <input asp-for="Image" type="file" accept=".jpg,.jpeg,.png,.webp" class="form-control"
+                   data-file-type="image" data-err-target="imgErr" />
+            <span asp-validation-for="Image" class="field-validation-error"></span>
+            <span id="imgErr" class="field-validation-error" style="display:none;"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
 
-    <div class="mb-3">
-        <label>Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Şəkil</label>
-        <input asp-for="Image" type="file" class="form-control" />
-        <span asp-validation-for="Image" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Səhifə</label>
-        <select asp-for="Page" class="form-control">
-            <option value="About">About</option>
-            <option value="Contact">Contact</option>
-            <option value="Blog">Blog</option>
-            <option value="Courses">Courses</option>
-            <option value="Teacher">Teacher</option>
-        </select>
-        <span asp-validation-for="Page" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Yarat</button>
-</form>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

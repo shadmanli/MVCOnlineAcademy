@@ -1,55 +1,332 @@
 ﻿@using Academy.ViewModels.Course
 @model CourseCreateVM
+@{
+    ViewData["Title"] = "Yeni Kurs";
+}
 
-<form method="post" enctype="multipart/form-data">
+<style>
+.val-field { position: relative; margin-bottom: 18px; }
+.val-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .06em; display: block; margin-bottom: 6px; }
+.val-input, .val-select, .val-textarea {
+    width: 100%; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 11px 14px; color: #f1f5f9; font-size: 14px;
+    outline: none; transition: all .25s ease; font-family: inherit;
+}
+.val-input:focus, .val-select:focus, .val-textarea:focus {
+    border-color: #6366f1; background: rgba(99,102,241,0.05);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+.val-textarea { resize: vertical; min-height: 100px; }
+.val-select option { background: #1a1f2e; color: #f1f5f9; }
+.val-error { font-size: 11.5px; color: #ef4444; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+.val-error::before { content: '⚠'; }
+.val-input.input-error, .val-select.input-error, .val-textarea.input-error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.12) !important;
+}
+.val-input.input-ok { border-color: #10b981; }
+.section-title { font-size: 16px; font-weight: 700; color: #f1f5f9; margin: 24px 0 16px; display: flex; align-items: center; gap: 8px; }
+.video-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 14px; position: relative; }
+.remove-video { position: absolute; top: 12px; right: 12px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #ef4444; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; transition: all .2s; }
+.remove-video:hover { background: rgba(239,68,68,0.2); }
+.btn-add-video { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); color: #818cf8; border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .25s; display: inline-flex; align-items: center; gap: 7px; }
+.btn-add-video:hover { background: rgba(99,102,241,0.18); }
+.btn-submit { background: linear-gradient(135deg,#6366f1,#0ea5e9); color: #fff; border: none; border-radius: 12px; padding: 13px 32px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .25s; box-shadow: 0 4px 15px rgba(99,102,241,0.3); }
+.btn-submit:hover { box-shadow: 0 0 22px rgba(99,102,241,0.5); transform: translateY(-1px); }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@@media(max-width:640px) { .form-row-2 { grid-template-columns: 1fr; } }
+</style>
 
-    <input asp-for="Title" class="form-control mb-2" placeholder="Title" />
-    <textarea asp-for="Description" class="form-control mb-2"></textarea>
-
-    <input asp-for="Price" class="form-control mb-2" placeholder="Price" />
-
-    <input type="file" asp-for="Image" class="form-control mb-2" />
-
-    <select asp-for="LanguageId" asp-items="Model.Languages" class="form-control mb-2"></select>
-    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control mb-2"></select>
-    <select asp-for="InstructorId" asp-items="Model.Instructors" class="form-control mb-2"></select>
-    
-    <select asp-for="Level" class="form-control mb-2">
-        <option value="Beginner">Beginner</option>
-        <option value="Intermediate">Intermediate</option>
-        <option value="Advanced">Advanced</option>
-    </select>
-
-    <input asp-for="Duration" class="form-control mb-2" placeholder="Duration" />
-
-    <h4 class="mt-4">Videos</h4>
-    <div id="videos-container">
-        <div class="video-item border p-3 mb-3">
-            <input name="VideoTitles" class="form-control mb-2" placeholder="Video Title" />
-            <input type="file" name="VideoFiles" accept="video/*" class="form-control mb-2" />
-            <select name="VideoLevels" class="form-control mb-2">
-                <option value="1">Beginner</option>
-                <option value="2">Intermediate</option>
-                <option value="3">Advanced</option>
-            </select>
-        </div>
+<div class="p-page-header">
+    <div>
+        <div class="p-page-title">Yeni Kurs Yarat</div>
+        <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Course" asp-action="Index">Kurslar</a> / Yeni</div>
     </div>
-    <button type="button" class="btn btn-info mb-3" onclick="addVideo()">Add Another Video</button>
+</div>
 
-    <button type="submit" class="btn btn-success mt-3 d-block">Create</button>
+<div class="p-card" style="max-width:860px;">
+    <form id="courseCreateForm" method="post" enctype="multipart/form-data" novalidate>
+        @Html.AntiForgeryToken()
 
-</form>
+        <!-- Əsas məlumatlar -->
+        <div class="section-title"><i class="fa fa-book-open" style="color:#6366f1;"></i> Əsas Məlumatlar</div>
+
+        <div class="val-field">
+            <label class="val-label">Kurs Adı *</label>
+            <input asp-for="Title" class="val-input" placeholder="Məs: C# ilə Backend Proqramlaşdırma"
+                   data-val="true" data-val-required="Kurs adı daxil edilməlidir."
+                   data-val-minlength="Kurs adı minimum 3 simvol olmalıdır." data-val-minlength-min="3"
+                   data-val-maxlength="Kurs adı maksimum 200 simvol ola bilər." data-val-maxlength-max="200" />
+            <span asp-validation-for="Title" class="val-error"></span>
+        </div>
+
+        <div class="val-field">
+            <label class="val-label">Kurs Təsviri *</label>
+            <textarea asp-for="Description" class="val-textarea" placeholder="Kurs haqqında ətraflı məlumat..."
+                      data-val="true" data-val-required="Kurs təsviri daxil edilməlidir."
+                      data-val-minlength="Kurs təsviri minimum 10 simvol olmalıdır." data-val-minlength-min="10"></textarea>
+            <span asp-validation-for="Description" class="val-error"></span>
+        </div>
+
+        <div class="form-row-2">
+            <div class="val-field">
+                <label class="val-label">Qiymət (AZN) *</label>
+                <input asp-for="Price" type="number" step="0.01" min="0" class="val-input" placeholder="0.00"
+                       data-val="true" data-val-required="Qiymət daxil edilməlidir."
+                       data-val-range="Qiymət 0-10000 arasında olmalıdır." data-val-range-min="0" data-val-range-max="10000" />
+                <span asp-validation-for="Price" class="val-error"></span>
+            </div>
+            <div class="val-field">
+                <label class="val-label">Müddət (dəqiqə) *</label>
+                <input asp-for="Duration" type="number" min="1" class="val-input" placeholder="60"
+                       data-val="true" data-val-required="Müddət daxil edilməlidir."
+                       data-val-range="Müddət 1-10000 arasında olmalıdır." data-val-range-min="1" data-val-range-max="10000" />
+                <span asp-validation-for="Duration" class="val-error"></span>
+            </div>
+        </div>
+
+        <div class="form-row-2">
+            <div class="val-field">
+                <label class="val-label">Kateqoriya *</label>
+                <select asp-for="CategoryId" asp-items="Model.Categories" class="val-select"
+                        data-val="true" data-val-required="Kateqoriya seçilməlidir."
+                        data-val-range="Kateqoriya seçilməlidir." data-val-range-min="1" data-val-range-max="999999">
+                    <option value="0">-- Kateqoriya seçin --</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="val-error"></span>
+            </div>
+            <div class="val-field">
+                <label class="val-label">Dil *</label>
+                <select asp-for="LanguageId" asp-items="Model.Languages" class="val-select"
+                        data-val="true" data-val-required="Dil seçilməlidir."
+                        data-val-range="Dil seçilməlidir." data-val-range-min="1" data-val-range-max="999999">
+                    <option value="0">-- Dil seçin --</option>
+                </select>
+                <span asp-validation-for="LanguageId" class="val-error"></span>
+            </div>
+        </div>
+
+        <div class="form-row-2">
+            <div class="val-field">
+                <label class="val-label">Müəllim *</label>
+                <select asp-for="InstructorId" asp-items="Model.Instructors" class="val-select"
+                        data-val="true" data-val-required="Müəllim seçilməlidir."
+                        data-val-range="Müəllim seçilməlidir." data-val-range-min="1" data-val-range-max="999999">
+                    <option value="0">-- Müəllim seçin --</option>
+                </select>
+                <span asp-validation-for="InstructorId" class="val-error"></span>
+            </div>
+            <div class="val-field">
+                <label class="val-label">Səviyyə *</label>
+                <select asp-for="Level" class="val-select"
+                        data-val="true" data-val-required="Səviyyə seçilməlidir.">
+                    <option value="">-- Səviyyə seçin --</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+                <span asp-validation-for="Level" class="val-error"></span>
+            </div>
+        </div>
+
+        <div class="val-field">
+            <label class="val-label">Kurs Şəkli * (jpg, jpeg, png, webp — max 5MB)</label>
+            <input asp-for="Image" type="file" accept=".jpg,.jpeg,.png,.webp" class="val-input"
+                   id="imageInput" onchange="validateImageFile(this)" />
+            <span asp-validation-for="Image" class="val-error"></span>
+            <span id="imageError" class="val-error" style="display:none;"></span>
+        </div>
+
+        <!-- Videolar -->
+        <div class="section-title"><i class="fa fa-video" style="color:#0ea5e9;"></i> Videolar</div>
+
+        <div id="videos-container">
+            <div class="video-item" data-index="0">
+                <button type="button" class="remove-video" onclick="removeVideo(this)" style="display:none;">
+                    <i class="fa fa-times"></i> Sil
+                </button>
+                <div class="form-row-2">
+                    <div class="val-field">
+                        <label class="val-label">Video Başlığı</label>
+                        <input name="VideoTitles" class="val-input video-title" placeholder="Məs: Giriş dərsi" />
+                        <span class="val-error video-title-err" style="display:none;">Video başlığı daxil edilməlidir.</span>
+                    </div>
+                    <div class="val-field">
+                        <label class="val-label">Video Səviyyəsi</label>
+                        <select name="VideoLevels" class="val-select video-level">
+                            <option value="">-- Səviyyə seçin --</option>
+                            <option value="1">Beginner</option>
+                            <option value="2">Intermediate</option>
+                            <option value="3">Advanced</option>
+                        </select>
+                        <span class="val-error video-level-err" style="display:none;">Video səviyyəsi seçilməlidir.</span>
+                    </div>
+                </div>
+                <div class="val-field">
+                    <label class="val-label">Video Faylı (mp4, mov, avi — max 500MB)</label>
+                    <input type="file" name="VideoFiles" accept=".mp4,.mov,.avi" class="val-input video-file"
+                           onchange="validateVideoFile(this)" />
+                    <span class="val-error video-file-err" style="display:none;"></span>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-add-video mb-4" onclick="addVideo()">
+            <i class="fa fa-plus"></i> Video Əlavə Et
+        </button>
+
+        <div style="display:flex;gap:12px;margin-top:8px;">
+            <button type="submit" class="btn-submit">
+                <i class="fa fa-check me-2"></i>Kursu Yarat
+            </button>
+            <a asp-area="Admin" asp-controller="Course" asp-action="Index"
+               style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:7px;">
+                <i class="fa fa-arrow-left"></i> Geri
+            </a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
-    <script>
-        function addVideo() {
-            var container = document.getElementById('videos-container');
-            var item = document.querySelector('.video-item').cloneNode(true);
+<partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+<script>
+// ── File validation ──────────────────────────────────────
+const ALLOWED_IMG = ['.jpg','.jpeg','.png','.webp'];
+const ALLOWED_VID = ['.mp4','.mov','.avi'];
+const MAX_IMG = 5 * 1024 * 1024;
+const MAX_VID = 500 * 1024 * 1024;
 
-            var inputs = item.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
+function getExt(name) { return name.slice(name.lastIndexOf('.')).toLowerCase(); }
 
-            container.appendChild(item);
+function validateImageFile(input) {
+    var err = document.getElementById('imageError');
+    err.style.display = 'none';
+    if (!input.files || !input.files[0]) return;
+    var f = input.files[0];
+    var ext = getExt(f.name);
+    if (!ALLOWED_IMG.includes(ext)) {
+        err.textContent = 'Şəkil formatı düzgün deyil. İcazə verilənlər: jpg, jpeg, png, webp.';
+        err.style.display = 'flex';
+        input.value = '';
+        return;
+    }
+    if (f.size > MAX_IMG) {
+        err.textContent = 'Şəkil ölçüsü maksimum 5 MB ola bilər.';
+        err.style.display = 'flex';
+        input.value = '';
+    }
+}
+
+function validateVideoFile(input) {
+    var errEl = input.closest('.val-field').querySelector('.video-file-err');
+    errEl.style.display = 'none';
+    if (!input.files || !input.files[0]) return;
+    var f = input.files[0];
+    var ext = getExt(f.name);
+    if (!ALLOWED_VID.includes(ext)) {
+        errEl.textContent = 'Video formatı düzgün deyil. İcazə verilənlər: mp4, mov, avi.';
+        errEl.style.display = 'flex';
+        input.value = '';
+        return;
+    }
+    if (f.size > MAX_VID) {
+        errEl.textContent = 'Video ölçüsü maksimum 500 MB ola bilər.';
+        errEl.style.display = 'flex';
+        input.value = '';
+    }
+}
+
+// ── Video əlavə et / sil ─────────────────────────────────
+var videoCount = 1;
+
+function addVideo() {
+    var container = document.getElementById('videos-container');
+    var template = container.querySelector('.video-item').cloneNode(true);
+    template.dataset.index = videoCount++;
+
+    // inputları təmizlə
+    template.querySelectorAll('input').forEach(function(i) { i.value = ''; });
+    template.querySelectorAll('select').forEach(function(s) { s.selectedIndex = 0; });
+    template.querySelectorAll('.val-error').forEach(function(e) { e.style.display = 'none'; });
+
+    // Sil düyməsini göstər
+    template.querySelector('.remove-video').style.display = 'inline-flex';
+
+    container.appendChild(template);
+}
+
+function removeVideo(btn) {
+    var item = btn.closest('.video-item');
+    if (document.querySelectorAll('.video-item').length > 1) item.remove();
+}
+
+// ── Form submit validation ───────────────────────────────
+document.getElementById('courseCreateForm').addEventListener('submit', function(e) {
+    var valid = true;
+
+    // Video sahələrini yoxla (yalnız doldurulmuşsa)
+    document.querySelectorAll('.video-item').forEach(function(item) {
+        var titleInput = item.querySelector('.video-title');
+        var levelSelect = item.querySelector('.video-level');
+        var fileInput = item.querySelector('.video-file');
+        var titleErr = item.querySelector('.video-title-err');
+        var levelErr = item.querySelector('.video-level-err');
+
+        var hasTitle = titleInput.value.trim() !== '';
+        var hasFile  = fileInput.files && fileInput.files.length > 0;
+        var hasLevel = levelSelect.value !== '';
+
+        // Əgər hər hansı biri doldurulubsa, hamısı məcburi olur
+        if (hasTitle || hasFile || hasLevel) {
+            if (!hasTitle) {
+                titleErr.style.display = 'flex';
+                titleInput.classList.add('input-error');
+                valid = false;
+            } else {
+                titleErr.style.display = 'none';
+                titleInput.classList.remove('input-error');
+            }
+            if (!hasLevel) {
+                levelErr.style.display = 'flex';
+                levelSelect.classList.add('input-error');
+                valid = false;
+            } else {
+                levelErr.style.display = 'none';
+                levelSelect.classList.remove('input-error');
+            }
         }
-    </script>
+    });
+
+    // Şəkil yoxlaması
+    var imgInput = document.getElementById('imageInput');
+    var imgErr = document.getElementById('imageError');
+    if (!imgInput.files || imgInput.files.length === 0) {
+        imgErr.textContent = 'Kurs şəkli seçilməlidir.';
+        imgErr.style.display = 'flex';
+        valid = false;
+    }
+
+    if (!valid) e.preventDefault();
+});
+
+// ── Real-time validation ─────────────────────────────────
+document.querySelectorAll('.val-input, .val-select, .val-textarea').forEach(function(el) {
+    el.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            this.classList.remove('input-error');
+            this.classList.add('input-ok');
+        } else {
+            this.classList.remove('input-ok');
+        }
+    });
+});
+
+// ── Unobtrusive validation stilini tətbiq et ────────────
+document.addEventListener('DOMContentLoaded', function() {
+    // Validation xəta elementlərini val-error class-ı ilə stilizə et
+    document.querySelectorAll('[data-valmsg-for]').forEach(function(span) {
+        span.classList.add('val-error');
+    });
+});
+</script>
 }

@@ -1,29 +1,33 @@
-﻿@model Academy.ViewModels.CourseRequirement.CourseRequirementCreateVM
+﻿@using Academy.ViewModels.CourseRequirement
+@model CourseRequirementCreateVM
+@{ ViewData["Title"] = "Yeni Kurs Tələbi"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<div class="container mt-5">
-
-    <h2 class="mb-4">Yeni Tələb əlavə et</h2>
-
-    <form method="post">
-
-       
-        <div class="mb-3">
-            <label class="form-label">Tələb</label>
-            <input asp-for="Text" class="form-control" placeholder="Məs: Basic C# bilikləri" />
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Course seç</label>
-            <select asp-for="CourseId"
-                    asp-items="Model.Courses"
-                    class="form-control">
-                <option value="">Seç...</option>
-            </select>
-        </div>
-
-        <button class="btn btn-success">Yarat</button>
-        <a asp-action="Index" class="btn btn-secondary">Geri</a>
-
-    </form>
-
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Kurs Tələbi</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="CourseRequirement" asp-action="Index">Kurs Tələbləri</a> / Yeni</div>
 </div>
+
+<div class="p-card" style="max-width:560px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Tələb Mətni <span class="req">*</span></label>
+            <input asp-for="Text" class="form-control" placeholder="Məs: HTML/CSS bilikləri tələb olunur" data-no-whitespace />
+            <span asp-validation-for="Text" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Kurs <span class="req">*</span></label>
+            <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
+                <option value="0">-- Kurs seçin --</option>
+            </select>
+            <span asp-validation-for="CourseId" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

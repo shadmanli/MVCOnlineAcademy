@@ -1,0 +1,104 @@
+<partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+<script>
+(function() {
+    'use strict';
+
+    var ALLOWED_IMG = ['.jpg','.jpeg','.png','.webp'];
+    var ALLOWED_VID = ['.mp4','.mov','.avi'];
+    var MAX_IMG = 5 * 1024 * 1024;
+    var MAX_VID = 500 * 1024 * 1024;
+
+    function getExt(name) {
+        return name.slice(name.lastIndexOf('.')).toLowerCase();
+    }
+
+    // File validation
+    function validateFile(input) {
+        var errId = input.dataset.errTarget;
+        var errEl = errId ? document.getElementById(errId) : null;
+        var isImg = input.dataset.fileType === 'image';
+        var isVid = input.dataset.fileType === 'video';
+
+        if (!input.files || !input.files[0]) return true;
+        var f = input.files[0];
+        var ext = getExt(f.name);
+        var msg = '';
+
+        if (isImg) {
+            if (!ALLOWED_IMG.includes(ext))
+                msg = 'Şəkil formatı düzgün deyil. İcazə verilənlər: jpg, jpeg, png, webp.';
+            else if (f.size > MAX_IMG)
+                msg = 'Şəkil ölçüsü maksimum 5 MB ola bilər.';
+        } else if (isVid) {
+            if (!ALLOWED_VID.includes(ext))
+                msg = 'Video formatı düzgün deyil. İcazə verilənlər: mp4, mov, avi.';
+            else if (f.size > MAX_VID)
+                msg = 'Video ölçüsü maksimum 500 MB ola bilər.';
+        }
+
+        if (msg) {
+            if (errEl) { errEl.textContent = msg; errEl.style.display = 'flex'; }
+            input.value = '';
+            input.classList.add('input-invalid');
+            return false;
+        }
+
+        if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+        input.classList.remove('input-invalid');
+        return true;
+    }
+
+    // Real-time border feedback
+    function applyRealtime(el) {
+        el.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.remove('input-invalid');
+                this.classList.add('input-valid');
+            } else {
+                this.classList.remove('input-valid');
+            }
+        });
+        el.addEventListener('change', function() {
+            if (this.value !== '' && this.value !== '0') {
+                this.classList.remove('input-invalid');
+                this.classList.add('input-valid');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // File inputs
+        document.querySelectorAll('input[type="file"][data-file-type]').forEach(function(inp) {
+            inp.addEventListener('change', function() { validateFile(this); });
+        });
+
+        // Real-time feedback
+        document.querySelectorAll('.form-control, .form-select').forEach(applyRealtime);
+
+        // Validation error span styling
+        document.querySelectorAll('[data-valmsg-for]').forEach(function(span) {
+            span.classList.add('field-validation-error');
+        });
+
+        // Form submit — file check
+        document.querySelectorAll('form').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                var allOk = true;
+                form.querySelectorAll('input[type="file"][data-file-type]').forEach(function(inp) {
+                    if (!validateFile(inp)) allOk = false;
+                });
+                if (!allOk) e.preventDefault();
+            });
+        });
+
+        // Whitespace check
+        document.querySelectorAll('input[data-no-whitespace], textarea[data-no-whitespace]').forEach(function(el) {
+            el.addEventListener('blur', function() {
+                if (this.value.trim() === '' && this.value !== '') {
+                    this.value = '';
+                }
+            });
+        });
+    });
+})();
+</script>

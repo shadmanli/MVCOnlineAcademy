@@ -1,25 +1,31 @@
-﻿@model Academy.ViewModels.Lesson.LessonEditVM
-
-<div class="container mt-5">
-    <h2 class="mb-4">Edit Lesson</h2>
-
+﻿@using Academy.ViewModels.Lesson
+@model LessonEditVM
+@{ ViewData["Title"] = "Dərs Redaktə"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
+<div class="p-page-header">
+    <div class="p-page-title">Dərs Redaktə</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Lesson" asp-action="Index">Dərslər</a> / Redaktə</div>
+</div>
+<div class="p-card" style="max-width:560px;">
     <form asp-action="Edit" method="post">
-
-        <input type="hidden" asp-for="Id" />
-
-    
-        <div class="mb-3">
-            <label class="form-label">Title</label>
-            <input asp-for="Title" class="form-control" />
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div class="af-field">
+            <label class="af-label">Dərs Başlığı <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">Course</label>
-            <select asp-for="CourseId" asp-items="Model.Courses" class="form-control"></select>
+        <div class="af-field">
+            <label class="af-label">Kurs <span class="req">*</span></label>
+            <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
+                <option value="0">-- Kurs seçin --</option>
+            </select>
+            <span asp-validation-for="CourseId" class="field-validation-error"></span>
         </div>
-
-        <button type="submit" class="btn btn-primary">Yadda saxla</button>
-        <a asp-action="Index" class="btn btn-secondary">Geri</a>
-
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
     </form>
 </div>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

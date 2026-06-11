@@ -1,21 +1,38 @@
-﻿@model ContactItemCreateVM
+﻿@using Academy.ViewModels.ContactItem
+@model ContactItemCreateVM
+@{ ViewData["Title"] = "Yeni Əlaqə Elementi"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<form asp-area="Admin" asp-controller="ContactItem" asp-action="Create" method="post">
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Əlaqə Elementi</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="ContactItem" asp-action="Index">Əlaqə Elementləri</a> / Yeni</div>
+</div>
 
-    <div class="mb-3">
-        <input asp-for="Description" class="form-control" placeholder="Description" />
-    </div>
+<div class="p-card" style="max-width:560px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Təsvir <span class="req">*</span></label>
+            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Məs: Bizimlə əlaqə..." data-no-whitespace></textarea>
+            <span asp-validation-for="Description" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Ünvan <span class="req">*</span></label>
+            <input asp-for="Address" class="form-control" placeholder="Məs: Bakı, Azərbaycan" data-no-whitespace />
+            <span asp-validation-for="Address" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Əlaqə Bölməsi <span class="req">*</span></label>
+            <select asp-for="ContactSectionId" asp-items="Model.Sections" class="form-select">
+                <option value="0">-- Bölmə seçin --</option>
+            </select>
+            <span asp-validation-for="ContactSectionId" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
 
-    <div class="mb-3">
-        <input asp-for="Address" class="form-control" placeholder="Address" />
-    </div>
-
-    <div class="mb-3">
-        <select asp-for="ContactSectionId" asp-items="Model.Sections" class="form-control">
-            <option value="">Section seç</option>
-        </select>
-    </div>
-
-    <button type="submit" class="btn btn-success">Create</button>
-
-</form>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

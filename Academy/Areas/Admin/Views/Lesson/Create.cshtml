@@ -1,14 +1,33 @@
 ﻿@using Academy.ViewModels.Lesson
 @model LessonCreateVM
+@{ ViewData["Title"] = "Yeni Dərs"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<form method="post">
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Dərs</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Lesson" asp-action="Index">Dərslər</a> / Yeni</div>
+</div>
 
-    <input asp-for="Title" class="form-control mb-2" placeholder="Title" />
+<div class="p-card" style="max-width:560px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Dərs Başlığı <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Məs: Giriş dərsi" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Kurs <span class="req">*</span></label>
+            <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
+                <option value="0">-- Kurs seçin --</option>
+            </select>
+            <span asp-validation-for="CourseId" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
 
-    <select asp-for="CourseId" asp-items="Model.Courses" class="form-control mb-2">
-        <option value="">Course seç</option>
-    </select>
-
-    <button class="btn btn-success">Create</button>
-
-</form>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

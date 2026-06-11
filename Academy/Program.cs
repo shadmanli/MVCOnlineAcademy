@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Academy.Data;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ISliderService, SliderService>();
@@ -40,8 +41,12 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddHttpContextAccessor();
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddFluentValidation(fv =>
+    {
+        fv.RegisterValidatorsFromAssemblyContaining<Program>();
+        fv.DisableDataAnnotationsValidation = false; // Data Annotations ilə birlikdə işləsin
+    });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -75,11 +80,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
     options.SlidingExpiration = true;
-    // Security stamp dəyişdikdə cookie 30 saniyə ərzində invalidate olur
-    options.ValidationInterval = TimeSpan.FromSeconds(30);
 });
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Security stamp 30 saniyədə bir yoxlanılır — rol dəyişdikdə cookie dərhal invalidate olur
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromSeconds(30);
+});
 
 builder.Services.AddSignalR();
 

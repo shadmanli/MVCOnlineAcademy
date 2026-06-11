@@ -1,19 +1,24 @@
-﻿@model Academy.ViewModels.Instructor.InstructorEditVM
-
-<div class="container mt-5">
-    <h2 class="mb-4">Edit Instructor</h2>
-
+﻿@using Academy.ViewModels.Instructor
+@model InstructorEditVM
+@{ ViewData["Title"] = "Müəllim Redaktə"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
+<div class="p-page-header">
+    <div class="p-page-title">Müəllim Redaktə</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Instructor" asp-action="Index">Müəllimlər</a> / Redaktə</div>
+</div>
+<div class="p-card" style="max-width:480px;">
     <form asp-action="Edit" method="post">
-
-        <input type="hidden" asp-for="Id" />
-
-        <div class="mb-3">
-            <label class="form-label">Full Name</label>
-            <input asp-for="FullName" class="form-control" />
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div class="af-field">
+            <label class="af-label">Ad Soyad <span class="req">*</span></label>
+            <input asp-for="FullName" class="form-control" data-no-whitespace />
+            <span asp-validation-for="FullName" class="field-validation-error"></span>
         </div>
-
-        <button type="submit" class="btn btn-primary">Yadda saxla</button>
-        <a asp-action="Index" class="btn btn-secondary">Geri</a>
-
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
     </form>
 </div>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Academy.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin,Admin,Muellim")]
     public class CourseFeatureController : Controller
     {
         private readonly ICourseFeatureService _service;

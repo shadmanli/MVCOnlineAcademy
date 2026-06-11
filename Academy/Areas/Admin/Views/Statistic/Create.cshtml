@@ -1,33 +1,31 @@
-﻿
+﻿@using Academy.ViewModels.Statistic
 @model StatisticCreateVM
+@{ ViewData["Title"] = "Yeni Statistika"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<div class="container mt-5" style="margin-top:60px;">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-
-            <h2 class="mb-3" style="margin-top:50px;"> Yarat</h2>
-
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
-
-                <div class="mb-3">
-                    <label asp-for="Title" class="form-label">Başlıq</label>
-                    <input asp-for="Title" class="form-control" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Count" class="form-label">Say</label>
-                    <input asp-for="Count" type="tel" class="form-control" />
-                    <span asp-validation-for="Count" class="text-danger"></span>
-                </div>
-
-
-      
-
-                <button type="submit" class="btn btn-primary">Təsdiqlə</button>
-                <a asp-action="Index" class="btn btn-secondary">İmtina et</a>
-
-            </form>
-        </div>
-    </div>
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Statistika</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Statistic" asp-action="Index">Statistika</a> / Yeni</div>
 </div>
+
+<div class="p-card" style="max-width:480px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Məs: Tamamlanan kurslar" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Say <span class="req">*</span></label>
+            <input asp-for="Count" type="number" min="0" class="form-control" placeholder="0" />
+            <span asp-validation-for="Count" class="field-validation-error"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

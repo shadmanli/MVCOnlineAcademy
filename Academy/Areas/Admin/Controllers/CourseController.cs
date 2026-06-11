@@ -46,7 +46,19 @@ namespace Academy.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            await _service.CreateAsync(model);
+            try
+            {
+                await _service.CreateAsync(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                model.Languages   = _context.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
+                model.Categories  = _context.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
+                model.Instructors = _context.Instructors.Select(x => new SelectListItem(x.FullName, x.Id.ToString())).ToList();
+                return View(model);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

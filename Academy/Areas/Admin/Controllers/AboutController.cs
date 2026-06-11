@@ -1,10 +1,12 @@
 ﻿using Academy.Services.Interfaces;
 using Academy.ViewModels.About;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Academy.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "SuperAdmin,Admin,Muellim")]
     [Area("Admin")]
     public class AboutController : Controller
     {

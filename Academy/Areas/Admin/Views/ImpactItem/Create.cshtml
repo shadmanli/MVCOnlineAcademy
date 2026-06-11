@@ -1,28 +1,47 @@
-﻿@model ImpactItemCreateVM
+﻿@using Academy.ViewModels.ImpactItem
+@model ImpactItemCreateVM
+@{ ViewData["Title"] = "Yeni Impact Elementi"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<form asp-area="Admin" asp-controller="ImpactItem" asp-action="Create" method="post" enctype="multipart/form-data">
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Impact Elementi</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="ImpactItem" asp-action="Index">Impact Elementləri</a> / Yeni</div>
+</div>
 
-    <div class="mb-3">
-        <input asp-for="Title" class="form-control" placeholder="Title" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+<div class="p-card" style="max-width:640px;">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="af-row-2">
+            <div class="af-field">
+                <label class="af-label">Başlıq <span class="req">*</span></label>
+                <input asp-for="Title" class="form-control" placeholder="Element başlığı" data-no-whitespace />
+                <span asp-validation-for="Title" class="field-validation-error"></span>
+            </div>
+            <div class="af-field">
+                <label class="af-label">Impact Bölməsi</label>
+                <select asp-for="ImpactSectionId" asp-items="Model.Sections" class="form-select">
+                    <option value="">-- Bölmə seçin --</option>
+                </select>
+                <span asp-validation-for="ImpactSectionId" class="field-validation-error"></span>
+            </div>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Təsvir <span class="req">*</span></label>
+            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Element haqqında..." data-no-whitespace></textarea>
+            <span asp-validation-for="Description" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Şəkil <span class="req">*</span> <small style="color:#64748b;">(jpg, jpeg, png, webp — max 5MB)</small></label>
+            <input asp-for="Image" type="file" accept=".jpg,.jpeg,.png,.webp" class="form-control"
+                   data-file-type="image" data-err-target="imgErr" />
+            <span asp-validation-for="Image" class="field-validation-error"></span>
+            <span id="imgErr" class="field-validation-error" style="display:none;"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
 
-    <div class="mb-3">
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <select asp-for="ImpactSectionId" asp-items="Model.Sections" class="form-control">
-            <option value="">Section seç</option>
-        </select>
-        <span asp-validation-for="ImpactSectionId" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <input type="file" asp-for="Image" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-success">Create</button>
-
-</form>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

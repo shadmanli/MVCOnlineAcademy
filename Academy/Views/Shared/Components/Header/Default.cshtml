@@ -1,64 +1,537 @@
 ﻿@inject Microsoft.AspNetCore.Identity.UserManager<Academy.Models.AppUser> UserManager
 
-<header>
-    <section id="top-bar">
-        <div class="navbar">
-            <div class="nav-logo">
-                <a href="home.html"><img src="~/assets/images/logo-light.png" alt=""></a>
-            </div>
+<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-            <div class="hamburger">
-                <i class="fa-solid fa-bars"></i>
-            </div>
-            <div class="menu-common">
-                <nav class="menu-list">
-                    <ul>
-                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-controller="About" asp-action="Index">About</a></li>
-                        <li><a asp-controller="Course" asp-action="Index">Courses</a></li>
-                        <li><a asp-controller="Teacher" asp-action="Index">Teachers</a></li>
-                        <li><a asp-controller="Blog" asp-action="Index">Blog</a></li>
-                        <li><a asp-controller="Contact" asp-action="Index"> Contact</a></li>
-                    </ul>
+/* ══════════════════════════════
+   PREMIUM NAVBAR
+══════════════════════════════ */
+#top-bar {
+    width: 100%;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 1000;
+    padding: 0;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
 
-                </nav>
-                <div class="icons">
-                    <a href="#" id="search-toggle">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </a>
+#top-bar .nav-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 72px;
+    padding: 0 32px;
+    gap: 40px;
+    background: rgba(4, 8, 20, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.4s ease;
+}
 
-                    <a href="/Wishlist" style="margin-right: 15px; position: relative;">
-                        <i class="fas fa-heart" style="color: #e74c3c;"></i>
-                        <span id="wishlist-badge" style="position: absolute; top: -5px; right: -10px; font-size: 10px; border-radius: 50%; padding: 2px 6px; display: none; background: #e74c3c; color: white;">0</span>
-                    </a>
+#top-bar.scrolled .nav-inner {
+    background: rgba(4, 8, 20, 0.95);
+    border-bottom-color: rgba(255,255,255,0.08);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
 
-                    <a asp-controller="Basket" asp-action="Index"><i class="fa-solid fa-cart-shopping"></i></a>
+/* Logo */
+.nav-logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
 
-                    <div class="login-register" style="display: flex; align-items: center; gap: 10px;">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            var user = await UserManager.GetUserAsync(User);
-                            <a href="/Profile" style="color: white; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px;">
-                                <i class="fa-solid fa-user-circle"></i> @user?.FullName
-                            </a>
-                            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
-                                <button type="submit" class="log-first" style="background: none; border: none; cursor: pointer; color: white;">
-                                    <i class="fa-solid fa-sign-out-alt"></i> Çıxış
-                                </button>
-                            </form>
-                        }
-                        else
-                        {
-                            <button class="log-first" id="loginBtn"><i class="fa-regular fa-user"></i></button>
-                        }
-                    </div>
+.logo-mark {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #00c4a8 0%, #0ea5e9 50%, #6366f1 100%);
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: #fff; font-weight: 900;
+    box-shadow: 0 0 20px rgba(0,196,168,0.35), 0 4px 12px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+}
+
+.logo-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.logo-name .l1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.logo-name .l1 em {
+    color: #00c4a8;
+    font-style: normal;
+}
+
+.logo-name .l1 span { color: #ffffff; }
+
+.logo-name .l2 {
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Nav links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.68);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 9px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 4px; left: 50%; right: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    opacity: 0;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+    background: rgba(255,255,255,0.06);
+}
+
+.nav-links a:hover::after {
+    left: 14px; right: 14px; opacity: 1;
+}
+
+/* Nav actions */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.nav-icon-btn {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.65);
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.nav-icon-btn:hover {
+    background: rgba(255,255,255,0.11);
+    color: #fff;
+    border-color: rgba(255,255,255,0.15);
+}
+
+#wishlist-badge {
+    position: absolute;
+    top: -3px; right: -3px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    min-width: 15px; height: 15px;
+    border-radius: 99px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #040814;
+    padding: 0 3px;
+}
+
+/* User pill */
+.user-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 14px 4px 5px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 99px;
+    color: #fff;
+    font-size: 13px; font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+
+.user-pill:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+}
+
+.user-av {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c4a8, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+}
+
+/* Logout */
+.nav-logout {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.18);
+    border-radius: 9px;
+    color: #fca5a5;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-logout:hover {
+    background: rgba(239,68,68,0.16);
+    color: #ef4444;
+}
+
+/* Login CTA */
+.nav-login-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 18px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+
+.nav-login-btn:hover {
+    box-shadow: 0 0 24px rgba(0,196,168,0.5), 0 8px 20px rgba(0,196,168,0.2);
+    transform: translateY(-1px);
+}
+
+/* Search panel */
+.nav-search-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%; transform: translateX(-50%);
+    width: 520px;
+    background: rgba(8,14,32,0.97);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 14px 18px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+}
+
+.nav-search-panel.open { display: flex; animation: searchIn 0.25s ease; }
+
+@@keyframes searchIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.nav-search-panel input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-search-panel input::placeholder { color: rgba(255,255,255,0.3); }
+
+.nav-search-close {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 7px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.nav-search-close:hover { color: #fff; background: rgba(255,255,255,0.12); }
+
+/* Hamburger */
+.nav-hamburger {
+    display: none;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px;
+    width: 38px; height: 38px;
+    align-items: center; justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.nav-hamburger:hover { background: rgba(255,255,255,0.12); }
+
+/* Mobile drawer */
+@@media (max-width: 1024px) {
+    .nav-hamburger { display: flex; }
+    .nav-links, .nav-actions { display: none; }
+    #top-bar .nav-inner { gap: 16px; }
+
+    .nav-mobile-open .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: 72px; right: 0;
+        width: 300px;
+        height: calc(100vh - 72px);
+        background: rgba(4,8,20,0.98);
+        backdrop-filter: blur(24px);
+        border-left: 1px solid rgba(255,255,255,0.07);
+        padding: 24px 20px;
+        gap: 4px;
+        overflow-y: auto;
+        z-index: 999;
+        animation: drawerIn 0.3s ease;
+    }
+
+    .nav-mobile-open .nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: 72px; right: 0;
+        width: 300px;
+        padding: 0 20px 24px;
+        background: rgba(4,8,20,0.98);
+        border-left: 1px solid rgba(255,255,255,0.07);
+        gap: 8px;
+        z-index: 999;
+        margin-top: calc(48px * 6 + 48px);
+    }
+}
+
+@@keyframes drawerIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@@media (max-width: 640px) {
+    #top-bar .nav-inner { padding: 0 16px; }
+    .logo-name .l2 { display: none; }
+    .nav-search-panel { width: calc(100vw - 32px); }
+}
+</style>
+
+<header id="top-bar">
+    <div class="nav-inner" style="position:relative;">
+
+        <!-- Logo -->
+        <div class="nav-logo">
+            <a asp-controller="Home" asp-action="Index">
+                <div class="logo-mark">
+                    <i class="fa-solid fa-graduation-cap"></i>
                 </div>
-                <div id="search-panel" class="search-panel">
-                    <input type="text" placeholder="Search...">
-                    <button id="close-search">✕</button>
+                <div class="logo-name">
+                    <div class="l1"><em>i</em><span>Nzara</span><span style="color:#6366f1;">.</span></div>
+                    <div class="l2">Online Academy</div>
                 </div>
-
-            </div>
+            </a>
         </div>
-    </section>
+
+        <!-- Nav Links -->
+        <nav class="nav-links">
+            <a asp-controller="Home"    asp-action="Index">Ana Səhifə</a>
+            <a asp-controller="About"   asp-action="Index">Haqqımızda</a>
+            <a asp-controller="Course"  asp-action="Index">Kurslar</a>
+            <a asp-controller="Teacher" asp-action="Index">Müəllimlər</a>
+            <a asp-controller="Blog"    asp-action="Index">Bloq</a>
+            <a asp-controller="Contact" asp-action="Index">Əlaqə</a>
+        </nav>
+
+        <!-- Actions -->
+        <div class="nav-actions">
+            <button class="nav-icon-btn" id="navSearchToggle" title="Axtar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+            <a href="/Wishlist" class="nav-icon-btn" title="İstəklər" style="position:relative;">
+                <i class="fas fa-heart" style="color:#f87171;font-size:14px;"></i>
+                <span id="wishlist-badge" style="display:none;align-items:center;justify-content:center;">0</span>
+            </a>
+
+            <a asp-controller="Basket" asp-action="Index" class="nav-icon-btn" title="Səbət">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                var user = await UserManager.GetUserAsync(User);
+                var initial = user?.FullName?.Length > 0 ? user.FullName[0].ToString().ToUpper() : "U";
+                <a href="/Profile" class="user-pill">
+                    <div class="user-av">@initial</div>
+                    @user?.FullName
+                </a>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                    <button type="submit" class="nav-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Çıxış
+                    </button>
+                </form>
+            }
+            else
+            {
+                <button class="nav-login-btn" id="loginBtn">
+                    <i class="fa-regular fa-user"></i> Giriş
+                </button>
+            }
+        </div>
+
+        <!-- Hamburger -->
+        <button class="nav-hamburger" id="navHamburger">
+            <i class="fa-solid fa-bars" id="navHamburgerIcon"></i>
+        </button>
+
+        <!-- Search Dropdown -->
+        <div class="nav-search-panel" id="navSearchPanel">
+            <i class="fa-solid fa-magnifying-glass" style="color:rgba(255,255,255,0.35);font-size:14px;flex-shrink:0;"></i>
+            <form id="navSearchForm" action="/Course" method="get" style="flex:1;display:flex;align-items:center;gap:10px;">
+                <input type="text" name="search" placeholder="Kurs, müəllim, mövzu axtar..." id="navSearchInput" autocomplete="off" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;font-family:'Inter',sans-serif;" />
+                <button type="submit" style="background:linear-gradient(135deg,#00c4a8,#0ea5e9);border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s ease;"
+                        onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                    Axtar
+                </button>
+            </form>
+            <button class="nav-search-close" id="navSearchClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+    </div>
 </header>
+
+<script>
+(function () {
+    // Scroll glass effect
+    window.addEventListener('scroll', function () {
+        document.getElementById('top-bar').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // Search toggle
+    var searchToggle = document.getElementById('navSearchToggle');
+    var searchPanel  = document.getElementById('navSearchPanel');
+    var searchClose  = document.getElementById('navSearchClose');
+    var searchInput  = document.getElementById('navSearchInput');
+
+    // URL-dəki mövcud search dəyərini input-a yüklə
+    var urlParams = new URLSearchParams(window.location.search);
+    var existingSearch = urlParams.get('search');
+    if (existingSearch && searchInput) searchInput.value = existingSearch;
+
+    if (searchToggle) {
+        searchToggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            searchPanel.classList.toggle('open');
+            if (searchPanel.classList.contains('open')) {
+                setTimeout(function() { searchInput.focus(); }, 100);
+            }
+        });
+    }
+
+    if (searchClose) {
+        searchClose.addEventListener('click', function () {
+            searchPanel.classList.remove('open');
+        });
+    }
+
+    // Escape tuşu ilə bağla
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && searchPanel.classList.contains('open')) {
+            searchPanel.classList.remove('open');
+        }
+        // Ctrl+K / Cmd+K ilə aç
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            searchPanel.classList.toggle('open');
+            if (searchPanel.classList.contains('open')) {
+                setTimeout(function() { searchInput.focus(); }, 100);
+            }
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        if (searchPanel && !searchPanel.contains(e.target) && e.target !== searchToggle) {
+            searchPanel.classList.remove('open');
+        }
+    });
+
+    // Boş axtarışı blokla
+    var searchForm = document.getElementById('navSearchForm');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            var val = searchInput.value.trim();
+            if (!val) { e.preventDefault(); return; }
+            searchPanel.classList.remove('open');
+        });
+    }    // Hamburger mobile
+    var ham     = document.getElementById('navHamburger');
+    var hamIcon = document.getElementById('navHamburgerIcon');
+    var topBar  = document.getElementById('top-bar');
+
+    if (ham) {
+        ham.addEventListener('click', function () {
+            var inner = topBar.querySelector('.nav-inner');
+            inner.classList.toggle('nav-mobile-open');
+            var isOpen = inner.classList.contains('nav-mobile-open');
+            hamIcon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        });
+    }
+
+    // Active link highlight
+    var currentPath = window.location.pathname.toLowerCase();
+    document.querySelectorAll('.nav-links a').forEach(function (a) {
+        var href = (a.getAttribute('href') || '').toLowerCase();
+        if (href && (currentPath === href || (href !== '/' && currentPath.startsWith(href)))) {
+            a.style.color = '#00c4a8';
+            a.style.background = 'rgba(0,196,168,0.08)';
+        }
+    });
+})();
+</script>

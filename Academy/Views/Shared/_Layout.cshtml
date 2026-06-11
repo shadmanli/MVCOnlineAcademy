@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @if (User.Identity?.IsAuthenticated == true)
     {
-        <meta name="user-id" content="@System.Security.Claims.ClaimsPrincipalExtensions.FindFirstValue(User, System.Security.Claims.ClaimTypes.NameIdentifier)">
+        <meta name="user-id" content="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
     }
     else
     {
@@ -14,7 +14,7 @@
     }
     <title>Inzara Academy</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 
@@ -35,93 +35,548 @@
         @await Component.InvokeAsync("Footer")
     }
 
-    <div class="modal" id="loginModal">
-        <div class="modal-box login-box">
-            <span class="closeBtn">✕</span>
+    <!-- ══════════ INZARA ACADEMY AUTH MODALS ══════════ -->
+    <style>
+    :root {
+        --ia-bg:       #0F1B2D;
+        --ia-surface:  #152338;
+        --ia-deep:     #1C2D45;
+        --ia-gold:     #F5A623;
+        --ia-amber:    #FFB84D;
+        --ia-cream:    #F0E6D3;
+        --ia-border:   rgba(245,166,35,0.2);
+        --ia-err:      #E05252;
+        --ia-success:  #2ECC71;
+        --ia-text:     #CBD5E1;
+        --ia-ease:     cubic-bezier(0.4,0,0.2,1);
+    }
 
-            <h2>Inzara <span>Academy</span></h2>
-            <h3>Xoş gəldin👋</h3>
-            <span>
-                Hesabına daxil ol və öyrənməyə davam et
-            </span>
-            <div class="tabs">
-                <button type="button" class="active">Daxil Ol</button>
-                <button type="button" onclick="openRegister()">Qeydiyyat</button>
+    /* ── Overlay ── */
+    .ia-modal-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(5,10,20,0.82);
+        backdrop-filter: blur(8px);
+        z-index: 9000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: iaFadeIn 0.25s var(--ia-ease);
+    }
+
+    .ia-modal-overlay.active { display: flex; }
+
+    @@keyframes iaFadeIn { from{opacity:0} to{opacity:1} }
+
+    /* ── Modal box ── */
+    .ia-modal {
+        background: var(--ia-surface);
+        border: 1px solid var(--ia-border);
+        border-radius: 24px;
+        width: 100%;
+        max-width: 880px;
+        min-height: 520px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+        box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(245,166,35,0.08);
+        animation: iaSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        position: relative;
+    }
+
+    @@keyframes iaSlideUp {
+        from { opacity:0; transform: translateY(32px) scale(0.97); }
+        to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Left panel ── */
+    .ia-left {
+        background: linear-gradient(145deg, #0a1220 0%, #0e1c30 40%, #071524 100%);
+        padding: 48px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Kağız teksturası effect */
+    .ia-left::before {
+        content: '';
+        position: absolute; inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f5a623' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+    }
+
+    /* Blob-lar */
+    .ia-left::after {
+        content: '';
+        position: absolute;
+        width: 280px; height: 280px;
+        background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -60px; right: -80px;
+        pointer-events: none;
+    }
+
+    .ia-blob-2 {
+        position: absolute;
+        width: 200px; height: 200px;
+        background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: -40px; left: -40px;
+        pointer-events: none;
+    }
+
+    /* Kitab animasiyası */
+    .ia-book-anim {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+
+    .ia-book-svg {
+        width: 80px; height: 80px;
+        opacity: 0.7;
+        animation: iaBookPulse 4s ease-in-out infinite;
+    }
+
+    @@keyframes iaBookPulse {
+        0%,100% { opacity: 0.5; transform: translateY(0) rotate(-2deg); }
+        50%      { opacity: 0.85; transform: translateY(-6px) rotate(2deg); }
+    }
+
+    .ia-brand {
+        position: relative; z-index: 1;
+    }
+
+    .ia-brand-name {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--ia-cream);
+        letter-spacing: -0.3px;
+        margin-bottom: 8px;
+    }
+
+    .ia-brand-name em {
+        color: var(--ia-gold);
+        font-style: normal;
+    }
+
+    .ia-brand-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: rgba(203,213,225,0.6);
+        line-height: 1.7;
+    }
+
+    /* Xüsusiyyətlər */
+    .ia-features {
+        position: relative; z-index: 1;
+        display: flex; flex-direction: column; gap: 14px;
+    }
+
+    .ia-feat {
+        display: flex; align-items: center; gap: 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 13px; color: rgba(203,213,225,0.7);
+    }
+
+    .ia-feat-icon {
+        width: 32px; height: 32px;
+        background: rgba(245,166,35,0.1);
+        border: 1px solid rgba(245,166,35,0.2);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--ia-gold); font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    /* ── Right panel ── */
+    .ia-right {
+        padding: 40px 44px;
+        display: flex;
+        flex-direction: column;
+        background: var(--ia-surface);
+        overflow-y: auto;
+        max-height: 90vh;
+    }
+
+    /* Close */
+    .ia-close {
+        position: absolute;
+        top: 16px; right: 16px;
+        width: 32px; height: 32px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        color: #64748b; cursor: pointer; font-size: 13px;
+        transition: all 0.2s ease;
+        z-index: 10;
+    }
+
+    .ia-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* Heading */
+    .ia-heading {
+        margin-bottom: 28px;
+    }
+
+    .ia-heading h2 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 22px; font-weight: 700;
+        color: var(--ia-cream);
+        margin-bottom: 6px;
+    }
+
+    .ia-heading p {
+        font-family: 'Inter', sans-serif;
+        font-size: 13.5px; color: #64748b;
+    }
+
+    /* Tabs */
+    .ia-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        margin-bottom: 28px;
+    }
+
+    .ia-tab {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px; font-weight: 600;
+        color: #475569;
+        padding: 10px 20px 10px 0;
+        cursor: pointer;
+        border: none; background: none;
+        position: relative;
+        transition: color 0.2s ease;
+        margin-right: 16px;
+    }
+
+    .ia-tab::after {
+        content: '';
+        position: absolute; bottom: -1px; left: 0; right: 0;
+        height: 2px;
+        background: var(--ia-gold);
+        border-radius: 2px 2px 0 0;
+        transform: scaleX(0);
+        transition: transform 0.25s ease;
+    }
+
+    .ia-tab.active { color: var(--ia-gold); }
+    .ia-tab.active::after { transform: scaleX(1); }
+    .ia-tab:hover { color: var(--ia-cream); }
+
+    /* Alerts */
+    .ia-alert {
+        display: flex; align-items: center; gap: 8px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 12.5px; font-weight: 500;
+        margin-bottom: 16px;
+        font-family: 'Inter', sans-serif;
+        animation: iaFadeIn 0.3s ease;
+    }
+
+    .ia-alert-error   { background: rgba(224,82,82,0.1);  border: 1px solid rgba(224,82,82,0.25); color: #fca5a5; }
+    .ia-alert-success { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.25); color: #86efac; }
+
+    /* Form */
+    .ia-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .ia-field {
+        margin-bottom: 18px;
+        position: relative;
+    }
+
+    .ia-label {
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-size: 11px; font-weight: 700;
+        color: rgba(240,230,211,0.6);
+        text-transform: uppercase; letter-spacing: 0.06em;
+        margin-bottom: 7px;
+    }
+
+    .ia-input {
+        width: 100%;
+        background: var(--ia-deep);
+        border: 1.5px solid rgba(255,255,255,0.07);
+        border-radius: 10px;
+        padding: 11px 14px;
+        color: var(--ia-cream);
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+        transition: all 0.25s ease;
+    }
+
+    .ia-input:focus {
+        border-color: var(--ia-gold);
+        background: rgba(28,45,69,0.8);
+        box-shadow: 0 0 0 3px rgba(245,166,35,0.12);
+        color: var(--ia-cream);
+    }
+
+    .ia-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    /* Extras */
+    .ia-extras {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 22px; margin-top: -6px;
+    }
+
+    .ia-remember {
+        display: flex; align-items: center; gap: 8px;
+        font-family: 'Inter', sans-serif;
+        font-size: 13px; color: #64748b;
+        cursor: pointer;
+    }
+
+    /* Custom toggle */
+    .ia-toggle {
+        width: 36px; height: 20px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 99px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        flex-shrink: 0;
+    }
+
+    .ia-toggle::after {
+        content: '';
+        width: 14px; height: 14px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px; left: 2px;
+        transition: all 0.25s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .ia-toggle.on {
+        background: var(--ia-gold);
+        border-color: var(--ia-gold);
+    }
+
+    .ia-toggle.on::after { transform: translateX(16px); background: #fff; }
+
+    .ia-forgot {
+        font-family: 'Inter', sans-serif;
+        font-size: 12.5px; font-weight: 500;
+        color: var(--ia-amber);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .ia-forgot:hover { color: var(--ia-gold); text-decoration: underline; }
+
+    /* Submit btn */
+    .ia-btn {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #F5A623, #E8940F);
+        color: #0F1B2D;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px; font-weight: 700;
+        border: none; border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 16px rgba(245,166,35,0.3);
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    .ia-btn:hover {
+        box-shadow: 0 8px 24px rgba(245,166,35,0.45);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #FFB84D, #F5A623);
+    }
+
+    .ia-btn:active { transform: translateY(0); }
+
+    /* Responsive */
+    @@media (max-width: 700px) {
+        .ia-modal { grid-template-columns: 1fr; max-width: 420px; }
+        .ia-left  { display: none; }
+        .ia-right { padding: 32px 24px; }
+        .ia-form-row { grid-template-columns: 1fr; }
+    }
+    </style>
+
+    <!-- ── LOGIN MODAL ── -->
+    <div class="ia-modal-overlay" id="loginModal">
+        <div class="ia-modal">
+
+            <!-- Sol panel -->
+            <div class="ia-left">
+                <div class="ia-blob-2"></div>
+
+                <div class="ia-book-anim">
+                    <svg class="ia-book-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.15)" stroke="rgba(245,166,35,0.4)" stroke-width="1.5"/>
+                        <rect x="42" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.1)"  stroke="rgba(245,166,35,0.3)" stroke-width="1.5"/>
+                        <line x1="10" y1="40" x2="38" y2="40" stroke="rgba(245,166,35,0.25)" stroke-width="1"/>
+                        <line x1="42" y1="40" x2="70" y2="40" stroke="rgba(245,166,35,0.2)"  stroke-width="1"/>
+                        <line x1="15" y1="30" x2="33" y2="30" stroke="rgba(245,166,35,0.2)"  stroke-width="1"/>
+                        <line x1="15" y1="50" x2="33" y2="50" stroke="rgba(245,166,35,0.2)"  stroke-width="1"/>
+                        <line x1="47" y1="30" x2="65" y2="30" stroke="rgba(245,166,35,0.15)" stroke-width="1"/>
+                        <line x1="47" y1="50" x2="65" y2="50" stroke="rgba(245,166,35,0.15)" stroke-width="1"/>
+                        <path d="M38 15 Q40 12 42 15 Q40 65 38 65 Q40 67 42 65" stroke="rgba(245,166,35,0.5)" stroke-width="1.5" fill="none"/>
+                    </svg>
+                </div>
+
+                <div class="ia-brand">
+                    <div class="ia-brand-name">Inzara <em>Academy</em></div>
+                    <div class="ia-brand-desc">Biliklərin dərinliyinə səyahət edin.<br>Hər kurs yeni bir qapı açır.</div>
+                </div>
+
+                <div class="ia-features">
+                    <div class="ia-feat"><div class="ia-feat-icon"><i class="fa fa-book-open"></i></div>100+ Peşəkar Kurs</div>
+                    <div class="ia-feat"><div class="ia-feat-icon"><i class="fa fa-users"></i></div>5000+ Aktiv Tələbə</div>
+                    <div class="ia-feat"><div class="ia-feat-icon"><i class="fa fa-certificate"></i></div>Rəsmi Sertifikat</div>
+                </div>
             </div>
 
-            @if (TempData["LoginError"] != null)
-            {
-                <div class="auth-alert auth-alert-error">
-                    <i class="fa fa-exclamation-circle me-2"></i>@TempData["LoginError"]
-                </div>
-            }
-            @if (TempData["LoginSuccess"] != null)
-            {
-                <div class="auth-alert auth-alert-success">
-                    <i class="fa fa-check-circle me-2"></i>@TempData["LoginSuccess"]
-                </div>
-            }
+            <!-- Sağ panel -->
+            <div class="ia-right">
+                <button class="ia-close" onclick="closeAllModals()"><i class="fa fa-xmark"></i></button>
 
-            <form asp-controller="Account" asp-action="Login" method="post" class="login-form">
-                <label>E-poçt</label>
-                <input type="email" name="Email" placeholder="ornek@email.com" required>
-
-                <label>Şifrə</label>
-                <input type="password" name="Password" placeholder="********" required>
-
-                <div class="login-extra">
-                    <label><input type="checkbox" name="RememberMe" value="true"> Məni xatırla</label>
-                    <a href="#">Şifrəni unutdun?</a>
+                <div class="ia-heading">
+                    <h2>Xoş Gəldiniz</h2>
+                    <p>Hesabınıza daxil olun və öyrənməyə davam edin</p>
                 </div>
 
-                <button type="submit" class="main-btn">Daxil ol</button>
-            </form>
+                <div class="ia-tabs">
+                    <button class="ia-tab active" onclick="openLogin()">Daxil Ol</button>
+                    <button class="ia-tab" onclick="openRegister()">Qeydiyyat</button>
+                </div>
+
+                @if (TempData["LoginError"] != null)
+                {
+                    <div class="ia-alert ia-alert-error">
+                        <i class="fa fa-circle-exclamation"></i> @TempData["LoginError"]
+                    </div>
+                }
+                @if (TempData["LoginSuccess"] != null)
+                {
+                    <div class="ia-alert ia-alert-success">
+                        <i class="fa fa-circle-check"></i> @TempData["LoginSuccess"]
+                    </div>
+                }
+
+                <form asp-controller="Account" asp-action="Login" method="post">
+                    <div class="ia-field">
+                        <label class="ia-label">E-poçt</label>
+                        <input type="email" name="Email" class="ia-input" placeholder="ornek@email.com" required />
+                    </div>
+                    <div class="ia-field">
+                        <label class="ia-label">Şifrə</label>
+                        <input type="password" name="Password" class="ia-input" placeholder="••••••••" required />
+                    </div>
+                    <div class="ia-extras">
+                        <label class="ia-remember" onclick="toggleRemember()">
+                            <div class="ia-toggle" id="rememberToggle"></div>
+                            Məni xatırla
+                        </label>
+                        <input type="hidden" name="RememberMe" id="rememberVal" value="false" />
+                        <a href="#" class="ia-forgot">Şifrəni unutdun?</a>
+                    </div>
+                    <button type="submit" class="ia-btn">
+                        <i class="fa fa-right-to-bracket"></i> Daxil Ol
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
+    <!-- ── REGISTER MODAL ── -->
+    <div class="ia-modal-overlay" id="registerModal">
+        <div class="ia-modal">
 
+            <!-- Sol panel -->
+            <div class="ia-left">
+                <div class="ia-blob-2"></div>
 
-    <div class="modal" id="registerModal">
-        <div class="modal-box register-box">
-            <span class="closeBtn">✕</span>
+                <div class="ia-book-anim">
+                    <svg class="ia-book-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.15)" stroke="rgba(245,166,35,0.4)" stroke-width="1.5"/>
+                        <rect x="42" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.1)"  stroke="rgba(245,166,35,0.3)" stroke-width="1.5"/>
+                        <path d="M38 15 Q40 12 42 15 Q40 65 38 65 Q40 67 42 65" stroke="rgba(245,166,35,0.5)" stroke-width="1.5" fill="none"/>
+                    </svg>
+                </div>
 
-            <h2>Inzara <span>Academy</span></h2>
-            <h3>Hesab yarat ✨</h3>
-            <p>Pulsuz qeydiyyatdan keç, 340+ kursdan yararlan</p>
+                <div class="ia-brand">
+                    <div class="ia-brand-name">Inzara <em>Academy</em></div>
+                    <div class="ia-brand-desc">Pulsuz qeydiyyat.<br>340+ kursdan istifadə edin.</div>
+                </div>
 
-            <div class="tabs">
-                <button type="button" onclick="openLogin()">Daxil Ol</button>
-                <button type="button" class="active">Qeydiyyat</button>
+                <div class="ia-features">
+                    <div class="ia-feat"><div class="ia-feat-icon"><i class="fa fa-star"></i></div>Pulsuz Başla</div>
+                    <div class="ia-feat"><div class="ia-feat-icon"><i class="fa fa-graduation-cap"></i></div>Expert Müəllimlər</div>
+                    <div class="ia-feat"><div class="ia-feat-icon"><i class="fa fa-infinity"></i></div>Ömürlük Giriş</div>
+                </div>
             </div>
 
-            @if (TempData["RegisterError"] != null)
-            {
-                <div class="auth-alert auth-alert-error">
-                    <i class="fa fa-exclamation-circle me-2"></i>@TempData["RegisterError"]
+            <!-- Sağ panel -->
+            <div class="ia-right">
+                <button class="ia-close" onclick="closeAllModals()"><i class="fa fa-xmark"></i></button>
+
+                <div class="ia-heading">
+                    <h2>Hesab Yarat</h2>
+                    <p>Təhsil səyahətinizə bu gün başlayın</p>
                 </div>
-            }
-            @if (TempData["RegisterSuccess"] != null)
-            {
-                <div class="auth-alert auth-alert-success">
-                    <i class="fa fa-check-circle me-2"></i>@TempData["RegisterSuccess"]
+
+                <div class="ia-tabs">
+                    <button class="ia-tab" onclick="openLogin()">Daxil Ol</button>
+                    <button class="ia-tab active" onclick="openRegister()">Qeydiyyat</button>
                 </div>
-            }
 
-            <form asp-controller="Account" asp-action="Register" method="post" class="register-form">
-                <label>Ad və Soyad</label>
-                <input type="text" name="FullName" placeholder="Tam adınız" required>
+                @if (TempData["RegisterError"] != null)
+                {
+                    <div class="ia-alert ia-alert-error">
+                        <i class="fa fa-circle-exclamation"></i> @TempData["RegisterError"]
+                    </div>
+                }
+                @if (TempData["RegisterSuccess"] != null)
+                {
+                    <div class="ia-alert ia-alert-success">
+                        <i class="fa fa-circle-check"></i> @TempData["RegisterSuccess"]
+                    </div>
+                }
 
-                <label>E-poçt</label>
-                <input type="email" name="Email" placeholder="ornek@email.com" required>
-
-                <label>Şifrə</label>
-                <input type="password" name="Password" placeholder="********" required>
-
-                <label>Şifrəni Təsdiqləyin</label>
-                <input type="password" name="ConfirmPassword" placeholder="********" required>
-
-                <button type="submit" class="main-btn">Qeydiyyatdan keç</button>
-            </form>
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    <div class="ia-form-row">
+                        <div class="ia-field">
+                            <label class="ia-label">Ad Soyad</label>
+                            <input type="text" name="FullName" class="ia-input" placeholder="Adınız Soyadınız" required />
+                        </div>
+                        <div class="ia-field">
+                            <label class="ia-label">E-poçt</label>
+                            <input type="email" name="Email" class="ia-input" placeholder="ornek@email.com" required />
+                        </div>
+                    </div>
+                    <div class="ia-form-row">
+                        <div class="ia-field">
+                            <label class="ia-label">Şifrə</label>
+                            <input type="password" name="Password" class="ia-input" placeholder="••••••••" required />
+                        </div>
+                        <div class="ia-field">
+                            <label class="ia-label">Şifrəni Təsdiqləyin</label>
+                            <input type="password" name="ConfirmPassword" class="ia-input" placeholder="••••••••" required />
+                        </div>
+                    </div>
+                    <button type="submit" class="ia-btn" style="margin-top:4px;">
+                        <i class="fa fa-user-plus"></i> Qeydiyyatdan Keç
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -132,11 +587,36 @@
 
     <!-- Modal açma/bağlama — bütün səhifələrdə işləsin -->
     <script>
-        (function () {
-            var loginModal    = document.getElementById('loginModal');
-            var registerModal = document.getElementById('registerModal');
+        function closeAllModals() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.remove('active');
+        }
 
-            // Login düyməsi (header-dəki user ikonu)
+        function openLogin() {
+            document.getElementById('registerModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function openRegister() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.add('active');
+        }
+
+        // "Məni xatırla" toggle
+        function toggleRemember() {
+            var toggle = document.getElementById('rememberToggle');
+            var val    = document.getElementById('rememberVal');
+            if (toggle.classList.contains('on')) {
+                toggle.classList.remove('on');
+                val.value = 'false';
+            } else {
+                toggle.classList.add('on');
+                val.value = 'true';
+            }
+        }
+
+        (function () {
+            // Login düyməsi
             var loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {
                 loginBtn.addEventListener('click', function (e) {
@@ -145,34 +625,21 @@
                 });
             }
 
-            // Bağla düymələri
-            document.querySelectorAll('.closeBtn').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    if (loginModal)    loginModal.classList.remove('active');
-                    if (registerModal) registerModal.classList.remove('active');
-                });
+            // Overlay klikləndikdə bağla
+            ['loginModal', 'registerModal'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        if (e.target === el) closeAllModals();
+                    });
+                }
             });
 
-            // Modal xaricinə klikləndikdə bağla
-            window.addEventListener('click', function (e) {
-                if (e.target === loginModal)    loginModal.classList.remove('active');
-                if (e.target === registerModal) registerModal.classList.remove('active');
+            // Escape ilə bağla
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeAllModals();
             });
         })();
-
-        function openLogin() {
-            var loginModal    = document.getElementById('loginModal');
-            var registerModal = document.getElementById('registerModal');
-            if (registerModal) registerModal.classList.remove('active');
-            if (loginModal)    loginModal.classList.add('active');
-        }
-
-        function openRegister() {
-            var loginModal    = document.getElementById('loginModal');
-            var registerModal = document.getElementById('registerModal');
-            if (loginModal)    loginModal.classList.remove('active');
-            if (registerModal) registerModal.classList.add('active');
-        }
     </script>
 
     @if (TempData["OpenLoginModal"] != null)

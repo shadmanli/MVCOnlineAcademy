@@ -1,33 +1,47 @@
-﻿@model BlogEditVM
-
-<h2>Blog Yenilə</h2>
-
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-
-    <div class="mb-3">
-        <label>Başlıq</label>
-        <input asp-for="Title" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label>Təsvir</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label>Ad</label>
-        <input asp-for="Name" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label>Köhnə şəkil</label><br />
-        <img src="~/uploads/blog/@Model.ExistingImage" width="200" />
-    </div>
-
-    <div class="mb-3">
-        <label>Yeni şəkil</label>
-        <input asp-for="Image" type="file" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Yenilə</button>
-</form>
+﻿@using Academy.ViewModels.Blog
+@model BlogEditVM
+@{ ViewData["Title"] = "Blog Redaktə"; }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
+<div class="p-page-header">
+    <div class="p-page-title">Blog Redaktə</div>
+    <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blog</a> / Redaktə</div>
+</div>
+<div class="p-card" style="max-width:640px;">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="ExistingImage" type="hidden" />
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" data-no-whitespace />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Ad <span class="req">*</span></label>
+            <input asp-for="Name" class="form-control" data-no-whitespace />
+            <span asp-validation-for="Name" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Məzmun <span class="req">*</span></label>
+            <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Description" class="field-validation-error"></span>
+        </div>
+        @if (!string.IsNullOrEmpty(Model?.ExistingImage))
+        {
+            <div class="af-field">
+                <label class="af-label">Mövcud Şəkil</label>
+                <img src="/uploads/blog/@Model.ExistingImage" style="max-height:120px;border-radius:8px;" />
+            </div>
+        }
+        <div class="af-field">
+            <label class="af-label">Yeni Şəkil <small style="color:#64748b;">(jpg, jpeg, png, webp — max 5MB)</small></label>
+            <input asp-for="Image" type="file" accept=".jpg,.jpeg,.png,.webp" class="form-control"
+                   data-file-type="image" data-err-target="imgErr" />
+            <span id="imgErr" class="field-validation-error" style="display:none;"></span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }
