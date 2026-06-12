@@ -389,64 +389,195 @@
 
     <!-- ===== REVIEWS SECTION ===== -->
     <div class="container" style="margin-top:60px;margin-bottom:60px;" id="reviews-section">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;flex-wrap:wrap;gap:12px;">
-            <h2 style="font-size:26px;font-weight:800;color:#1a1a2e;margin:0;">
-                ⭐ Tələbə Rəyləri
+
+        <div class="reviews-header">
+            <h2 class="reviews-title">
+                <i class="fa-solid fa-star" style="color:#fbbf24;font-size:22px;"></i>
+                Tələbə Rəyləri
             </h2>
-            <div id="avg-rating-box" style="display:flex;align-items:center;gap:12px;"></div>
+            <div id="avg-rating-box"></div>
         </div>
 
         <!-- Rating Distribution -->
-        <div id="rating-distribution" style="background:#f8f9fa;border-radius:16px;padding:24px;margin-bottom:32px;display:none;">
-            <div style="display:flex;gap:32px;flex-wrap:wrap;align-items:center;">
-                <div style="text-align:center;min-width:80px;">
-                    <div id="avg-score" style="font-size:56px;font-weight:900;color:#1a1a2e;line-height:1;"></div>
-                    <div id="avg-stars" style="margin:8px 0;"></div>
-                    <div style="font-size:13px;color:#666;" id="total-reviews-txt"></div>
-                </div>
-                <div style="flex:1;min-width:200px;" id="star-bars"></div>
-            </div>
-        </div>
+        <div id="rating-distribution" class="rating-overview" style="display:none;"></div>
 
         <!-- Reviews List -->
-        <div id="reviews-list" style="display:flex;flex-direction:column;gap:16px;">
+        <div id="reviews-list" style="display:flex;flex-direction:column;gap:16px;margin-top:24px;">
             <div style="text-align:center;padding:40px;color:#999;">
-                <div class="spinner-border text-primary" style="width:2rem;height:2rem;"></div>
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:28px;color:#00c4a8;"></i>
             </div>
         </div>
 
         <!-- Write Review Form -->
-        <div id="review-form-section" style="margin-top:40px;background:linear-gradient(135deg,#667eea15,#764ba215);border:1px solid #667eea30;border-radius:20px;padding:32px;">
-            <h3 style="font-size:20px;font-weight:700;margin-bottom:20px;color:#1a1a2e;">✍️ Rəyinizi Yazın</h3>
+        <div class="review-write-wrap">
+            <h3 class="review-write-title">
+                <i class="fa-solid fa-pen-to-square"></i> Rəyinizi Yazın
+            </h3>
             <div id="review-form-msg"></div>
             <div id="review-form-inner">
-                <!-- Star Rating -->
-                <div style="margin-bottom:20px;">
-                    <label style="font-weight:600;color:#333;display:block;margin-bottom:10px;">Reytinq seçin:</label>
-                    <div id="star-selector" style="display:flex;gap:8px;">
+                <div class="review-star-row">
+                    <label class="review-star-label">Reytinq seçin:</label>
+                    <div id="star-selector" style="display:flex;gap:8px;margin-top:8px;">
                         @for (int s = 1; s <= 5; s++)
                         {
                             <i class="fa fa-star star-btn" data-val="@s"
-                               style="font-size:32px;color:#ddd;cursor:pointer;transition:all 0.2s;"></i>
+                               style="font-size:32px;color:#334155;cursor:pointer;transition:all 0.2s;"></i>
                         }
                     </div>
                     <input type="hidden" id="selectedRating" value="0" />
                 </div>
-                <!-- Message -->
-                <div style="margin-bottom:20px;">
-                    <label style="font-weight:600;color:#333;display:block;margin-bottom:8px;">Rəyiniz:</label>
-                    <textarea id="reviewMessage" rows="4" placeholder="Bu kurs haqqında fikirlərinizi yazın (minimum 10 simvol)..."
-                              style="width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;font-size:14px;resize:vertical;outline:none;transition:border 0.2s;"
-                              onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#ddd'"></textarea>
+                <div class="review-msg-row">
+                    <label class="review-star-label">Rəyiniz:</label>
+                    <textarea id="reviewMessage" rows="4"
+                              placeholder="Bu kurs haqqında fikirlərinizi yazın..."
+                              class="review-textarea"></textarea>
                 </div>
-                <button id="submitReviewBtn" onclick="submitReview(@Model.Id)"
-                        style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;transition:all 0.3s;"
-                        onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <i class="fa fa-paper-plane me-2"></i>Rəy Göndər
+                <button id="submitReviewBtn" onclick="submitReview(@Model.Id)" class="review-submit-btn">
+                    <i class="fa fa-paper-plane"></i> Rəy Göndər
                 </button>
             </div>
         </div>
+
     </div>
+
+    <style>
+    .reviews-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .reviews-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .review-write-wrap {
+        margin-top: 48px;
+        background: #040814;
+        border: 1px solid rgba(0,196,168,0.15);
+        border-radius: 20px;
+        padding: 36px;
+        position: relative;
+        overflow: hidden;
+    }
+    .review-write-wrap::before {
+        content: '';
+        position: absolute;
+        width: 300px; height: 300px;
+        background: radial-gradient(circle, rgba(0,196,168,0.07) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -100px; right: -80px;
+        pointer-events: none;
+    }
+    .review-write-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Inter', sans-serif;
+    }
+    .review-star-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        display: block;
+        margin-bottom: 6px;
+        font-family: 'Inter', sans-serif;
+    }
+    .review-star-row { margin-bottom: 20px; }
+    .review-msg-row { margin-bottom: 20px; }
+    .review-textarea {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255,255,255,0.05);
+        border: 1.5px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        color: #f8fafc;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        resize: vertical;
+        outline: none;
+        transition: all 0.25s ease;
+        box-sizing: border-box;
+        margin-top: 8px;
+    }
+    .review-textarea::placeholder { color: rgba(255,255,255,0.2); }
+    .review-textarea:focus {
+        border-color: #00c4a8;
+        background: rgba(0,196,168,0.06);
+        box-shadow: 0 0 0 3px rgba(0,196,168,0.12);
+    }
+    .review-submit-btn {
+        background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+        color: #fff;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .review-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,196,168,0.45);
+    }
+    .review-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    /* Review cards */
+    .review-card {
+        background: #fff;
+        border: 1px solid #e8edf3;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        transition: box-shadow 0.2s;
+    }
+    .review-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .reviewer { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .rev-avatar {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .reviewer-info strong { font-size: 15px; color: #0f172a; display: block; }
+    .reviewer-info .rev-meta {
+        font-size: 12px; color: #94a3b8;
+        display: flex; align-items: center; gap: 6px; margin-top: 3px;
+    }
+    .rev-stars { color: #fbbf24; font-size: 13px; }
+    .review-card p { font-size: 14px; color: #475569; line-height: 1.65; }
+    /* Rating overview */
+    .rating-overview {
+        background: #fff;
+        border: 1px solid #e8edf3;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 0;
+    }
+    </style>
 
 </main>
 
@@ -509,22 +640,27 @@
         function renderReviews(reviews) {
             const container = document.getElementById('reviews-list');
             if (!reviews.length) {
-                container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;"><i class="fa fa-star" style="font-size:40px;display:block;margin-bottom:12px;"></i><p>Hələ rəy yoxdur. İlk rəyi siz yazın!</p></div>';
+                container.innerHTML = '<div style="text-align:center;padding:48px;color:#94a3b8;background:#fff;border:1px solid #e8edf3;border-radius:16px;">' +
+                    '<i class="fa fa-star" style="font-size:40px;display:block;margin-bottom:12px;color:#cbd5e1;"></i>' +
+                    '<p style="font-size:15px;font-weight:600;">Hələ rəy yoxdur. İlk rəyi siz yazın!</p></div>';
                 return;
             }
-            container.innerHTML = reviews.map(function(r) {
-                return '<div style="background:#fff;border:1px solid #f0f0f0;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.05);animation:fadeInUp 0.4s ease;">' +
-                    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">' +
-                        '<div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;flex-shrink:0;">' +
+            const colors = ['linear-gradient(135deg,#00c4a8,#0ea5e9)','linear-gradient(135deg,#ff6d34,#e8551f)','linear-gradient(135deg,#6366f1,#8b5cf6)','linear-gradient(135deg,#f59e0b,#d97706)'];
+            container.innerHTML = reviews.map(function(r, idx) {
+                return '<div class="review-card">' +
+                    '<div class="reviewer">' +
+                        '<div class="rev-avatar" style="background:' + colors[idx % colors.length] + ';">' +
                             r.name[0].toUpperCase() +
                         '</div>' +
-                        '<div style="flex:1;">' +
-                            '<div style="font-weight:700;color:#1a1a2e;">' + r.name + '</div>' +
-                            '<div>' + renderStars(r.rating) + '</div>' +
+                        '<div class="reviewer-info">' +
+                            '<strong>' + r.name + '</strong>' +
+                            '<div class="rev-meta">' +
+                                '<span class="rev-stars">' + renderStars(r.rating) + '</span>' +
+                                '<span>·</span><span>' + r.date + '</span>' +
+                            '</div>' +
                         '</div>' +
-                        '<div style="font-size:12px;color:#999;">' + r.date + '</div>' +
                     '</div>' +
-                    '<p style="color:#555;font-size:14px;line-height:1.7;margin:0;">' + r.message + '</p>' +
+                    '<p>' + r.message + '</p>' +
                 '</div>';
             }).join('');
         }
@@ -535,28 +671,32 @@
             dist.style.display = 'block';
 
             const avg = reviews.reduce(function(s, r) { return s + r.rating; }, 0) / reviews.length;
-            document.getElementById('avg-score').textContent = avg.toFixed(1);
-            document.getElementById('avg-stars').innerHTML = renderStars(Math.round(avg), 18);
-            document.getElementById('total-reviews-txt').textContent = reviews.length + ' rəy';
 
             document.getElementById('avg-rating-box').innerHTML =
-                '<span style="font-size:28px;font-weight:900;color:#1a1a2e;">' + avg.toFixed(1) + '</span>' +
-                renderStars(Math.round(avg), 20) +
-                '<span style="color:#666;font-size:14px;">(' + reviews.length + ' rəy)</span>';
+                '<span style="font-size:26px;font-weight:900;color:#0f172a;">' + avg.toFixed(1) + '</span>' +
+                '<span style="margin:0 4px;">' + renderStars(Math.round(avg), 18) + '</span>' +
+                '<span style="color:#64748b;font-size:13px;">(' + reviews.length + ' rəy)</span>';
 
-            let barsHtml = '';
+            let distHtml = '<div style="display:flex;gap:28px;align-items:center;flex-wrap:wrap;">' +
+                '<div style="text-align:center;min-width:80px;">' +
+                    '<div style="font-size:52px;font-weight:900;color:#0f172a;line-height:1;font-family:\'DM Sans\',sans-serif;">' + avg.toFixed(1) + '</div>' +
+                    '<div style="color:#fbbf24;font-size:18px;margin:6px 0;">' + renderStars(Math.round(avg), 18) + '</div>' +
+                    '<div style="font-size:12px;color:#94a3b8;">' + reviews.length + ' rəy</div>' +
+                '</div>' +
+                '<div style="flex:1;min-width:180px;">';
             for (let s = 5; s >= 1; s--) {
                 const cnt = reviews.filter(function(r) { return r.rating === s; }).length;
                 const pct = reviews.length ? Math.round(cnt / reviews.length * 100) : 0;
-                barsHtml += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
-                    '<span style="font-size:13px;color:#666;width:40px;">' + s + ' ⭐</span>' +
-                    '<div style="flex:1;background:#e9ecef;border-radius:99px;height:8px;overflow:hidden;">' +
-                        '<div style="width:' + pct + '%;background:linear-gradient(90deg,#f59e0b,#f97316);height:100%;border-radius:99px;transition:width 0.8s ease;"></div>' +
+                distHtml += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
+                    '<span style="font-size:12px;color:#64748b;width:36px;">' + s + ' <i class="fa fa-star" style="color:#fbbf24;font-size:11px;"></i></span>' +
+                    '<div style="flex:1;background:#f1f5f9;border-radius:99px;height:7px;overflow:hidden;">' +
+                        '<div style="width:' + pct + '%;background:linear-gradient(90deg,#fbbf24,#f59e0b);height:100%;border-radius:99px;transition:width 0.8s ease;"></div>' +
                     '</div>' +
-                    '<span style="font-size:13px;color:#666;width:30px;">' + cnt + '</span>' +
+                    '<span style="font-size:12px;color:#94a3b8;width:24px;">' + cnt + '</span>' +
                 '</div>';
             }
-            document.getElementById('star-bars').innerHTML = barsHtml;
+            distHtml += '</div></div>';
+            dist.innerHTML = distHtml;
         }
 
         function submitReview(courseId) {

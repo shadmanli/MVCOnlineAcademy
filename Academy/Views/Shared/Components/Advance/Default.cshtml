@@ -1,25 +1,289 @@
-﻿
-@model AboutUsVM
+﻿@model AboutUsVM
+
+<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+#About {
+    width: 100%;
+    padding: 100px 32px;
+    background: #ffffff;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+#About::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,196,168,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -150px; right: -100px;
+    pointer-events: none;
+}
+
+.about-part {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Image ── */
+.about-img-wrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 420px;
+    height: 420px;
+}
+
+.about-img-ring {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0,196,168,0.2), rgba(14,165,233,0.1), rgba(99,102,241,0.15));
+    z-index: 0;
+}
+
+.about-img-ring-2 {
+    position: absolute;
+    inset: -24px;
+    border-radius: 50%;
+    border: 2px dashed rgba(0,196,168,0.15);
+    z-index: 0;
+    animation: aboutRingSpin 20s linear infinite;
+}
+
+@@keyframes aboutRingSpin {
+    to { transform: rotate(360deg); }
+}
+
+.main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    border: 4px solid #ffffff;
+    box-shadow: 0 20px 60px rgba(0,196,168,0.15), 0 8px 24px rgba(0,0,0,0.08);
+    display: block;
+}
+
+/* Floating badge */
+.about-badge-float {
+    position: absolute;
+    bottom: 24px;
+    right: -16px;
+    z-index: 2;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border: 1px solid #e8edf3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.about-badge-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.about-badge-txt strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+}
+
+.about-badge-txt span {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ── Text ── */
+.about-text {
+    flex: 1;
+}
+
+.about-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.about-label::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.about-text h2 {
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+}
+
+.about-text p {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.75;
+    margin-bottom: 28px;
+}
+
+/* Call row */
+.about-call-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.about-call-icon {
+    width: 44px; height: 44px;
+    background: rgba(0,196,168,0.08);
+    border: 1px solid rgba(0,196,168,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #00c4a8;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.about-call-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.about-call-info span {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.about-call-info a {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+}
+
+.about-call-info a:hover { color: #00c4a8; }
+
+/* CTA button */
+.about-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #ff6d34, #e8551f);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(255,109,52,0.3);
+    font-family: 'Inter', sans-serif;
+}
+
+.about-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255,109,52,0.45);
+    color: #fff;
+}
+
+@@media (max-width: 1024px) {
+    .about-part { gap: 50px; }
+    .about-img-wrap { width: 340px; height: 340px; }
+}
+
+@@media (max-width: 768px) {
+    #About { padding: 70px 20px; }
+    .about-part {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 48px;
+    }
+    .about-label { justify-content: center; }
+    .about-call-row { justify-content: center; }
+    .about-img-wrap { width: 280px; height: 280px; }
+    .about-badge-float { right: 0; bottom: -16px; }
+}
+</style>
 
 <section id="About">
     <div class="about-part">
-        <div class="image">
-            <img class="main-img" src="~/uploads/aboutus/@Model.Image" alt="">
-         
+
+        <!-- Image -->
+        <div class="about-img-wrap">
+            <div class="about-img-ring"></div>
+            <div class="about-img-ring-2"></div>
+            <img class="main-img" src="~/uploads/aboutus/@Model.Image" alt="@Model.Title">
+            <div class="about-badge-float">
+                <div class="about-badge-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="about-badge-txt">
+                    <strong>10K+</strong>
+                    <span>Happy Students</span>
+                </div>
+            </div>
         </div>
+
+        <!-- Text -->
         <div class="about-text">
-            <h5>ABOUT US</h5>
-            <span>
-                @Model.Title
-                <br>
-            </span>
-            <p>
-               @Model.Description
-            </p>
-            <span class="number">
-                Call Us <span class="phone">@Model.Phone </span>or
-            </span>
-            <a href="courses.html">Submit</a>
+            <span class="about-label">ABOUT US</span>
+            <h2>@Model.Title</h2>
+            <p>@Model.Description</p>
+
+            <div class="about-call-row">
+                <div class="about-call-icon">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="about-call-info">
+                    <span>Call Us Anytime</span>
+                    <a href="tel:@Model.Phone">@Model.Phone</a>
+                </div>
+            </div>
+
+            <a href="/Course" class="about-cta">
+                <i class="fa-solid fa-rocket"></i>
+                Explore Courses
+            </a>
         </div>
+
     </div>
 </section>

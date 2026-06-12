@@ -10,43 +10,40 @@
             @{ int i = 0; }
             @foreach (var slide in slides)
             {
-                <div class="hero-slide @(i == 0 ? "slide-active" : "slide")"
-                     style="position:absolute;inset:0;background:url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;transition:opacity 0.9s ease;">
+                <div class="hero-slide @(i == 0 ? "slide-active" : "")"
+                     data-index="@i"
+                     style="position:absolute;inset:0;background:url('@Url.Content("~/uploads/sliders/" + slide.Image)') center center/cover no-repeat;">
 
                     <!-- Dark overlay -->
-                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,20,0.82) 0%,rgba(4,8,20,0.5) 60%,rgba(4,8,20,0.3) 100%);"></div>
+                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,20,0.85) 0%,rgba(4,8,20,0.55) 60%,rgba(4,8,20,0.25) 100%);"></div>
+
+                    <!-- Teal glow accent -->
+                    <div style="position:absolute;bottom:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(0,196,168,0.08) 0%,transparent 70%);pointer-events:none;"></div>
 
                     <!-- Content -->
-                    <div style="position:relative;z-index:2;height:100%;display:flex;align-items:center;padding:0 6% 0;">
-                        <div style="max-width:620px;">
-                            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:99px;padding:6px 16px;margin-bottom:20px;animation:heroFadeUp 0.7s ease @(i * 0.1)s both;">
-                                <span style="width:6px;height:6px;border-radius:50%;background:#F5A623;display:inline-block;"></span>
-                                <span style="font-size:12px;font-weight:600;color:#F5A623;letter-spacing:0.1em;text-transform:uppercase;font-family:'Inter',sans-serif;">Inzara Academy</span>
+                    <div style="position:relative;z-index:2;height:100%;display:flex;align-items:center;padding:0 6%;">
+                        <div style="max-width:640px;">
+
+                            <!-- Badge — artıq "Inzara Academy" yoxdur, kurs sayı göstərilir -->
+                            <div class="hero-badge hero-anim-1">
+                                <span class="hero-badge-dot"></span>
+                                <span class="hero-badge-text">Online Education Platform</span>
                             </div>
 
-                            <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(32px,5vw,58px);font-weight:800;color:#f8fafc;line-height:1.15;margin-bottom:18px;letter-spacing:-1px;animation:heroFadeUp 0.7s ease @(i * 0.1 + 0.1)s both;">
-                                @slide.Title
+                            <!-- Title — hərflər split animate -->
+                            <h1 class="hero-title hero-anim-2">
+                                <span class="hero-split-text">@slide.Title</span>
                             </h1>
 
                             @if (!string.IsNullOrEmpty(slide.Description))
                             {
-                                <p style="font-family:'Inter',sans-serif;font-size:clamp(15px,2vw,18px);color:rgba(248,250,252,0.7);line-height:1.7;margin-bottom:32px;max-width:480px;animation:heroFadeUp 0.7s ease @(i * 0.1 + 0.2)s both;">
-                                    @slide.Description
-                                </p>
+                                <p class="hero-desc hero-anim-3">@slide.Description</p>
                             }
 
-                            <div style="display:flex;gap:14px;flex-wrap:wrap;animation:heroFadeUp 0.7s ease @(i * 0.1 + 0.3)s both;">
-                                <a asp-controller="Course" asp-action="Index"
-                                   style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#F5A623,#E8940F);color:#0F1B2D;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;border-radius:12px;text-decoration:none;transition:all .25s ease;box-shadow:0 4px 20px rgba(245,166,35,0.35);"
-                                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(245,166,35,0.5)'"
-                                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(245,166,35,0.35)'">
+                            <!-- Buttons -->
+                            <div class="hero-btns hero-anim-4">
+                                <a asp-controller="Course" asp-action="Index" class="hero-btn-primary">
                                     <i class="fa fa-graduation-cap"></i> Kurslara Bax
-                                </a>
-                                <a href="#cards"
-                                   style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);color:#f8fafc;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border-radius:12px;text-decoration:none;transition:all .25s ease;backdrop-filter:blur(6px);"
-                                   onmouseover="this.style.background='rgba(255,255,255,0.14)'"
-                                   onmouseout="this.style.background='rgba(255,255,255,0.08)'">
-                                    Daha Ətraflı <i class="fa fa-arrow-right" style="font-size:12px;"></i>
                                 </a>
                             </div>
                         </div>
@@ -59,16 +56,10 @@
         <!-- Navigation arrows -->
         @if (slides.Count > 1)
         {
-            <button id="heroPrev" onclick="heroSlide(-1)"
-                    style="position:absolute;left:24px;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:all .2s ease;"
-                    onmouseover="this.style.background='rgba(245,166,35,0.25)';this.style.borderColor='rgba(245,166,35,0.5)'"
-                    onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.15)'">
+            <button id="heroPrev" onclick="heroSlide(-1)" class="hero-nav-btn" style="left:24px;">
                 <i class="fa fa-chevron-left"></i>
             </button>
-            <button id="heroNext" onclick="heroSlide(1)"
-                    style="position:absolute;right:24px;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:all .2s ease;"
-                    onmouseover="this.style.background='rgba(245,166,35,0.25)';this.style.borderColor='rgba(245,166,35,0.5)'"
-                    onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.15)'">
+            <button id="heroNext" onclick="heroSlide(1)" class="hero-nav-btn" style="right:24px;">
                 <i class="fa fa-chevron-right"></i>
             </button>
 
@@ -77,53 +68,296 @@
                 @for (int d = 0; d < slides.Count; d++)
                 {
                     <button class="hero-dot @(d == 0 ? "hero-dot-active" : "")"
-                            onclick="heroGoTo(@d)"
-                            style="width:@(d == 0 ? "24" : "8")px;height:8px;border-radius:99px;border:none;background:@(d == 0 ? "#F5A623" : "rgba(255,255,255,0.35)");cursor:pointer;transition:all .3s ease;padding:0;"></button>
+                            onclick="heroGoTo(@d)"></button>
                 }
             </div>
         }
 
         <!-- Scroll indicator -->
-        <div style="position:absolute;bottom:20px;right:32px;z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.5;">
-            <span style="font-family:'Inter',sans-serif;font-size:10px;color:#fff;letter-spacing:0.1em;writing-mode:vertical-rl;text-transform:uppercase;">Scroll</span>
-            <div style="width:1px;height:32px;background:linear-gradient(to bottom,rgba(255,255,255,0.6),transparent);"></div>
+        <div class="hero-scroll-ind">
+            <span>Scroll</span>
+            <div class="hero-scroll-line"></div>
         </div>
 
     </section>
 
     <style>
-    .hero-slide { opacity: 0; pointer-events: none; }
-    .hero-slide.slide-active { opacity: 1; pointer-events: all; }
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* ── Slide transitions ── */
+    .hero-slide {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.9s ease;
+    }
+    .hero-slide.slide-active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* ── Badge ── */
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0,196,168,0.1);
+        border: 1px solid rgba(0,196,168,0.25);
+        border-radius: 99px;
+        padding: 6px 16px;
+        margin-bottom: 24px;
+    }
+
+    .hero-badge-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: #00c4a8;
+        display: inline-block;
+        animation: heroPulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes heroPulse {
+        0%,100% { box-shadow: 0 0 0 0 rgba(0,196,168,0.4); }
+        50%      { box-shadow: 0 0 0 6px rgba(0,196,168,0); }
+    }
+
+    .hero-badge-text {
+        font-size: 11px;
+        font-weight: 700;
+        color: #00c4a8;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Title ── */
+    .hero-title {
+        font-family: 'Inter', sans-serif;
+        font-size: clamp(34px, 5.5vw, 64px);
+        font-weight: 900;
+        color: #f8fafc;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        letter-spacing: -2px;
+    }
+
+    /* Split char animation */
+    .hero-char {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(40px) rotate(4deg);
+        animation: heroCharIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @@keyframes heroCharIn {
+        to { opacity: 1; transform: translateY(0) rotate(0deg); }
+    }
+
+    /* ── Description ── */
+    .hero-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: clamp(15px, 2vw, 18px);
+        color: rgba(248,250,252,0.65);
+        line-height: 1.75;
+        margin-bottom: 36px;
+        max-width: 480px;
+    }
+
+    /* ── Buttons ── */
+    .hero-btns {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 14px 30px;
+        background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 20px rgba(0,196,168,0.35);
+        letter-spacing: 0.01em;
+    }
+
+    .hero-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 32px rgba(0,196,168,0.5);
+        color: #ffffff;
+        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    }
+
+    .hero-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #f8fafc;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        backdrop-filter: blur(6px);
+    }
+
+    .hero-btn-secondary:hover {
+        background: rgba(0,196,168,0.1);
+        border-color: rgba(0,196,168,0.3);
+        color: #00c4a8;
+    }
+
+    /* ── Nav arrows ── */
+    .hero-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 48px; height: 48px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50%;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(8px);
+        transition: all 0.25s ease;
+    }
+
+    .hero-nav-btn:hover {
+        background: rgba(0,196,168,0.2);
+        border-color: rgba(0,196,168,0.4);
+        color: #00c4a8;
+        transform: translateY(-50%) scale(1.08);
+    }
+
+    /* ── Dots ── */
+    .hero-dot {
+        width: 8px; height: 8px;
+        border-radius: 99px;
+        border: none;
+        background: rgba(255,255,255,0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 0;
+    }
+
+    .hero-dot.hero-dot-active, .hero-dot:hover {
+        width: 28px;
+        background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    }
+
+    /* ── Scroll indicator ── */
+    .hero-scroll-ind {
+        position: absolute;
+        bottom: 20px; right: 32px;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0.45;
+    }
+
+    .hero-scroll-ind span {
+        font-family: 'Inter', sans-serif;
+        font-size: 10px;
+        color: #fff;
+        letter-spacing: 0.12em;
+        writing-mode: vertical-rl;
+        text-transform: uppercase;
+    }
+
+    .hero-scroll-line {
+        width: 1px; height: 36px;
+        background: linear-gradient(to bottom, rgba(0,196,168,0.8), transparent);
+        animation: heroScrollAnim 1.5s ease-in-out infinite;
+    }
+
+    @@keyframes heroScrollAnim {
+        0%   { transform: scaleY(0); transform-origin: top; }
+        50%  { transform: scaleY(1); transform-origin: top; }
+        51%  { transform: scaleY(1); transform-origin: bottom; }
+        100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* ── Entrance animations ── */
+    .hero-slide.slide-active .hero-anim-1 { animation: heroFadeUp 0.6s ease 0.1s both; }
+    .hero-slide.slide-active .hero-anim-3 { animation: heroFadeUp 0.6s ease 0.5s both; }
+    .hero-slide.slide-active .hero-anim-4 { animation: heroFadeUp 0.6s ease 0.7s both; }
 
     @@keyframes heroFadeUp {
-        from { opacity: 0; transform: translateY(24px); }
+        from { opacity: 0; transform: translateY(28px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
     @@media (max-width: 768px) {
         #main-start { height: 100svh; min-height: 500px; }
+        .hero-title { letter-spacing: -1px; }
     }
     </style>
 
     <script>
+    // ── Split text into animated chars ──
+    function splitHeroText(el) {
+        if (!el) return;
+        var wrap = el.querySelector('.hero-split-text');
+        if (!wrap) return;
+        var text = wrap.textContent;
+        wrap.innerHTML = '';
+        var delay = 0.25;
+        text.split('').forEach(function(ch) {
+            var span = document.createElement('span');
+            span.className = 'hero-char';
+            span.style.animationDelay = delay + 's';
+            span.textContent = ch === ' ' ? '\u00A0' : ch;
+            wrap.appendChild(span);
+            delay += ch === ' ' ? 0.04 : 0.045;
+        });
+    }
+
     (function() {
         var total   = @slides.Count;
         var current = 0;
         var timer;
 
-        var slides  = document.querySelectorAll('.hero-slide');
-        var dots    = document.querySelectorAll('.hero-dot');
+        var slideEls = document.querySelectorAll('.hero-slide');
+        var dots     = document.querySelectorAll('.hero-dot');
+
+        // Split active slide on load
+        splitHeroText(slideEls[0]);
 
         function goTo(n) {
-            slides[current].classList.remove('slide-active');
-            slides[current].classList.add('slide');
-            dots[current] && (dots[current].style.width = '8px', dots[current].style.background = 'rgba(255,255,255,0.35)');
+            // outgoing
+            slideEls[current].classList.remove('slide-active');
+            if (dots[current]) {
+                dots[current].classList.remove('hero-dot-active');
+                dots[current].style.width = '8px';
+                dots[current].style.background = 'rgba(255,255,255,0.3)';
+            }
 
             current = (n + total) % total;
 
-            slides[current].classList.remove('slide');
-            slides[current].classList.add('slide-active');
-            dots[current] && (dots[current].style.width = '24px', dots[current].style.background = '#F5A623');
+            // incoming
+            slideEls[current].classList.add('slide-active');
+            if (dots[current]) {
+                dots[current].classList.add('hero-dot-active');
+                dots[current].style.width = '28px';
+                dots[current].style.background = 'linear-gradient(90deg,#00c4a8,#0ea5e9)';
+            }
+
+            // re-split title chars
+            splitHeroText(slideEls[current]);
         }
 
         window.heroSlide = function(dir) { clearInterval(timer); goTo(current + dir); startAuto(); };
@@ -131,7 +365,7 @@
 
         function startAuto() {
             if (total <= 1) return;
-            timer = setInterval(function() { goTo(current + 1); }, 5000);
+            timer = setInterval(function() { goTo(current + 1); }, 5500);
         }
 
         startAuto();

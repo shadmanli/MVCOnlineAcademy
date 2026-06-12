@@ -1,31 +1,288 @@
-﻿<section id="feedback-part">
-    <div class="left-side">
-        <div class="first">
-            <img src="~/assets/images/icon_bg.png" alt="">
-            <i class="fa-solid fa-rocket infobox_icon"></i>
-            <h3 style="margin-top:40px;">Learn Anything </h3>
-            <span>Join millions of people from around <br> the world learning together. Try it now!</span><br>
-            <a href="">View More +</a>
-        </div>
-        <div class="second">
-            <img src="~/assets/images/icon_bg.png" alt="">
-            <i class="fa-solid fa-users infobox_icon"></i>
-            <h3 style=" margin-top:40px;">Learn Together </h3>
-            <span>Join millions of people from around <br>world learning together. Try it now!</span><br>
-            <a href="">View More +</a>
-        </div>
-    </div>
+﻿<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-    <div class="home-form">
-        <div class="top">
-            <h1>Feedback Form</h1>
+#feedback-part {
+    width: 100%;
+    background: linear-gradient(135deg, #00c4a8 0%, #00a896 50%, #008f80 100%);
+    padding: 80px 32px;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle pattern overlay */
+#feedback-part::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/G%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+/* Ambient blobs */
+#feedback-part::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+    top: -150px; right: -100px;
+    filter: blur(60px);
+    pointer-events: none;
+}
+
+.fb-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Left side: info cards ── */
+.fb-left {
+    display: flex;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.fb-info-card {
+    position: relative;
+    max-width: 240px;
+}
+
+.fb-icon-wrap {
+    width: 72px; height: 72px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.fb-info-card:hover .fb-icon-wrap {
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.fb-icon-wrap i {
+    font-size: 28px;
+    color: #ffffff;
+}
+
+.fb-info-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+}
+
+.fb-info-card p {
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0 0 14px;
+}
+
+.fb-info-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: gap 0.2s ease;
+}
+
+.fb-info-link::after {
+    content: '+';
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.fb-info-card:hover .fb-info-link {
+    gap: 8px;
+}
+
+/* ── Right side: form ── */
+.fb-right {
+    flex-shrink: 0;
+}
+
+.fb-form-wrap {
+    width: 320px;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+}
+
+.fb-form-header {
+    background: linear-gradient(135deg, #ff6d34 0%, #e8551f 100%);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.fb-form-header::before {
+    content: '';
+    position: absolute;
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    top: -30px; right: -20px;
+}
+
+.fb-form-header-bar {
+    width: 4px;
+    height: 28px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.fb-form-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+}
+
+.fb-form-body {
+    padding: 24px 28px 28px;
+}
+
+.fb-field {
+    margin-bottom: 14px;
+}
+
+.fb-field input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #f4f6f8;
+    border: 1.5px solid #e8edf3;
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: #0f172a;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.fb-field input::placeholder {
+    color: #94a3b8;
+}
+
+.fb-field input:focus {
+    border-color: #00c4a8;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0,196,168,0.12);
+}
+
+.fb-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #00c4a8, #00a896);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+}
+
+.fb-submit-btn:hover {
+    box-shadow: 0 8px 24px rgba(0,196,168,0.45);
+    transform: translateY(-2px);
+}
+
+.fb-submit-btn:active { transform: translateY(0); }
+
+/* ── Responsive ── */
+@@media (max-width: 992px) {
+    .fb-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 40px;
+    }
+    .fb-right { width: 100%; }
+    .fb-form-wrap { width: 100%; max-width: 420px; }
+}
+
+@@media (max-width: 640px) {
+    #feedback-part { padding: 60px 20px; }
+    .fb-left { gap: 36px; }
+    .fb-info-card { max-width: 100%; }
+}
+</style>
+
+<section id="feedback-part">
+    <div class="fb-inner">
+
+        <!-- ── Left: info cards ── -->
+        <div class="fb-left">
+            <div class="fb-info-card">
+                <div class="fb-icon-wrap">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h3>Learn Anything</h3>
+                <p>Join millions of people from around the world learning together. Try it now!</p>
+                <a href="/Course" class="fb-info-link">View More</a>
+            </div>
+
+            <div class="fb-info-card">
+                <div class="fb-icon-wrap">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <h3>Learn Together</h3>
+                <p>Join millions of people from around world learning together. Try it now!</p>
+                <a href="/Course" class="fb-info-link">View More</a>
+            </div>
         </div>
-        <div class="seconds">
-            <form>
-                <input type="text" placeholder="Your Name">
-                <input type="text" placeholder="your@gmail.com">
-                <button type="submit">Submit</button>
-            </form>
+
+        <!-- ── Right: form ── -->
+        <div class="fb-right">
+            <div class="fb-form-wrap">
+                <div class="fb-form-header">
+                    <div class="fb-form-header-bar"></div>
+                    <h2>Feedback Form</h2>
+                </div>
+                <div class="fb-form-body">
+                    <form method="post" action="/ContactMessage/Create">
+                        <div class="fb-field">
+                            <input type="text" name="Name" placeholder="Your Name" required />
+                        </div>
+                        <div class="fb-field">
+                            <input type="email" name="Email" placeholder="your@gmail.com" required />
+                        </div>
+                        <button type="submit" class="fb-submit-btn">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
+
     </div>
 </section>

@@ -1,14 +1,161 @@
-﻿<section id="become">
-    <div class="become-container">
-        <div class="left-side">
-            <h1>Become an Instructor Today</h1>
-            <p>
-                Join the world’s largest online learning marketplace now
+﻿<style>
+#become {
+    width: 100%;
+    padding: 60px 32px;
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
 
-            </p>
+.become-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #040814 0%, #0a1628 50%, #040814 100%);
+    border-radius: 24px;
+    border: 1px solid rgba(0,196,168,0.15);
+    padding: 56px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+}
+
+.become-container::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,196,168,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -150px; left: -100px;
+    pointer-events: none;
+}
+
+.become-container::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -100px; right: -80px;
+    pointer-events: none;
+}
+
+.become-left {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.become-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(0,196,168,0.1);
+    border: 1px solid rgba(0,196,168,0.2);
+    border-radius: 99px;
+    padding: 5px 14px;
+    margin-bottom: 18px;
+}
+
+.become-badge span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #00c4a8;
+}
+
+.become-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00c4a8;
+    animation: bpulse 2s ease-in-out infinite;
+}
+
+@@keyframes bpulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,196,168,0.4); }
+    50%      { box-shadow: 0 0 0 5px rgba(0,196,168,0); }
+}
+
+.become-left h1 {
+    font-size: clamp(24px, 3.5vw, 38px);
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+.become-left p {
+    font-size: 15px;
+    color: rgba(203,213,225,0.55);
+    line-height: 1.7;
+    max-width: 460px;
+}
+
+.become-right {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.become-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 32px;
+    background: linear-gradient(135deg, #ff6d34, #e8551f);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 14px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(255,109,52,0.35);
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+
+.become-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255,109,52,0.5);
+    color: #fff;
+}
+
+.become-btn i { font-size: 16px; }
+
+@@media (max-width: 768px) {
+    .become-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 40px 32px;
+    }
+    .become-btn { width: 100%; justify-content: center; }
+}
+
+@@media (max-width: 480px) {
+    #become { padding: 40px 16px; }
+    .become-container { padding: 32px 24px; border-radius: 18px; }
+}
+</style>
+
+<section id="become">
+    <div class="become-container">
+        <div class="become-left">
+            <div class="become-badge">
+                <div class="become-badge-dot"></div>
+                <span>Join Our Team</span>
+            </div>
+            <h1>Become an Instructor Today</h1>
+            <p>Join the world's largest online learning marketplace. Share your expertise, inspire thousands of students and earn doing what you love.</p>
         </div>
-        <div class="rigth">
-            <a href="teachers.html">Become an Instructor</a>
+        <div class="become-right">
+            <a href="#" class="become-btn">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                Become an Instructor
+            </a>
         </div>
     </div>
 </section>

@@ -1,60 +1,348 @@
-﻿<section id="last-card">
+﻿<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+#last-card {
+    width: 100%;
+    padding: 100px 20px;
+    background: #f8f9fb;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.blog-card {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── Header row ── */
+.button-for {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 52px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.blog-title p {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.blog-title p::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.blog-title h1 {
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 12px;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.blog-title span {
+    font-size: 15px;
+    color: #64748b;
+    display: block;
+    line-height: 1.6;
+    max-width: 480px;
+}
+
+.blog-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    background: linear-gradient(135deg, #00c4a8 0%, #0ea5e9 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 18px rgba(0,196,168,0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.blog-view-all::after {
+    content: '→';
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.blog-view-all:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,196,168,0.45);
+    color: #fff;
+}
+
+.blog-view-all:hover::after {
+    transform: translateX(4px);
+}
+
+/* ── Cards grid ── */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+/* ── Single card ── */
+.blog-card-single {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e8edf3;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-card-single:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    border-color: rgba(0,196,168,0.2);
+}
+
+/* ── Image ── */
+.blog-img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    position: relative;
+}
+
+.blog-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.blog-card-single:hover .blog-img img {
+    transform: scale(1.06);
+}
+
+/* Category badge on image */
+.blog-category-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 99px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+/* ── Text block ── */
+.blog-text {
+    padding: 24px 26px 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.blog-meta .dot-sep {
+    width: 3px; height: 3px;
+    background: #cbd5e1;
+    border-radius: 50%;
+}
+
+.blog-meta .author-name {
+    color: #00c4a8;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.blog-meta .author-name:hover { color: #0ea5e9; }
+
+.blog-text h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.45;
+    margin: 0;
+    letter-spacing: -0.02em;
+    transition: color 0.2s ease;
+}
+
+.blog-card-single:hover .blog-text h3 { color: #00c4a8; }
+
+.blog-excerpt {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.blog-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.link2 {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ff6d34;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+}
+
+.link2::after {
+    content: '→';
+    transition: transform 0.2s ease;
+}
+
+.link2:hover { color: #e8551f; }
+.link2:hover::after { transform: translateX(4px); }
+
+.blog-read-time {
+    font-size: 12px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ── Responsive ── */
+@@media (max-width: 1024px) {
+    .cards-container { grid-template-columns: repeat(2, 1fr); }
+}
+
+@@media (max-width: 640px) {
+    #last-card { padding: 70px 16px; }
+    .cards-container { grid-template-columns: 1fr; }
+    .button-for { flex-direction: column; align-items: flex-start; }
+    .blog-view-all { align-self: flex-start; }
+}
+</style>
+
+<section id="last-card">
     <div class="blog-card">
+
         <div class="button-for">
             <div class="blog-title">
-                <p>
-                    DISCOVER NEWS
-                </p>
+                <p>DISCOVER NEWS</p>
                 <h1>Read Our Blog</h1>
                 <span>Explore learning tips, career advice. Unlock new opportunities with unlimited access.</span>
             </div>
-            <a href="blog.html">View All</a>
+            <a href="/Blog" class="blog-view-all">View All</a>
         </div>
+
         <div class="cards-container">
-            <div class="blog-card-single">
-                <div class="blog-img">
-                    <img src="~/assets/images/blog-02-600x486.jpg" alt="">
-                </div>
-                <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
-                </div>
-            </div>
-
-
 
             <div class="blog-card-single">
                 <div class="blog-img">
-                    <img src="~/assets/images/blog-02-600x486.jpg" alt="">
+                    <span class="blog-category-badge">Learning</span>
+                    <img src="~/assets/images/blog-02-600x486.jpg" alt="Top Tips for Learning">
                 </div>
                 <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
+                    <div class="blog-meta">
+                        <span>Jun 10, 2025</span>
+                        <span class="dot-sep"></span>
+                        <a href="" class="author-name">James Taylor</a>
+                    </div>
+                    <h3>Top Best 10 Tips for Learning at Work</h3>
+                    <p class="blog-excerpt">Discover proven strategies to maximize your learning potential and advance your career while balancing daily responsibilities.</p>
+                    <div class="blog-footer-row">
+                        <a href="" class="link2">Read More</a>
+                        <span class="blog-read-time">
+                            <i class="fa-regular fa-clock"></i> 5 min read
+                        </span>
+                    </div>
                 </div>
             </div>
-
 
             <div class="blog-card-single">
                 <div class="blog-img">
-                    <img src="~/assets/images/blog-02-600x486.jpg" alt="">
+                    <span class="blog-category-badge">Career</span>
+                    <img src="~/assets/images/blog-02-600x486.jpg" alt="Career Growth">
                 </div>
                 <div class="blog-text">
-                    <span>
-                        Learning/
-                        <a href="" class="link1">BY James Taylor</a>
-                    </span>
-                    <h3>Top Best 10 Tips for Learning <br> at Work</h3>
-                    <a href="" class="link2">View More</a>
+                    <div class="blog-meta">
+                        <span>Jun 8, 2025</span>
+                        <span class="dot-sep"></span>
+                        <a href="" class="author-name">James Taylor</a>
+                    </div>
+                    <h3>Top Best 10 Tips for Learning at Work</h3>
+                    <p class="blog-excerpt">Unlock new opportunities and elevate your professional skills with these expert-curated insights for modern learners.</p>
+                    <div class="blog-footer-row">
+                        <a href="" class="link2">Read More</a>
+                        <span class="blog-read-time">
+                            <i class="fa-regular fa-clock"></i> 4 min read
+                        </span>
+                    </div>
                 </div>
             </div>
+
+            <div class="blog-card-single">
+                <div class="blog-img">
+                    <span class="blog-category-badge">Technology</span>
+                    <img src="~/assets/images/blog-02-600x486.jpg" alt="Tech Learning">
+                </div>
+                <div class="blog-text">
+                    <div class="blog-meta">
+                        <span>Jun 5, 2025</span>
+                        <span class="dot-sep"></span>
+                        <a href="" class="author-name">James Taylor</a>
+                    </div>
+                    <h3>Top Best 10 Tips for Learning at Work</h3>
+                    <p class="blog-excerpt">Stay ahead of the curve with the latest trends in online education and technology-driven learning environments.</p>
+                    <div class="blog-footer-row">
+                        <a href="" class="link2">Read More</a>
+                        <span class="blog-read-time">
+                            <i class="fa-regular fa-clock"></i> 6 min read
+                        </span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>

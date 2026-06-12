@@ -1,6 +1,172 @@
-﻿
-@model MissionVM
+﻿@model MissionVM
 
+<style>
+#Mission {
+    padding: 100px 20px;
+    background: #ffffff;
+    font-family: 'Inter', sans-serif;
+}
+
+.mission-parts {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    justify-content: space-between;
+}
+
+.mission-left {
+    flex: 1;
+    max-width: 520px;
+}
+
+.mission-left > span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.mission-left > span::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.mission-left h1 {
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+}
+
+.mission-left p {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.75;
+    margin: 0 0 36px;
+}
+
+/* ── Skills ── */
+.skills {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.skill {}
+
+.skill-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.skill-top span {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.skill-top .skill-pct {
+    font-size: 15px;
+    font-weight: 800;
+    color: #00c4a8;
+    min-width: 44px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Progress track */
+.progress {
+    width: 100%;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 99px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Progress fill */
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+/* Shimmer effect */
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    animation: shimmer 1.8s ease-in-out infinite;
+    border-radius: 99px;
+}
+
+@@keyframes shimmer {
+    0%   { opacity: 0; transform: translateX(-20px); }
+    50%  { opacity: 1; }
+    100% { opacity: 0; transform: translateX(20px); }
+}
+
+/* ── Image ── */
+.image-mission {
+    flex-shrink: 0;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 6px solid #e2f8f5;
+    box-shadow: 0 20px 60px rgba(0,196,168,0.15), 0 4px 20px rgba(0,0,0,0.08);
+    position: relative;
+    transition: transform 0.5s ease;
+    background-color: #f0fafa;
+}
+
+.image-mission:hover {
+    transform: scale(1.02);
+}
+
+@@media (max-width: 992px) {
+    .mission-parts {
+        flex-direction: column;
+        gap: 48px;
+        text-align: center;
+    }
+    .mission-left > span {
+        justify-content: center;
+    }
+    .mission-left {
+        max-width: 100%;
+    }
+    .image-mission {
+        width: 280px;
+        height: 280px;
+        overflow: hidden;
+    }
+}
+
+@@media (max-width: 480px) {
+    #Mission { padding: 70px 16px; }
+    .image-mission { width: 220px; height: 220px; }
+}
+</style>
 
 <section id="Mission">
     <div class="mission-parts">
@@ -10,47 +176,107 @@
             <p>@Model.Description</p>
 
             <div class="skills">
-
-
                 <div class="skill">
                     <div class="skill-top">
                         <span>Experience</span>
-                        <p>70%</p>
+                        <span class="skill-pct" data-target="70">0%</span>
                     </div>
                     <div class="progress">
                         <div class="progress-bar" data-percent="70"></div>
                     </div>
-
                 </div>
-
 
                 <div class="skill">
                     <div class="skill-top">
                         <span>Motivation</span>
-                        <p>90%</p>
+                        <span class="skill-pct" data-target="90">0%</span>
                     </div>
                     <div class="progress">
                         <div class="progress-bar" data-percent="90"></div>
                     </div>
-
                 </div>
-
 
                 <div class="skill">
                     <div class="skill-top">
                         <span>Quality</span>
-                        <p>90%</p>
+                        <span class="skill-pct" data-target="90">0%</span>
                     </div>
                     <div class="progress">
                         <div class="progress-bar" data-percent="90"></div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <div class="image-mission">
-            <img src="@Url.Content("~/uploads/mission/" + Model.Image)" alt="">
+        <div class="image-mission"
+             style="background-image: url('@Url.Content("~/uploads/mission/" + Model.Image)');
+                    background-size: cover;
+                    background-position: left center;">
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    var section = document.getElementById('Mission');
+    if (!section) return;
+
+    var animated = false;
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function animateSkills() {
+        if (animated) return;
+        animated = true;
+
+        var bars = section.querySelectorAll('.progress-bar');
+        var pcts = section.querySelectorAll('.skill-pct');
+
+        bars.forEach(function (bar, idx) {
+            var target = parseInt(bar.getAttribute('data-percent')) || 0;
+            var pctEl  = pcts[idx];
+            var delay  = idx * 180; // hər bar bir-birindən gecikmə ilə başlasın
+
+            setTimeout(function () {
+                // Bar genişliyi
+                bar.style.width = target + '%';
+
+                // Rəqəm count-up
+                var duration = 1400;
+                var startTime = null;
+
+                function step(ts) {
+                    if (!startTime) startTime = ts;
+                    var elapsed  = ts - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    var current  = Math.round(easeOutCubic(progress) * target);
+                    if (pctEl) pctEl.textContent = current + '%';
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        if (pctEl) pctEl.textContent = target + '%';
+                    }
+                }
+
+                requestAnimationFrame(step);
+            }, delay);
+        });
+    }
+
+    // Intersection Observer — section görünəndə başla
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    animateSkills();
+                    observer.unobserve(section);
+                }
+            });
+        }, { threshold: 0.3 });
+        observer.observe(section);
+    } else {
+        // Fallback
+        animateSkills();
+    }
+})();
+</script>

@@ -1,34 +1,146 @@
 ﻿@using Academy.ViewModels.ImpactSection
 @model IEnumerable<ImpactSectionVM>
 
+<style>
+#global {
+    width: 100%;
+    background: #f8fafc;
+    padding: 80px 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.global-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.global-first {
+    text-align: center;
+    margin-bottom: 52px;
+}
+
+.global-first span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.global-first span::before,
+.global-first span::after {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.global-first h2 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+
+.global-card-common {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.global-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e8edf3;
+    padding: 36px 28px 32px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.global-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,196,168,0.1);
+    border-color: rgba(0,196,168,0.2);
+}
+
+.global-img {
+    width: 80px; height: 80px;
+    border-radius: 20px;
+    background: rgba(0,196,168,0.08);
+    border: 1px solid rgba(0,196,168,0.15);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.global-card:hover .global-img {
+    background: rgba(0,196,168,0.14);
+    box-shadow: 0 0 20px rgba(0,196,168,0.15);
+}
+
+.global-img img {
+    width: 48px; height: 48px;
+    object-fit: contain;
+}
+
+.global-content span {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    display: block;
+    letter-spacing: -0.01em;
+}
+
+.global-content p {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.65;
+    margin-top: 6px;
+}
+
+@@media (max-width: 640px) {
+    #global { padding: 60px 16px; }
+    .global-card-common { grid-template-columns: 1fr 1fr; }
+}
+
+@@media (max-width: 400px) {
+    .global-card-common { grid-template-columns: 1fr; }
+}
+</style>
+
 <section id="global">
     <div class="global-container">
-
         @foreach (var sec in Model)
         {
             <div class="global-first">
                 <span>@sec.Title</span>
                 <h2>@sec.SubTitle</h2>
             </div>
-
             <div class="global-card-common">
-
                 @foreach (var item in sec.Items)
                 {
                     <div class="global-card">
                         <div class="global-img">
-                            <img src="~/uploads/impactitem/@item.Image" alt="">
+                            <img src="~/uploads/impactitem/@item.Image" alt="@item.Title">
                         </div>
-
                         <div class="global-content">
                             <span>@item.Title</span>
                             <p>@item.Description</p>
                         </div>
                     </div>
                 }
-
             </div>
         }
-
     </div>
 </section>

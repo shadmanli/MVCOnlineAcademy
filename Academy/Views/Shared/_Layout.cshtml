@@ -38,13 +38,13 @@
     <!-- ══════════ INZARA ACADEMY AUTH MODALS ══════════ -->
     <style>
     :root {
-        --ia-bg:       #0F1B2D;
-        --ia-surface:  #152338;
-        --ia-deep:     #1C2D45;
-        --ia-gold:     #F5A623;
-        --ia-amber:    #FFB84D;
-        --ia-cream:    #F0E6D3;
-        --ia-border:   rgba(245,166,35,0.2);
+        --ia-bg:       #040814;
+        --ia-surface:  #0a1628;
+        --ia-deep:     #0d1f3c;
+        --ia-gold:     #00c4a8;
+        --ia-amber:    #0ea5e9;
+        --ia-cream:    #e2f0ff;
+        --ia-border:   rgba(0,196,168,0.2);
         --ia-err:      #E05252;
         --ia-success:  #2ECC71;
         --ia-text:     #CBD5E1;
@@ -71,7 +71,7 @@
     /* ── Modal box ── */
     .ia-modal {
         background: var(--ia-surface);
-        border: 1px solid var(--ia-border);
+        border: 1px solid rgba(0,196,168,0.15);
         border-radius: 24px;
         width: 100%;
         max-width: 880px;
@@ -79,7 +79,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         overflow: hidden;
-        box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(245,166,35,0.08);
+        box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,196,168,0.06);
         animation: iaSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
         position: relative;
     }
@@ -91,7 +91,7 @@
 
     /* ── Left panel ── */
     .ia-left {
-        background: linear-gradient(145deg, #0a1220 0%, #0e1c30 40%, #071524 100%);
+        background: linear-gradient(145deg, #040814 0%, #071520 40%, #040814 100%);
         padding: 48px 40px;
         display: flex;
         flex-direction: column;
@@ -104,7 +104,7 @@
     .ia-left::before {
         content: '';
         position: absolute; inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f5a623' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300c4a8' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         pointer-events: none;
     }
 
@@ -113,7 +113,7 @@
         content: '';
         position: absolute;
         width: 280px; height: 280px;
-        background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(0,196,168,0.1) 0%, transparent 70%);
         border-radius: 50%;
         top: -60px; right: -80px;
         pointer-events: none;
@@ -122,7 +122,7 @@
     .ia-blob-2 {
         position: absolute;
         width: 200px; height: 200px;
-        background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%);
         border-radius: 50%;
         bottom: -40px; left: -40px;
         pointer-events: none;
@@ -153,16 +153,16 @@
     }
 
     .ia-brand-name {
-        font-family: 'Playfair Display', Georgia, serif;
+        font-family: 'Inter', sans-serif;
         font-size: 26px;
         font-weight: 800;
-        color: var(--ia-cream);
-        letter-spacing: -0.3px;
+        color: #ffffff;
+        letter-spacing: -0.5px;
         margin-bottom: 8px;
     }
 
     .ia-brand-name em {
-        color: var(--ia-gold);
+        color: #00c4a8;
         font-style: normal;
     }
 
@@ -187,11 +187,11 @@
 
     .ia-feat-icon {
         width: 32px; height: 32px;
-        background: rgba(245,166,35,0.1);
-        border: 1px solid rgba(245,166,35,0.2);
+        background: rgba(0,196,168,0.1);
+        border: 1px solid rgba(0,196,168,0.2);
         border-radius: 8px;
         display: flex; align-items: center; justify-content: center;
-        color: var(--ia-gold); font-size: 14px;
+        color: #00c4a8; font-size: 14px;
         flex-shrink: 0;
     }
 
@@ -200,7 +200,7 @@
         padding: 40px 44px;
         display: flex;
         flex-direction: column;
-        background: var(--ia-surface);
+        background: #0a1628;
         overflow-y: auto;
         max-height: 90vh;
     }
@@ -227,15 +227,16 @@
     }
 
     .ia-heading h2 {
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: 22px; font-weight: 700;
-        color: var(--ia-cream);
+        font-family: 'Inter', sans-serif;
+        font-size: 22px; font-weight: 800;
+        color: #ffffff;
         margin-bottom: 6px;
+        letter-spacing: -0.03em;
     }
 
     .ia-heading p {
         font-family: 'Inter', sans-serif;
-        font-size: 13.5px; color: #64748b;
+        font-size: 13.5px; color: rgba(203,213,225,0.45);
     }
 
     /* Tabs */
@@ -262,15 +263,15 @@
         content: '';
         position: absolute; bottom: -1px; left: 0; right: 0;
         height: 2px;
-        background: var(--ia-gold);
+        background: linear-gradient(90deg, #00c4a8, #0ea5e9);
         border-radius: 2px 2px 0 0;
         transform: scaleX(0);
         transition: transform 0.25s ease;
     }
 
-    .ia-tab.active { color: var(--ia-gold); }
+    .ia-tab.active { color: #00c4a8; }
     .ia-tab.active::after { transform: scaleX(1); }
-    .ia-tab:hover { color: var(--ia-cream); }
+    .ia-tab:hover { color: #ffffff; }
 
     /* Alerts */
     .ia-alert {
@@ -298,18 +299,18 @@
         display: block;
         font-family: 'Inter', sans-serif;
         font-size: 11px; font-weight: 700;
-        color: rgba(240,230,211,0.6);
+        color: rgba(255,255,255,0.4);
         text-transform: uppercase; letter-spacing: 0.06em;
         margin-bottom: 7px;
     }
 
     .ia-input {
         width: 100%;
-        background: var(--ia-deep);
+        background: rgba(0,196,168,0.04);
         border: 1.5px solid rgba(255,255,255,0.07);
         border-radius: 10px;
         padding: 11px 14px;
-        color: var(--ia-cream);
+        color: #ffffff;
         font-size: 14px;
         font-family: 'Inter', sans-serif;
         outline: none;
@@ -317,10 +318,10 @@
     }
 
     .ia-input:focus {
-        border-color: var(--ia-gold);
-        background: rgba(28,45,69,0.8);
-        box-shadow: 0 0 0 3px rgba(245,166,35,0.12);
-        color: var(--ia-cream);
+        border-color: #00c4a8;
+        background: rgba(0,196,168,0.07);
+        box-shadow: 0 0 0 3px rgba(0,196,168,0.12);
+        color: #ffffff;
     }
 
     .ia-input::placeholder { color: rgba(255,255,255,0.2); }
@@ -334,7 +335,7 @@
     .ia-remember {
         display: flex; align-items: center; gap: 8px;
         font-family: 'Inter', sans-serif;
-        font-size: 13px; color: #64748b;
+        font-size: 13px; color: rgba(203,213,225,0.5);
         cursor: pointer;
     }
 
@@ -362,8 +363,8 @@
     }
 
     .ia-toggle.on {
-        background: var(--ia-gold);
-        border-color: var(--ia-gold);
+        background: #00c4a8;
+        border-color: #00c4a8;
     }
 
     .ia-toggle.on::after { transform: translateX(16px); background: #fff; }
@@ -371,35 +372,58 @@
     .ia-forgot {
         font-family: 'Inter', sans-serif;
         font-size: 12.5px; font-weight: 500;
-        color: var(--ia-amber);
+        color: #00c4a8;
         text-decoration: none;
         transition: color 0.2s ease;
     }
 
-    .ia-forgot:hover { color: var(--ia-gold); text-decoration: underline; }
+    .ia-forgot:hover { color: #0ea5e9; text-decoration: underline; }
 
     /* Submit btn */
     .ia-btn {
         width: 100%;
         padding: 13px;
-        background: linear-gradient(135deg, #F5A623, #E8940F);
-        color: #0F1B2D;
+        background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+        color: #ffffff;
         font-family: 'Inter', sans-serif;
         font-size: 14px; font-weight: 700;
         border: none; border-radius: 12px;
         cursor: pointer;
         transition: all 0.25s ease;
-        box-shadow: 0 4px 16px rgba(245,166,35,0.3);
+        box-shadow: 0 4px 16px rgba(0,196,168,0.3);
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
 
     .ia-btn:hover {
-        box-shadow: 0 8px 24px rgba(245,166,35,0.45);
+        box-shadow: 0 8px 24px rgba(0,196,168,0.45);
         transform: translateY(-2px);
-        background: linear-gradient(135deg, #FFB84D, #F5A623);
+        background: linear-gradient(135deg, #0ea5e9, #6366f1);
     }
 
     .ia-btn:active { transform: translateY(0); }
+
+    /* Password toggle */
+    .ia-pw-wrap {
+        position: relative;
+    }
+    .ia-pw-wrap .ia-input {
+        padding-right: 44px;
+    }
+    .ia-pw-toggle {
+        position: absolute;
+        right: 12px; top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: rgba(255,255,255,0.25);
+        font-size: 15px;
+        padding: 4px;
+        transition: color 0.2s ease;
+        display: flex; align-items: center; justify-content: center;
+        z-index: 2;
+    }
+    .ia-pw-toggle:hover { color: #00c4a8; }
 
     /* Responsive */
     @@media (max-width: 700px) {
@@ -420,15 +444,15 @@
 
                 <div class="ia-book-anim">
                     <svg class="ia-book-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="10" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.15)" stroke="rgba(245,166,35,0.4)" stroke-width="1.5"/>
-                        <rect x="42" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.1)"  stroke="rgba(245,166,35,0.3)" stroke-width="1.5"/>
-                        <line x1="10" y1="40" x2="38" y2="40" stroke="rgba(245,166,35,0.25)" stroke-width="1"/>
-                        <line x1="42" y1="40" x2="70" y2="40" stroke="rgba(245,166,35,0.2)"  stroke-width="1"/>
-                        <line x1="15" y1="30" x2="33" y2="30" stroke="rgba(245,166,35,0.2)"  stroke-width="1"/>
-                        <line x1="15" y1="50" x2="33" y2="50" stroke="rgba(245,166,35,0.2)"  stroke-width="1"/>
-                        <line x1="47" y1="30" x2="65" y2="30" stroke="rgba(245,166,35,0.15)" stroke-width="1"/>
-                        <line x1="47" y1="50" x2="65" y2="50" stroke="rgba(245,166,35,0.15)" stroke-width="1"/>
-                        <path d="M38 15 Q40 12 42 15 Q40 65 38 65 Q40 67 42 65" stroke="rgba(245,166,35,0.5)" stroke-width="1.5" fill="none"/>
+                        <rect x="10" y="15" width="28" height="50" rx="3" fill="rgba(0,196,168,0.12)" stroke="rgba(0,196,168,0.4)" stroke-width="1.5"/>
+                        <rect x="42" y="15" width="28" height="50" rx="3" fill="rgba(14,165,233,0.08)"  stroke="rgba(14,165,233,0.3)" stroke-width="1.5"/>
+                        <line x1="10" y1="40" x2="38" y2="40" stroke="rgba(0,196,168,0.25)" stroke-width="1"/>
+                        <line x1="42" y1="40" x2="70" y2="40" stroke="rgba(14,165,233,0.2)"  stroke-width="1"/>
+                        <line x1="15" y1="30" x2="33" y2="30" stroke="rgba(0,196,168,0.2)"  stroke-width="1"/>
+                        <line x1="15" y1="50" x2="33" y2="50" stroke="rgba(0,196,168,0.2)"  stroke-width="1"/>
+                        <line x1="47" y1="30" x2="65" y2="30" stroke="rgba(14,165,233,0.15)" stroke-width="1"/>
+                        <line x1="47" y1="50" x2="65" y2="50" stroke="rgba(14,165,233,0.15)" stroke-width="1"/>
+                        <path d="M38 15 Q40 12 42 15 Q40 65 38 65 Q40 67 42 65" stroke="rgba(0,196,168,0.5)" stroke-width="1.5" fill="none"/>
                     </svg>
                 </div>
 
@@ -478,7 +502,12 @@
                     </div>
                     <div class="ia-field">
                         <label class="ia-label">Şifrə</label>
-                        <input type="password" name="Password" class="ia-input" placeholder="••••••••" required />
+                        <div class="ia-pw-wrap">
+                            <input type="password" name="Password" id="loginPassword" class="ia-input" placeholder="••••••••" required />
+                            <button type="button" class="ia-pw-toggle" onclick="togglePw('loginPassword', this)" tabindex="-1">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="ia-extras">
                         <label class="ia-remember" onclick="toggleRemember()">
@@ -506,9 +535,9 @@
 
                 <div class="ia-book-anim">
                     <svg class="ia-book-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="10" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.15)" stroke="rgba(245,166,35,0.4)" stroke-width="1.5"/>
-                        <rect x="42" y="15" width="28" height="50" rx="3" fill="rgba(245,166,35,0.1)"  stroke="rgba(245,166,35,0.3)" stroke-width="1.5"/>
-                        <path d="M38 15 Q40 12 42 15 Q40 65 38 65 Q40 67 42 65" stroke="rgba(245,166,35,0.5)" stroke-width="1.5" fill="none"/>
+                        <rect x="10" y="15" width="28" height="50" rx="3" fill="rgba(0,196,168,0.12)" stroke="rgba(0,196,168,0.4)" stroke-width="1.5"/>
+                        <rect x="42" y="15" width="28" height="50" rx="3" fill="rgba(14,165,233,0.08)"  stroke="rgba(14,165,233,0.3)" stroke-width="1.5"/>
+                        <path d="M38 15 Q40 12 42 15 Q40 65 38 65 Q40 67 42 65" stroke="rgba(0,196,168,0.5)" stroke-width="1.5" fill="none"/>
                     </svg>
                 </div>
 
@@ -565,11 +594,21 @@
                     <div class="ia-form-row">
                         <div class="ia-field">
                             <label class="ia-label">Şifrə</label>
-                            <input type="password" name="Password" class="ia-input" placeholder="••••••••" required />
+                            <div class="ia-pw-wrap">
+                                <input type="password" name="Password" id="regPassword" class="ia-input" placeholder="••••••••" required />
+                                <button type="button" class="ia-pw-toggle" onclick="togglePw('regPassword', this)" tabindex="-1">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="ia-field">
                             <label class="ia-label">Şifrəni Təsdiqləyin</label>
-                            <input type="password" name="ConfirmPassword" class="ia-input" placeholder="••••••••" required />
+                            <div class="ia-pw-wrap">
+                                <input type="password" name="ConfirmPassword" id="regConfirmPassword" class="ia-input" placeholder="••••••••" required />
+                                <button type="button" class="ia-pw-toggle" onclick="togglePw('regConfirmPassword', this)" tabindex="-1">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="ia-btn" style="margin-top:4px;">
@@ -587,6 +626,20 @@
 
     <!-- Modal açma/bağlama — bütün səhifələrdə işləsin -->
     <script>
+        function togglePw(inputId, btn) {
+            var input = document.getElementById(inputId);
+            var icon  = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash';
+                btn.style.color = '#00c4a8';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-regular fa-eye';
+                btn.style.color = '';
+            }
+        }
+
         function closeAllModals() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('registerModal').classList.remove('active');

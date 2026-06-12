@@ -1,212 +1,206 @@
-﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+﻿<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+#Say {
+    width: 100%;
+    background: #040814;
+    padding: 100px 32px;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+#Say::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,196,168,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -150px; right: -150px;
+    pointer-events: none;
+}
+
+.say-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.say-header {
+    text-align: center;
+    margin-bottom: 56px;
+}
+
+.say-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.say-label::before,
+.say-label::after {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.say-header h2 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: -0.03em;
+}
+
+/* Cards grid */
+.say-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.say-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 32px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.say-card:hover {
+    background: rgba(0,196,168,0.04);
+    border-color: rgba(0,196,168,0.18);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.say-quote-icon {
+    font-size: 32px;
+    color: rgba(0,196,168,0.25);
+    margin-bottom: 18px;
+    display: block;
+}
+
+.say-card p {
+    font-size: 14.5px;
+    color: rgba(203,213,225,0.7);
+    line-height: 1.75;
+    margin-bottom: 28px;
+    font-style: italic;
+}
+
+.say-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 20px;
+}
+
+.say-stars i {
+    color: #fbbf24;
+    font-size: 13px;
+}
+
+.say-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.say-author-img {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(0,196,168,0.3);
+}
+
+.say-author-info h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 2px;
+}
+
+.say-author-info span {
+    font-size: 12px;
+    color: #00c4a8;
+    font-weight: 500;
+}
+
+@@media (max-width: 768px) {
+    #Say { padding: 70px 20px; }
+    .say-grid { grid-template-columns: 1fr; }
+}
+</style>
 
 <section id="Say">
-    <div class="Testimonials-container">
-        <div class="testimonial-content">
-            <span>What The Say</span>
-            <p>Student Testimonials</p>
+    <div class="say-inner">
+        <div class="say-header">
+            <span class="say-label">What They Say</span>
+            <h2>Student Testimonials</h2>
         </div>
 
-        <div class="testimoniall slider">
-
-            <div class="testimonial-card">
-                <div class="testimonial-single">
-                    <div class="side">
-                        <img src="./assets/images/testimonials.jpg" class="imgg">
-                        <div class="title">
-                            <h1>Nina Farel</h1>
-                            <span>@@shamsadfg</span>
-                        </div>
+        <div class="say-grid">
+            <div class="say-card">
+                <i class="fa-solid fa-quote-left say-quote-icon"></i>
+                <div class="say-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <p>"Choosing online studies was the best way to do it – the internet is fast, cheap & popular and it's easy to communicate in social media with native speakers."</p>
+                <div class="say-author">
+                    <img src="~/assets/images/testimonials.jpg" alt="Nina Farel" class="say-author-img">
+                    <div class="say-author-info">
+                        <h4>Nina Farel</h4>
+                        <span>@@shamsadfg</span>
                     </div>
-                    <p>“Choosing online studies was the best way to do it – the internet is fast, cheap & popular and it’s easy to communicate in social media with native speakers.”</p>
                 </div>
             </div>
 
-            <div class="testimonial-card">
-                <div class="testimonial-single">
-                    <div class="side">
-                        <img src="./assets/images/testimonials.jpg" class="imgg">
-                        <div class="title">
-                            <h1>Nina Farel</h1>
-                            <span>@@shamsadfg</span>
-                        </div>
+            <div class="say-card">
+                <i class="fa-solid fa-quote-left say-quote-icon"></i>
+                <div class="say-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <p>"The course content is absolutely amazing. I learned more in 2 weeks here than in months of traditional studying. The instructors are world-class!"</p>
+                <div class="say-author">
+                    <img src="~/assets/images/testimonials.jpg" alt="Nina Farel" class="say-author-img">
+                    <div class="say-author-info">
+                        <h4>Alex Johnson</h4>
+                        <span>@@alexj_dev</span>
                     </div>
-                    <p>“Choosing online studies was the best way to do it – the internet is fast, cheap & popular and it’s easy to communicate in social media with native speakers.”</p>
                 </div>
             </div>
 
-            <div class="testimonial-card">
-                <div class="testimonial-single">
-                    <div class="side">
-                        <img src="./assets/images/testimonials.jpg" class="imgg">
-                        <div class="title">
-                            <h1>Nina Farel</h1>
-                            <span>@@shamsadfg</span>
-                        </div>
+            <div class="say-card">
+                <i class="fa-solid fa-quote-left say-quote-icon"></i>
+                <div class="say-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <p>"This platform changed my career. The practical projects and mentorship helped me land my dream job. I highly recommend it to anyone looking to grow."</p>
+                <div class="say-author">
+                    <img src="~/assets/images/testimonials.jpg" alt="Sara M" class="say-author-img">
+                    <div class="say-author-info">
+                        <h4>Sara Mitchell</h4>
+                        <span>@@sara_codes</span>
                     </div>
-                    <p>“Choosing online studies was the best way to do it – the internet is fast, cheap & popular and it’s easy to communicate in social media with native speakers.”</p>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
-
-<style>
-
-    #Say {
-        width: 100%;
-    }
-
-    .testimonial-content {
-        text-align: center;
-        margin-top: 110px;
-    }
-
-        .testimonial-content span {
-            font-size: 18px;
-            color: coral;
-            font-weight: 600;
-        }
-
-        .testimonial-content p {
-            font-size: 50px;
-            font-weight: bold;
-        }
-
-
-    .testimonial-card {
-        width: 550px;
-        height: 260px;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(194, 191, 191, 0.6);
-    }
-
-    .imgg {
-        border-radius: 50%;
-        width: 80px;
-        margin-top: 39px;
-        margin-left: 35px;
-    }
-
-    .side {
-        display: flex;
-        gap: 20px;
-    }
-
-    .title {
-        margin-top: 56px;
-    }
-
-
-    .testimonial-single p {
-        margin-top: 10px;
-        margin-left: 35px;
-        font-size: 20px;
-    }
-
-    .slider {
-        margin-top: 40px;
-    }
-
-    .testimonial-card {
-        margin: 0 15px;
-    }
-
-    .slick-dots li button:before {
-        font-size: 12px;
-        color: #c0bebe;
-    }
-
-    .slick-dots li.slick-active button:before {
-        color: #ff6d34;
-    }
-
-    .green {
-        width: 300px;
-        height: 10px;
-        color: green;
-    }
-
-
-    .top-side a {
-        width: 150px;
-        height: 50px;
-        background-color: coral;
-        color: #fff;
-        border: none;
-        font-size: 17px;
-        font-weight: 500;
-        border-radius: 5px;
-        margin-right: 105px;
-        margin-top: 105px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-        border: 2px solid coral;
-    }
-
-        .top-side a:hover {
-            background-color: transparent;
-            color: coral;
-        }
-
-    .top-side {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .dot-common {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: #c0bebe;
-    }
-
-
-    .dot-active {
-        background-color: #ff6d34;
-    }
-
-</style>
-
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-
-<script>
-    $(document).ready(function(){
-      $('.slider').slick({
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        dots: true,
-        arrows: false,
-        infinite: true,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        responsive: [
-          {
-            breakpoint: 768,
-            settings: {
-              slidesToShow: 1
-            }
-          }
-        ]
-      });
-    });
-</script>

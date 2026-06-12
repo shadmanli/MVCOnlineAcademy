@@ -1,4 +1,194 @@
-﻿<section id="instructor">
+﻿<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+#instructor {
+    width: 100%;
+    padding: 100px 32px;
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+.common-instructors {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Top row */
+.top-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 52px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.instructor-content span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.instructor-content span::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.instructor-content h1 {
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.instructor-content p {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.65;
+    max-width: 460px;
+}
+
+.top-side > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.top-side > a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,196,168,0.45);
+    color: #fff;
+}
+
+/* Cards grid */
+.teacher-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.teacher-single {
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #e8edf3;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    text-align: center;
+}
+
+.teacher-single:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    border-color: rgba(0,196,168,0.2);
+}
+
+.teacher-single .img {
+    position: relative;
+    overflow: hidden;
+    height: 260px;
+}
+
+.teacher-single .img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.teacher-single:hover .img img {
+    transform: scale(1.06);
+}
+
+/* Social icons overlay */
+.content {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(4,8,20,0.85) 0%, rgba(4,8,20,0.2) 60%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.teacher-single:hover .content {
+    opacity: 1;
+}
+
+.for-icon {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.for-icon:hover {
+    background: #00c4a8;
+    border-color: #00c4a8;
+    transform: translateY(-3px);
+}
+
+/* Name & role */
+.teacher-single h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 16px 16px 4px;
+    letter-spacing: -0.01em;
+}
+
+.teacher-single > span {
+    font-size: 13px;
+    color: #ff6d34;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 18px;
+}
+
+@@media (max-width: 768px) {
+    #instructor { padding: 70px 20px; }
+    .top-side { flex-direction: column; align-items: flex-start; }
+    .teacher-card { grid-template-columns: 1fr 1fr; }
+}
+
+@@media (max-width: 480px) {
+    .teacher-card { grid-template-columns: 1fr; }
+}
+</style>
+
+<section id="instructor">
     <div class="common-instructors">
         <div class="top-side">
             <div class="instructor-content">
@@ -6,248 +196,38 @@
                 <h1>Top Online Instructors</h1>
                 <p>Explore learning tips, career advice. Unlock new opportunities with unlimited access.</p>
             </div>
-            <a href="teachers.html">Join The Team</a>
-
         </div>
 
         <div class="teacher-card">
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
+            @{
+                var teachers = new[]
+                {
+                    new { Name = "Intizar Shadmanli", Role = "UI/UX Designer", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "Frontend Developer", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "Backend Engineer", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "Data Scientist", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "Mobile Developer", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "DevOps Engineer", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "Product Manager", Img = "david-leto-380x422.jpg" },
+                    new { Name = "Intizar Shadmanli", Role = "Photographer", Img = "david-leto-380x422.jpg" },
+                };
+            }
+            @foreach (var t in teachers)
+            {
+                <div class="teacher-single">
+                    <div class="img">
+                        <img src="~/assets/images/@t.Img" alt="@t.Name">
+                        <div class="content">
+                            <div class="for-icon"><i class="fa-brands fa-instagram"></i></div>
+                            <div class="for-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                            <div class="for-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                            <div class="for-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                        </div>
+                    </div>
+                    <h4>@t.Name</h4>
+                    <span>@t.Role</span>
                 </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-            <div class="teacher-single">
-                <div class="img">
-                    <img src="./assets/images/david-leto-380x422.jpg" alt="">
-                </div>
-                <div class="content">
-                    <div class="for-icon">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <div class="for-icon">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-facebook"></i>
-                    </div>
-
-                    <div class="for-icon">
-                        <i class="fa-brands fa-linkedin"></i>
-                    </div>
-
-                </div>
-                <h4>Intizar Shadmanli</h4>
-                <span>Photographer</span>
-            </div>
-
-
-
-
-
+            }
         </div>
     </div>
 </section>

@@ -1,11 +1,211 @@
-﻿<section id="contact-form">
-    <div class="img-form-common">
-        <div class="form-container">
-            <h1>Send Us A Message</h1>
-            <p>Have some suggestions or just want to say hi? Contact us:</p>
+﻿<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-            <!-- Toast -->
-            <div id="contactToast" style="display:none;padding:14px 20px;border-radius:8px;margin-bottom:16px;font-weight:600;font-size:14px;"></div>
+#contact-form {
+    width: 100%;
+    background: #040814;
+    padding: 100px 32px;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+#contact-form::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,196,168,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -150px; left: -150px;
+    pointer-events: none;
+}
+
+#contact-form::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,109,52,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -100px; right: -100px;
+    pointer-events: none;
+}
+
+.img-form-common {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Left: form */
+.form-container {
+    width: 100%;
+}
+
+.form-label-top {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.form-label-top::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.form-container h1 {
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+.form-container > p {
+    font-size: 15px;
+    color: rgba(203,213,225,0.55);
+    line-height: 1.7;
+    margin-bottom: 36px;
+}
+
+/* Toast */
+#contactToast {
+    display: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Form fields */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.field-wrap {
+    margin-bottom: 16px;
+}
+
+.field-wrap input,
+.field-wrap textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: #f8fafc;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: all 0.25s ease;
+    resize: none;
+}
+
+.field-wrap input::placeholder,
+.field-wrap textarea::placeholder {
+    color: rgba(255,255,255,0.25);
+}
+
+.field-wrap input:focus,
+.field-wrap textarea:focus {
+    border-color: #00c4a8;
+    background: rgba(0,196,168,0.06);
+    box-shadow: 0 0 0 3px rgba(0,196,168,0.12);
+}
+
+.field-error {
+    display: block;
+    color: #fca5a5;
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 16px;
+    font-family: 'Inter', sans-serif;
+}
+
+#contactSubmitBtn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ff6d34, #e8551f);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(255,109,52,0.3);
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+}
+
+#contactSubmitBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255,109,52,0.45);
+}
+
+#contactSubmitBtn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Right: image */
+.end-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.end-img img {
+    width: 100%;
+    max-width: 460px;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+    transition: transform 0.4s ease;
+}
+
+.end-img img:hover {
+    transform: translateY(-8px);
+}
+
+@@media (max-width: 900px) {
+    .img-form-common { grid-template-columns: 1fr; gap: 48px; }
+    .end-img { display: none; }
+}
+
+@@media (max-width: 480px) {
+    #contact-form { padding: 70px 20px; }
+}
+</style>
+
+<section id="contact-form">
+    <div class="img-form-common">
+
+        <div class="form-container">
+            <span class="form-label-top">Get In Touch</span>
+            <h1>Send Us A Message</h1>
+            <p>Have some suggestions or just want to say hi? Contact us and we'll get back to you soon.</p>
+
+            <div id="contactToast"></div>
 
             <form id="contactMessageForm" novalidate>
                 <div class="field-wrap">
@@ -21,24 +221,21 @@
                     <span class="field-error" id="err-Website"></span>
                 </div>
                 <div class="field-wrap">
-                    <textarea id="contactMessage" placeholder="Message..." rows="5"></textarea>
+                    <textarea id="contactMessage" placeholder="Your message..." rows="5"></textarea>
                     <span class="field-error" id="err-Message"></span>
                 </div>
-                <button type="submit" id="contactSubmitBtn">Send A Message</button>
+                <button type="submit" id="contactSubmitBtn">
+                    Send A Message
+                </button>
             </form>
         </div>
 
         <div class="end-img">
-            <img src="~/assets/images/contacts_02.png" alt="">
+            <img src="~/assets/images/contacts_02.png" alt="Contact Us">
         </div>
+
     </div>
 </section>
-
-<style>
-    .field-wrap { position: relative; margin-bottom: 4px; }
-    .field-error { display: block; color: #e74c3c; font-size: 12px; margin-bottom: 8px; min-height: 16px; }
-    #contactSubmitBtn:disabled { opacity: 0.7; cursor: not-allowed; }
-</style>
 
 <script>
 (function () {
@@ -49,8 +246,9 @@
         var t = document.getElementById('contactToast');
         t.textContent = msg;
         t.style.display = 'block';
-        t.style.background = type === 'success' ? '#00bda6' : '#e74c3c';
-        t.style.color = '#fff';
+        t.style.background = type === 'success' ? 'rgba(0,196,168,0.15)' : 'rgba(239,68,68,0.15)';
+        t.style.border = type === 'success' ? '1px solid rgba(0,196,168,0.3)' : '1px solid rgba(239,68,68,0.3)';
+        t.style.color = type === 'success' ? '#6ee7b7' : '#fca5a5';
         setTimeout(function () { t.style.display = 'none'; }, 5000);
     }
 
@@ -64,7 +262,6 @@
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         clearErrors();
-
         var btn = document.getElementById('contactSubmitBtn');
         btn.disabled = true;
         btn.textContent = 'Göndərilir...';
@@ -76,7 +273,6 @@
             message: document.getElementById('contactMessage').value
         };
 
-        // CSRF token
         var token = document.querySelector('input[name="__RequestVerificationToken"]');
 
         fetch('/Contact/SendMessage', {

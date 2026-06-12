@@ -9,7 +9,7 @@
         #courses-common {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
-            padding: 40px 20px;
+            padding: 160px 20px 60px;
             max-width: 1300px;
             margin: 0 auto;
         }
@@ -20,110 +20,112 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
-            background: #ffffff;
-            padding: 20px 25px;
-            border-radius: 16px;
+            gap: 16px;
+            background: #040814;
+            padding: 16px 24px;
+            border-radius: 18px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); 
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .courses-filter-wrapper:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
         .filter-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .courses-filter-wrapper select {
-            padding: 12px 35px 12px 18px;
+            padding: 0 36px 0 16px;
+            height: 44px;
             border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            background-color: #f8fafc;
-            font-size: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background-color: rgba(255,255,255,0.05);
+            font-size: 13px;
             font-weight: 500;
-            color: #334155;
+            color: rgba(255,255,255,0.75);
             cursor: pointer;
             outline: none;
-            min-width: 170px;
-            transition: all 0.3s ease;
+            min-width: 160px;
+            transition: all 0.25s ease;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2300c4a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 14px center;
-            background-size: 14px;
+            background-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .courses-filter-wrapper select option {
+            background: #0a1628;
+            color: #fff;
         }
 
         .courses-filter-wrapper select:hover {
-            border-color: #0ea5e9;
-            background-color: #ffffff;
+            border-color: rgba(0,196,168,0.35);
+            background-color: rgba(0,196,168,0.06);
+            color: #fff;
         }
 
         .courses-filter-wrapper select:focus {
-            border-color: #0ea5e9;
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-            background-color: #ffffff;
+            border-color: #00c4a8;
+            box-shadow: 0 0 0 3px rgba(0,196,168,0.12);
         }
 
         .courses-filter-wrapper .search-box {
             display: flex;
             align-items: center;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 10px;
-            width: 320px;
-            height: 46px;
+            width: 300px;
+            height: 44px;
             padding: 0;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .courses-filter-wrapper .search-box:focus-within {
-            border-color: #0ea5e9;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+            border-color: #00c4a8;
+            background: rgba(0,196,168,0.06);
+            box-shadow: 0 0 0 3px rgba(0,196,168,0.12);
         }
 
         .courses-filter-wrapper .search-box input {
             border: none;
             background: transparent;
-            padding: 0 18px;
+            padding: 0 16px;
             width: 100%;
             height: 100%;
             outline: none;
-            color: #1e293b;
+            color: #fff;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
         }
 
         .courses-filter-wrapper .search-box input::placeholder {
-            color: #94a3b8;
-            font-weight: 400;
+            color: rgba(255,255,255,0.3);
         }
 
         .courses-filter-wrapper .search-box button {
             background: transparent;
             border: none;
-            padding: 0 20px;
-            color: #0ea5e9;
+            padding: 0 18px;
+            color: #00c4a8;
             cursor: pointer;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
-            font-size: 16px;
+            transition: 0.2s;
+            font-size: 15px;
         }
 
         .courses-filter-wrapper .search-box button:hover {
-            color: #0284c7;
-            transform: scale(1.1);
+            color: #0ea5e9;
         }
 
         @@media (max-width: 900px) {
@@ -402,14 +404,14 @@
 
         /* Cart Primary Button */
         .pcc-btn-primary {
-            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            background: linear-gradient(135deg, #00c4a8, #0ea5e9);
             color: #ffffff !important;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25);
+            box-shadow: 0 4px 15px rgba(0,196,168,0.25);
         }
         .pcc-btn-primary:hover {
-            background: linear-gradient(135deg, #0284c7, #2563eb);
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+            box-shadow: 0 8px 20px rgba(0,196,168,0.4);
         }
 
         /* Quiz Button */
@@ -460,8 +462,10 @@
         .modern-pagination {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            align-items: center;
+            gap: 8px;
             margin-top: 60px;
+            flex-wrap: wrap;
         }
         .modern-pagination a {
             width: 44px;
@@ -470,21 +474,34 @@
             align-items: center;
             justify-content: center;
             border-radius: 12px;
-            background: #ffffff;
-            color: #64748b;
+            background: #040814;
+            color: rgba(255,255,255,0.5);
             font-weight: 600;
             text-decoration: none;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-            font-size: 15px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.25s ease;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
         }
-        .modern-pagination a:hover,
-        .modern-pagination a.active {
-            background: #0ea5e9;
-            color: #ffffff;
-            border-color: #0ea5e9;
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+        .modern-pagination a:hover {
+            background: rgba(0,196,168,0.1);
+            color: #00c4a8;
+            border-color: rgba(0,196,168,0.3);
             transform: translateY(-2px);
+        }
+        .modern-pagination a.active {
+            background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 6px 20px rgba(0,196,168,0.35);
+            transform: translateY(-2px);
+        }
+        .modern-pagination a.prev,
+        .modern-pagination a.next {
+            width: auto;
+            padding: 0 18px;
+            gap: 6px;
+            font-size: 13px;
         }
     </style>
 
@@ -659,22 +676,34 @@
     </div>
 
     <!-- Modern Pagination -->
-    @if (Model.TotalPages > 1)
+    @if (Model.TotalPages >= 1)
     {
         <div class="modern-pagination">
             @if (Model.CurrentPage > 1)
             {
-                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage - 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="prev"><i class="fa-solid fa-chevron-left"></i></a>
+                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage - 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="prev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
             }
-            
+
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
-                <a href="@Url.Action("Index", "Course", new { page = i, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="page @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                @if (i == 1 || i == Model.TotalPages || (i >= Model.CurrentPage - 2 && i <= Model.CurrentPage + 2))
+                {
+                    <a href="@Url.Action("Index", "Course", new { page = i, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })"
+                       class="page @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                }
+                else if (i == Model.CurrentPage - 3 || i == Model.CurrentPage + 3)
+                {
+                    <a style="pointer-events:none;opacity:0.4;">...</a>
+                }
             }
 
             @if (Model.CurrentPage < Model.TotalPages)
             {
-                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage + 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="next"><i class="fa-solid fa-chevron-right"></i></a>
+                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage + 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
             }
         </div>
     }
