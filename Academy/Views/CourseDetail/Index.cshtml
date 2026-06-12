@@ -598,14 +598,14 @@
             star.addEventListener('mouseover', function() {
                 const val = parseInt(this.dataset.val);
                 stars.forEach(function(s, i) {
-                    s.style.color = i < val ? '#f59e0b' : '#ddd';
+                    s.style.color = i < val ? '#fbbf24' : '#334155';
                     s.style.transform = i < val ? 'scale(1.2)' : 'scale(1)';
                 });
             });
             star.addEventListener('mouseout', function() {
                 const selected = parseInt(document.getElementById('selectedRating').value);
                 stars.forEach(function(s, i) {
-                    s.style.color = i < selected ? '#f59e0b' : '#ddd';
+                    s.style.color = i < selected ? '#fbbf24' : '#334155';
                     s.style.transform = 'scale(1)';
                 });
             });
@@ -613,7 +613,7 @@
                 const val = parseInt(this.dataset.val);
                 document.getElementById('selectedRating').value = val;
                 stars.forEach(function(s, i) {
-                    s.style.color = i < val ? '#f59e0b' : '#ddd';
+                    s.style.color = i < val ? '#fbbf24' : '#334155';
                 });
             });
         });
@@ -706,12 +706,12 @@
             const btn = document.getElementById('submitReviewBtn');
 
             if (rating === 0) {
-                msgEl.innerHTML = '<div style="color:#e74c3c;margin-bottom:12px;font-weight:600;">⚠️ Zəhmət olmasa reytinq seçin.</div>';
+                msgEl.innerHTML = '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;padding:12px 16px;border-radius:10px;margin-bottom:14px;font-size:13px;font-weight:600;">⚠️ Zəhmət olmasa reytinq seçin.</div>';
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Göndərilir...';
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Göndərilir...';
 
             const token = document.querySelector('input[name="__RequestVerificationToken"]');
 
@@ -726,13 +726,13 @@
             .then(r => r.json())
             .then(function(res) {
                 if (res.success) {
-                    msgEl.innerHTML = '<div style="background:#d1fae5;color:#065f46;padding:14px 20px;border-radius:12px;margin-bottom:16px;font-weight:600;">✅ ' + res.message + '</div>';
+                    msgEl.innerHTML = '<div style="background:rgba(0,196,168,0.1);border:1px solid rgba(0,196,168,0.25);color:#6ee7b7;padding:12px 16px;border-radius:10px;margin-bottom:14px;font-size:13px;font-weight:600;"><i class="fa fa-circle-check"></i> ' + res.message + '</div>';
                     document.getElementById('review-form-inner').style.opacity = '0.5';
                     document.getElementById('review-form-inner').style.pointerEvents = 'none';
                 } else {
-                    msgEl.innerHTML = '<div style="background:#fee2e2;color:#991b1b;padding:14px 20px;border-radius:12px;margin-bottom:16px;font-weight:600;">❌ ' + res.message + '</div>';
+                    msgEl.innerHTML = '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;padding:12px 16px;border-radius:10px;margin-bottom:14px;font-size:13px;font-weight:600;"><i class="fa fa-circle-xmark"></i> ' + res.message + '</div>';
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fa fa-paper-plane me-2"></i>Rəy Göndər';
+                    btn.innerHTML = '<i class="fa fa-paper-plane"></i> Rəy Göndər';
                 }
             });
         }
