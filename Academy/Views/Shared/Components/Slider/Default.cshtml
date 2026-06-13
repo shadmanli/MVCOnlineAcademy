@@ -3,7 +3,7 @@
 @if (Model != null && Model.Any())
 {
     var slides = Model.ToList();
-    <section id="main-start" style="position:relative;overflow:hidden;height:100vh;min-height:560px;">
+    <section id="main-start" style="position:relative;overflow:hidden;height:100vh;min-height:560px;background:#040814;">
 
         <!-- Slides -->
         <div id="heroSlider" style="position:relative;width:100%;height:100%;">
@@ -84,15 +84,33 @@
     <style>
     @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-    /* ── Slide transitions ── */
+    /* ── Slide transitions — altdan yuxarıya sürüşmə ── */
     .hero-slide {
-        opacity: 0;
         pointer-events: none;
-        transition: opacity 0.9s ease;
+        position: absolute;
+        inset: 0;
+        transform: translateY(100%);
+        transition: none;
+        z-index: 1;
     }
+
     .hero-slide.slide-active {
-        opacity: 1;
         pointer-events: all;
+        transform: translateY(0);
+        transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 2;
+    }
+
+    .hero-slide.slide-exit {
+        pointer-events: none;
+        transform: translateY(0);
+        animation: heroSlideUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 3;
+    }
+
+    @@keyframes heroSlideUp {
+        from { transform: translateY(0); }
+        to   { transform: translateY(-100%); }
     }
 
     /* ── Badge ── */
@@ -338,17 +356,25 @@
         splitHeroText(slideEls[0]);
 
         function goTo(n) {
-            // outgoing
-            slideEls[current].classList.remove('slide-active');
-            if (dots[current]) {
-                dots[current].classList.remove('hero-dot-active');
-                dots[current].style.width = '8px';
-                dots[current].style.background = 'rgba(255,255,255,0.3)';
-            }
-
+            var prev = current;
             current = (n + total) % total;
 
-            // incoming
+            if (prev === current) return;
+
+            // Çıxan slide — sağa doğru bağlanır
+            slideEls[prev].classList.remove('slide-active');
+            slideEls[prev].classList.add('slide-exit');
+            setTimeout(function() {
+                slideEls[prev].classList.remove('slide-exit');
+            }, 900);
+
+            if (dots[prev]) {
+                dots[prev].classList.remove('hero-dot-active');
+                dots[prev].style.width = '8px';
+                dots[prev].style.background = 'rgba(255,255,255,0.3)';
+            }
+
+            // Gələn slide — soldan sağa açılır
             slideEls[current].classList.add('slide-active');
             if (dots[current]) {
                 dots[current].classList.add('hero-dot-active');

@@ -27,7 +27,7 @@
     margin: 0 auto;
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: 120px;
     position: relative;
     z-index: 1;
 }
@@ -182,20 +182,12 @@
     gap: 2px;
 }
 
-.about-call-info span {
-    font-size: 11px;
-    font-weight: 600;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
 .about-call-info a {
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 15px;
+    font-weight: 700;
     color: #0f172a;
     text-decoration: none;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     transition: color 0.2s;
 }
 
@@ -205,16 +197,16 @@
 .about-cta {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
-    padding: 14px 30px;
+    gap: 8px;
+    padding: 11px 22px;
     background: linear-gradient(135deg, #ff6d34, #e8551f);
     color: #ffffff;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
     transition: all 0.25s ease;
-    box-shadow: 0 6px 20px rgba(255,109,52,0.3);
+    box-shadow: 0 4px 14px rgba(255,109,52,0.25);
     font-family: 'Inter', sans-serif;
 }
 
@@ -258,14 +250,14 @@
                 </div>
                 <div class="about-badge-txt">
                     <strong>10K+</strong>
-                    <span>Happy Students</span>
+                    <span>Məmnun Tələbə</span>
                 </div>
             </div>
         </div>
 
         <!-- Text -->
         <div class="about-text">
-            <span class="about-label">ABOUT US</span>
+            <span class="about-label">Haqqımızda</span>
             <h2>@Model.Title</h2>
             <p>@Model.Description</p>
 
@@ -274,14 +266,13 @@
                     <i class="fa-solid fa-phone"></i>
                 </div>
                 <div class="about-call-info">
-                    <span>Call Us Anytime</span>
                     <a href="tel:@Model.Phone">@Model.Phone</a>
                 </div>
             </div>
 
             <a href="/Course" class="about-cta">
                 <i class="fa-solid fa-rocket"></i>
-                Explore Courses
+                Kurslara Bax
             </a>
         </div>
 

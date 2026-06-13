@@ -208,9 +208,16 @@ namespace Academy.Controllers
         [HttpGet]
         public IActionResult AccessDenied()
         {
-            TempData["LoginError"] = "Bu səhifəyə giriş icazəniz yoxdur.";
-            TempData["OpenLoginModal"] = true;
-            return RedirectToAction("Index", "Home");
+            // Giriş etməyib → login modal ilə home-a yönləndir
+            if (!User.Identity!.IsAuthenticated)
+            {
+                TempData["LoginError"] = "Bu səhifəyə giriş üçün hesabınıza daxil olun.";
+                TempData["OpenLoginModal"] = true;
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Giriş edib amma icazəsi yoxdur → 403
+            return View("Error403");
         }
     }
 }

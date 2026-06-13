@@ -1,0 +1,164 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "401 - Giriş Tələb Olunur";
+    ViewData["HideFooter"] = true;
+}
+
+<style>
+.error-page {
+    min-height: 100vh;
+    background: #040814;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 20px 60px;
+}
+
+.error-page::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,196,168,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -200px; left: -200px;
+    pointer-events: none;
+}
+
+.error-page::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(14,165,233,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -150px; right: -150px;
+    pointer-events: none;
+}
+
+.error-box {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+}
+
+.error-code {
+    font-size: clamp(100px, 18vw, 160px);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.05em;
+    margin-bottom: 8px;
+}
+
+.error-icon-wrap {
+    width: 80px; height: 80px;
+    background: rgba(0,196,168,0.1);
+    border: 1px solid rgba(0,196,168,0.2);
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    font-size: 36px;
+    color: #00c4a8;
+}
+
+.error-title {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    color: #f8fafc;
+    margin-bottom: 14px;
+    letter-spacing: -0.03em;
+}
+
+.error-desc {
+    font-size: 16px;
+    color: rgba(203,213,225,0.6);
+    line-height: 1.75;
+    margin-bottom: 40px;
+}
+
+.error-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.err-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+    font-family: 'Inter', sans-serif;
+    border: none;
+    cursor: pointer;
+}
+
+.err-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,196,168,0.45);
+    color: #fff;
+}
+
+.err-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.err-btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+</style>
+
+<div class="error-page">
+    <div class="error-box">
+        <div class="error-code">401</div>
+        <div class="error-icon-wrap">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <h1 class="error-title">Giriş Tələb Olunur</h1>
+        <p class="error-desc">
+            Bu səhifəyə baxmaq üçün hesabınıza daxil olmalısınız.
+            Zəhmət olmasa giriş edin və yenidən cəhd edin.
+        </p>
+        <div class="error-actions">
+            <button class="err-btn-primary" id="loginBtn401">
+                <i class="fa-solid fa-right-to-bracket"></i> Daxil Ol
+            </button>
+            <a href="/" class="err-btn-secondary">
+                <i class="fa-solid fa-house"></i> Ana Səhifə
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('loginBtn401')?.addEventListener('click', function() {
+    if (typeof openLogin === 'function') openLogin();
+});
+</script>
