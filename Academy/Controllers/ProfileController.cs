@@ -43,6 +43,25 @@ namespace Academy.Controllers
             ViewBag.LastName = lastName;
             ViewBag.AssessmentResults = assessmentResults;
 
+            // Növbəti canlı dərs — user-in aldığı kurslara aid
+            var purchasedCourseIds = await context.OrderItems
+                .Where(oi => context.Orders.Any(o => o.Id == oi.OrderId && o.AppUserId == user.Id && o.Status == OrderStatus.Paid))
+                .Select(oi => oi.CourseId)
+                .Distinct()
+                .ToListAsync();
+
+            var nextLiveClass = await context.LiveClasses
+                .Include(l => l.Course)
+                .Include(l => l.Instructor)
+                .Where(l => purchasedCourseIds.Contains(l.CourseId) &&
+                            l.Status != Academy.Models.LiveSessionStatus.Ended &&
+                            l.Status != Academy.Models.LiveSessionStatus.Canceled &&
+                            l.ScheduledDate >= DateTime.Now.AddMinutes(-l.DurationMinutes))
+                .OrderBy(l => l.ScheduledDate)
+                .FirstOrDefaultAsync();
+
+            ViewBag.NextLiveClass = nextLiveClass;
+
             return View();
         }
 

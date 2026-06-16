@@ -2,39 +2,238 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Görü?l?r (Meetings)";
+    ViewData["Title"] = "Canlı Dərslər";
 }
 
-<div class="container" style="padding-top: 100px; padding-bottom: 50px;">
-    <h2>Bütün Canl? Görü?l?r</h2>
-    <p>A?a??da olan görü?l?r? keçid ed? bil?rsiniz.</p>
+<style>
+.meeting-page {
+    min-height: 100vh;
+    background: #040814;
+    padding: 120px 32px 80px;
+    font-family: 'Inter', sans-serif;
+}
 
-    <div class="row mt-4">
-        @if (!Model.Any())
-        {
-            <div class="col-12">
-                <div class="alert alert-warning">Haz?rda heç bir canl? görü? yoxdur.</div>
-            </div>
-        }
-        else
-        {
-            @foreach (var lc in Model)
+.meeting-page::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,196,168,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -200px; left: -150px;
+    pointer-events: none;
+}
+
+.meeting-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+.meeting-header { margin-bottom: 52px; }
+
+.meeting-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #00c4a8;
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px;
+}
+.meeting-label::before, .meeting-label::after {
+    content: ''; display: inline-block; width: 24px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9); border-radius: 2px;
+}
+
+.meeting-header h1 {
+    font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: #f8fafc;
+    letter-spacing: -0.03em; margin: 0;
+}
+
+.meeting-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.meeting-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 28px;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.meeting-card:hover {
+    border-color: rgba(0,196,168,0.25);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.meeting-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #00c4a8, transparent);
+    opacity: 0; transition: opacity 0.3s;
+}
+.meeting-card:hover::before { opacity: 1; }
+
+.mc-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 99px;
+    margin-bottom: 16px;
+}
+
+.mc-status.live {
+    background: rgba(0,255,135,0.1); color: #00ff87;
+    border: 1px solid rgba(0,255,135,0.25);
+}
+
+.mc-status.scheduled {
+    background: rgba(0,196,168,0.08); color: #00c4a8;
+    border: 1px solid rgba(0,196,168,0.2);
+}
+
+.mc-status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+    animation: mcPulse 1.5s infinite;
+}
+
+@@keyframes mcPulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+
+.mc-title {
+    font-size: 18px; font-weight: 800; color: #f8fafc;
+    margin-bottom: 8px; letter-spacing: -0.02em; line-height: 1.35;
+}
+
+.mc-course {
+    font-size: 13px; color: #00c4a8; font-weight: 600; margin-bottom: 16px;
+}
+
+.mc-meta {
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px;
+}
+
+.mc-meta-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: rgba(203,213,225,0.6);
+}
+
+.mc-meta-row i { color: rgba(0,196,168,0.6); font-size: 13px; width: 14px; }
+
+.mc-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff; font-size: 14px; font-weight: 700;
+    border-radius: 12px; text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+}
+.mc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,196,168,0.45); color:#fff; }
+
+.mc-btn-disabled {
+    width: 100%; padding: 13px; text-align: center;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    color: #64748b; font-size: 14px; font-weight: 600;
+    border-radius: 12px; cursor: not-allowed;
+}
+
+.meeting-empty {
+    grid-column: 1 / -1; text-align: center; padding: 80px 20px;
+    color: rgba(203,213,225,0.4);
+}
+.meeting-empty i { font-size: 52px; display: block; margin-bottom: 16px; color: rgba(0,196,168,0.3); }
+
+@@media (max-width: 640px) {
+    .meeting-page { padding: 100px 16px 60px; }
+    .meeting-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="meeting-page">
+    <div class="meeting-inner">
+
+        <div class="meeting-header">
+            <span class="meeting-label">Canlı Təhsil</span>
+            <h1>Canlı Dərslər</h1>
+        </div>
+
+        <div class="meeting-grid">
+            @if (!Model.Any())
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">@lc.Title</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Kurs: @lc.Course?.Title</h6>
-                            <p class="card-text">
-                                <small><strong>Mü?llim:</strong> @lc.Instructor?.FullName</small><br />
-                                <small><strong>Mövzu:</strong> @lc.Topic</small><br />
-                                <small><strong>Vaxt:</strong> @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</small>
-                            </p>
-                            <a href="/meeting/@lc.RoomId" class="btn btn-success w-100">Görü?? Qo?ul</a>
-                        </div>
-                    </div>
+                <div class="meeting-empty">
+                    <i class="fa-solid fa-video"></i>
+                    <p style="font-size:16px;font-weight:600;margin:0;">Hazırda aktiv canlı dərs yoxdur.</p>
+                    <p style="font-size:14px;margin-top:8px;">Yeni dərslər planlandıqda burada görünəcək.</p>
                 </div>
             }
-        }
+            else
+            {
+                @foreach (var lc in Model)
+                {
+                    bool isLive = lc.Status == Academy.Models.LiveSessionStatus.Live ||
+                        (lc.Status == Academy.Models.LiveSessionStatus.Scheduled && DateTime.Now >= lc.ScheduledDate);
+
+                    <div class="meeting-card">
+                        @if (isLive)
+                        {
+                            <div class="mc-status live">
+                                <span class="mc-status-dot"></span> Canlı
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mc-status scheduled">
+                                <span class="mc-status-dot"></span> Planlanıb
+                            </div>
+                        }
+
+                        <div class="mc-title">@lc.Title</div>
+                        <div class="mc-course">
+                            <i class="fa-solid fa-graduation-cap"></i> @(lc.Course?.Title ?? "Kurs")
+                        </div>
+
+                        <div class="mc-meta">
+                            @if (lc.Instructor != null)
+                            {
+                                <div class="mc-meta-row">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                    @lc.Instructor.FullName
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(lc.Topic))
+                            {
+                                <div class="mc-meta-row">
+                                    <i class="fa-solid fa-bookmark"></i>
+                                    @lc.Topic
+                                </div>
+                            }
+                            <div class="mc-meta-row">
+                                <i class="fa-regular fa-clock"></i>
+                                @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")
+                            </div>
+                            <div class="mc-meta-row">
+                                <i class="fa-solid fa-hourglass-half"></i>
+                                @lc.DurationMinutes dəqiqə
+                            </div>
+                        </div>
+
+                        @if (isLive)
+                        {
+                            <a href="/meeting/@lc.RoomId" class="mc-btn">
+                                <i class="fa-solid fa-video"></i> Dərsə Qoşul
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="mc-btn-disabled">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                @lc.ScheduledDate.ToString("dd MMM, HH:mm")-də başlayır
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+
     </div>
 </div>

@@ -102,45 +102,24 @@ namespace Academy.Controllers
         {
             var rng = new Random();
 
-            // 1. Kursun quiz-ini tap
-            if (courseId > 0)
-            {
-                var quiz = await _context.Quizzes
-                    .Include(q => q.Questions)
-                    .ThenInclude(q => q.Options)
-                    .FirstOrDefaultAsync(q => q.CourseId == courseId);
+            // Kurs ID verilmədibsə — sual yoxdur
+            if (courseId <= 0)
+                return Json(new object[0]);
 
-                if (quiz != null && quiz.Questions.Any(q => q.Options.Any()))
-                {
-                    var list = quiz.Questions
-                        .Where(q => q.Options.Any())
-                        .OrderBy(_ => rng.Next())
-                        .Take(15)
-                        .Select(q => new {
-                            id         = q.Id,
-                            text       = q.Text,
-                            difficulty = (int)q.Difficulty,
-                            points     = q.Points,
-                            options    = q.Options
-                                .OrderBy(_ => rng.Next())
-                                .Select(o => new { id = o.Id, text = o.Text })
-                                .ToList()
-                        });
-                    return Json(list);
-                }
-            }
+            // Həmin kursun quiz-ini tap
+            var quiz = await _context.Quizzes
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.Options)
+                .FirstOrDefaultAsync(q => q.CourseId == courseId);
 
-            // 2. Kurs quiz-i yoxdursa — bütün sualları qaytart
-            var all = await _context.AssessmentQuestions
-                .Include(q => q.Options)
+            // Quiz yoxdursa və ya sual yoxdursa — boş qaytart
+            if (quiz == null || !quiz.Questions.Any(q => q.Options.Any()))
+                return Json(new object[0]); // JS tərəfdə "Hələ sual yoxdur" mesajı göstəriləcək
+
+            var list = quiz.Questions
                 .Where(q => q.Options.Any())
-                .ToListAsync();
-
-            if (!all.Any())
-                return NotFound("Hələ sual əlavə edilməyib.");
-
-            var result = all
-                .OrderBy(_ => rng.Next()).Take(15)
+                .OrderBy(_ => rng.Next())
+                .Take(15)
                 .Select(q => new {
                     id         = q.Id,
                     text       = q.Text,
@@ -152,7 +131,7 @@ namespace Academy.Controllers
                         .ToList()
                 });
 
-            return Json(result);
+            return Json(list);
         }
 
         // ─────────────────────────────────────────────────────────────
@@ -290,14 +269,9 @@ namespace Academy.Controllers
                 .ToList();
 
             // ── 10. Tövsiyə sistemi ──────────────────────────────────
-            // Məntiqi:
-            // a) İstifadəçinin zəif olduğu kateqoriyalardakı kurslar (ən yüksək prioritet)
-            // b) İstifadəçinin level-inə uyğun kurslar
-            // c) Hazırda baxdığı kursdan fərqli kurslar
             var allCourses = await _context.Courses
                 .Include(c => c.Category)
-                .Where(c => c.IsActive && !c.IsDeleted
-                         && c.Id != (submission.CourseId ?? 0))
+                .Where(c => !c.IsDeleted && c.Id != (submission.CourseId ?? 0))
                 .ToListAsync();
 
             var ranked = allCourses
@@ -307,34 +281,26 @@ namespace Academy.Controllers
                     // Zəif kateqoriyaya uyğundursa +30
                     if (weakCatIds.Contains(c.CategoryId)) score += 30;
 
-                    // Level uyğunluğu
-                    if (c.Level == level) score += 20;
+                    // Level uyğunluğu — case-insensitive müqayisə
+                    bool levelMatch = string.Equals(c.Level, level, StringComparison.OrdinalIgnoreCase);
+                    if (levelMatch) score += 20;
 
                     // Beginner üçün Beginner kurslar əlavə boost
-                    if (level == "Beginner" && c.Level == "Beginner") score += 10;
-
+                    if (level == "Beginner" && string.Equals(c.Level, "Beginner", StringComparison.OrdinalIgnoreCase)) score += 10;
                     // Intermediate üçün həm Beginner həm Intermediate
-                    if (level == "Intermediate" && c.Level == "Intermediate") score += 5;
-
+                    if (level == "Intermediate" && (string.Equals(c.Level, "Intermediate", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.Level, "Beginner", StringComparison.OrdinalIgnoreCase))) score += 5;
                     // Advanced üçün Advanced kurslar
-                    if (level == "Advanced" && c.Level == "Advanced") score += 10;
+                    if (level == "Advanced" && string.Equals(c.Level, "Advanced", StringComparison.OrdinalIgnoreCase)) score += 10;
+
+                    // Level null/empty olan kurslar da göstərilsin — az bal ver
+                    if (string.IsNullOrEmpty(c.Level)) score += 2;
 
                     return new { Course = c, Score = score };
                 })
-                .Where(x => x.Score > 0)
                 .OrderByDescending(x => x.Score)
                 .Take(4)
                 .ToList();
-
-            // Əgər heç uyğun kurs yoxdursa — ən azı level-ə görə göstər
-            if (!ranked.Any())
-            {
-                ranked = allCourses
-                    .Select(c => new { Course = c, Score = c.Level == level ? 1 : 0 })
-                    .Where(x => x.Score > 0)
-                    .Take(4)
-                    .ToList();
-            }
 
             var weakCatNames = await _context.Categories
                 .Where(c => weakCatIds.Contains(c.Id))

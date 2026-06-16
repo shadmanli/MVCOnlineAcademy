@@ -8,7 +8,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Canl? D?rsl?r (Live Classes)</h6>
-        @if (ViewBag.IsMuellim != null && (bool)ViewBag.IsMuellim)
+        @if ((ViewBag.IsMuellim != null && (bool)ViewBag.IsMuellim) || (ViewBag.IsAdminOrSuper != null && (bool)ViewBag.IsAdminOrSuper))
         {
             <a asp-action="Create" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Yeni Canl? D?rs Yarat</a>
         }

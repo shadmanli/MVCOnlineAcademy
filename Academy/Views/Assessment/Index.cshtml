@@ -664,7 +664,19 @@
             await fetchQuestions();
             
             if(questions.length === 0) {
-                alert("Uyğun administrator tərəfindən hələ sual əlavə edilməyib.");
+                // Quiz UI-a xoş mesaj göstər
+                document.getElementById('view-intro').innerHTML = `
+                    <div class="onboarding-wrap">
+                        <i class="fa-solid fa-lock" style="font-size:48px;color:var(--text-muted);margin-bottom:24px;"></i>
+                        <h1 style="font-size:28px;">Bu Kurs Üçün Quiz Yoxdur</h1>
+                        <p style="color:var(--text-muted);font-size:16px;margin-bottom:40px;line-height:1.6;">
+                            Admin hələ bu kurs üçün quiz sualları əlavə etməyib.<br>
+                            Kursun detayına qayıda bilərsiniz.
+                        </p>
+                        <button class="btn-premium" onclick="history.back()">
+                            <i class="fa-solid fa-arrow-left"></i> Geri Qayıt
+                        </button>
+                    </div>`;
                 btn.innerHTML = 'Testə Başla <i class="fa-solid fa-arrow-right"></i>';
                 btn.disabled = false;
                 return;

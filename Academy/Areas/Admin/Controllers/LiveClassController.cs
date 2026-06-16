@@ -45,44 +45,91 @@ namespace Academy.Areas.Admin.Controllers
             return View(liveClasses);
         }
 
+        // GET: Admin/LiveClass/GetLessons?courseId=5
+        [HttpGet]
+        public async Task<IActionResult> GetLessons(int courseId)
+        {
+            var lessons = await _context.Lessons
+                .Where(l => l.CourseId == courseId)
+                .Select(l => new { id = l.Id, title = l.Title })
+                .ToListAsync();
+            return Json(lessons);
+        }
+
+        // GET: Admin/LiveClass/GetCoursesByCategory?categoryId=3
+        [HttpGet]
+        public async Task<IActionResult> GetCoursesByCategory(int categoryId)
+        {
+            var courses = await _context.Courses
+                .Where(c => c.CategoryId == categoryId)
+                .Select(c => new { id = c.Id, title = c.Title })
+                .ToListAsync();
+            return Json(courses);
+        }
+
         // GET: Admin/LiveClass/Create
-        [Authorize(Roles = "Muellim")]
         public async Task<IActionResult> Create()
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var isAdminOrSuper = await _userManager.IsInRoleAsync(currentUser, "Admin") || await _userManager.IsInRoleAsync(currentUser, "SuperAdmin");
+
             var vm = new LiveClassCreateVM
             {
                 Courses = await _context.Courses.Select(x => new SelectListItem(x.Title, x.Id.ToString())).ToListAsync(),
                 ScheduledDate = DateTime.Now.AddDays(1),
                 DurationMinutes = 60
             };
+
+            ViewBag.Categories = await _context.Categories
+                .Select(c => new SelectListItem(c.Name, c.Id.ToString()))
+                .ToListAsync();
+
+            if (isAdminOrSuper)
+            {
+                var teachers = await _userManager.GetUsersInRoleAsync("Muellim");
+                vm.Teachers = teachers.Select(t => new SelectListItem(t.FullName ?? t.UserName, t.Id)).ToList();
+            }
+
             return View(vm);
         }
 
         // POST: Admin/LiveClass/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Muellim")]
         public async Task<IActionResult> Create(LiveClassCreateVM model)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var isAdminOrSuper = await _userManager.IsInRoleAsync(currentUser, "Admin") || await _userManager.IsInRoleAsync(currentUser, "SuperAdmin");
+
             if (!ModelState.IsValid)
             {
                 model.Courses = await _context.Courses.Select(x => new SelectListItem(x.Title, x.Id.ToString())).ToListAsync();
+                if (isAdminOrSuper)
+                {
+                    var teachers = await _userManager.GetUsersInRoleAsync("Muellim");
+                    model.Teachers = teachers.Select(t => new SelectListItem(t.FullName ?? t.UserName, t.Id)).ToList();
+                }
                 return View(model);
             }
 
-            var currentUser = await _userManager.GetUserAsync(User);
+            var teacherId = currentUser.Id;
+            if (isAdminOrSuper && !string.IsNullOrEmpty(model.TeacherId))
+            {
+                teacherId = model.TeacherId;
+            }
 
             var liveClass = new LiveClass
             {
                 CourseId = model.CourseId,
-                TeacherId = currentUser.Id,
+                LessonId = model.LessonId,
+                TeacherId = teacherId,
                 Title = model.Title,
-                Topic = model.Topic ?? "Mövzu qeyd edilm?yib",
+                Topic = model.Topic ?? "MÃ¶vzu qeyd edilmÉ™yib",
                 ScheduledDate = DateTime.SpecifyKind(model.ScheduledDate, DateTimeKind.Unspecified),
                 DurationMinutes = model.DurationMinutes,
                 Status = LiveSessionStatus.Scheduled,
                 RoomId = Guid.NewGuid().ToString("N"),
-                SecureToken = Guid.NewGuid().ToString("N") // Default token
+                SecureToken = Guid.NewGuid().ToString("N")
             };
 
             await _context.LiveClasses.AddAsync(liveClass);
@@ -151,7 +198,7 @@ namespace Academy.Areas.Admin.Controllers
 
             liveClass.CourseId = model.CourseId;
             liveClass.Title = model.Title;
-            liveClass.Topic = model.Topic ?? "Mövzu qeyd edilm?yib";
+            liveClass.Topic = model.Topic ?? "Mï¿½vzu qeyd edilm?yib";
             liveClass.ScheduledDate = DateTime.SpecifyKind(model.ScheduledDate, DateTimeKind.Unspecified);
             liveClass.DurationMinutes = model.DurationMinutes;
 

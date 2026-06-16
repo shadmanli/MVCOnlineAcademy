@@ -108,6 +108,157 @@
         .card-danger h3 { color: var(--danger); margin-bottom: 16px;}
         .card-danger p { color: #555; margin-bottom: 24px; line-height: 1.6; font-size: 15px;}
 
+        /* NOTIFICATION */
+        .notif-dot {
+            position: absolute; top: -4px; right: -4px;
+            background: #ef4444; color: #fff;
+            font-size: 9px; font-weight: 700;
+            width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--nav-bg);
+        }
+        .notif-panel {
+            position: absolute; top: calc(100% + 14px); right: -12px;
+            width: 320px; background: rgba(20,24,36,0.98);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px); z-index: 200;
+            overflow: hidden;
+        }
+        .notif-panel-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.07);
+            font-weight: 700; font-size: 14px; color: #fff;
+        }
+        .notif-item {
+            display: flex; gap: 12px; align-items: flex-start;
+            padding: 14px 18px; transition: background 0.2s;
+        }
+        .notif-item:hover { background: rgba(255,255,255,0.04); }
+        .notif-item-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(0,200,150,0.15); color: var(--brand);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; flex-shrink: 0;
+        }
+        .notif-item-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+        .notif-item-sub { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+        /* NEXT LIVE CLASS CARD */
+        .next-live-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px; padding: 28px 32px;
+            margin-bottom: 32px; position: relative; overflow: hidden;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+        }
+        .next-live-card::before {
+            content: ''; position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(0,196,168,0.1) 0%, transparent 70%);
+            border-radius: 50%; top: -100px; right: -80px; pointer-events: none;
+        }
+        .nlc-label {
+            font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: #00c4a8;
+            display: inline-flex; align-items: center; gap: 6px; margin-bottom: 18px;
+        }
+        .nlc-live-dot {
+            width: 7px; height: 7px; border-radius: 50%; background: #00c4a8;
+            animation: nlcPulse 1.5s ease-in-out infinite;
+        }
+        @@keyframes nlcPulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(0,196,168,0.5); }
+            50%      { box-shadow: 0 0 0 6px rgba(0,196,168,0); }
+        }
+        .nlc-grid { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+        .nlc-title { font-size: 22px; font-weight: 800; color: #f8fafc; letter-spacing: -0.03em; margin-bottom: 8px; }
+        .nlc-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+        .nlc-meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(203,213,225,0.7); }
+        .nlc-meta-item i { color: rgba(0,196,168,0.7); font-size: 13px; }
+        .nlc-countdown-wrap { margin-bottom: 22px; }
+        .nlc-countdown-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+        .nlc-countdown { display: flex; gap: 12px; }
+        .nlc-time-box {
+            text-align: center;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 10px 16px; min-width: 60px;
+        }
+        .nlc-time-val { font-size: 24px; font-weight: 800; color: #f8fafc; font-variant-numeric: tabular-nums; line-height: 1; }
+        .nlc-time-lbl { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+        .nlc-sep { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.3); align-self: center; margin-bottom: 18px; }
+        .nlc-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 13px 26px;
+            background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+            color: #fff; font-size: 14px; font-weight: 700;
+            border-radius: 12px; text-decoration: none; border: none; cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(0,196,168,0.3);
+        }
+        .nlc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,196,168,0.45); color:#fff; }
+        .nlc-btn-disabled {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 13px 26px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4); font-size: 14px; font-weight: 600;
+            border-radius: 12px; cursor: not-allowed;
+        }
+        .nlc-status-live {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+            color: #ef4444; font-size: 12px; font-weight: 700;
+            padding: 4px 12px; border-radius: 99px; margin-bottom: 12px;
+            animation: redPulse 2s infinite;
+        }
+        .nlc-status-soon {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; font-size: 12px; font-weight: 700;
+            padding: 4px 12px; border-radius: 99px; margin-bottom: 12px;
+        }
+        @@keyframes redPulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+        /* LIVE POPUP */
+        .live-popup {
+            position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+            width: 360px;
+            background: rgba(10,18,36,0.97); backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,196,168,0.25); border-radius: 20px;
+            padding: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            transform: translateY(120px); opacity: 0;
+            transition: all 0.45s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .live-popup.show { transform: translateY(0); opacity: 1; }
+        .lp-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .lp-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.25);
+            display: flex; align-items: center; justify-content: center;
+            color: #ef4444; font-size: 18px; animation: redPulse 1.5s infinite;
+        }
+        .lp-title { font-size: 14px; font-weight: 800; color: #f8fafc; }
+        .lp-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+        .lp-close {
+            margin-left: auto; background: rgba(255,255,255,0.06); border: none;
+            width: 28px; height: 28px; border-radius: 8px; color: rgba(255,255,255,0.4);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .lp-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+        .lp-course { font-size: 15px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+        .lp-time { font-size: 13px; color: rgba(203,213,225,0.6); margin-bottom: 18px; }
+        .lp-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 12px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff; font-size: 13px; font-weight: 700;
+            border-radius: 12px; text-decoration: none;
+            box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+            transition: all 0.25s; border: none; cursor: pointer;
+        }
+        .lp-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(239,68,68,0.45); color:#fff; }
+
         /* PREMIUM SECTIONS (NEW) */
         .profile-header-card { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #00C896 0%, #00936e 100%); border-radius: 24px; padding: 40px; margin-bottom: 32px; box-shadow: 0 16px 40px rgba(0, 200, 150, 0.2); color: white; position: relative; overflow: hidden; }
         .ph-info h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; font-family:"Sora", sans-serif; }
@@ -179,14 +330,46 @@
 
     <!-- TOP NAVIGATION BAR -->
     <header class="guru-topbar">
-        <a href="/" class="logo">Guru<span>.</span></a>
+        <a href="/" class="logo">iNzara<span>.</span></a>
         <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Gələcəyinizi kəşf edin...">
         </div>
         <div class="nav-actions">
             <i class="fa-solid fa-cart-shopping"></i>
-            <i class="fa-regular fa-bell"></i>
+            <!-- Notification Bell -->
+            <div class="notif-wrap" id="notifWrap" style="position:relative;cursor:pointer;" onclick="toggleNotifPanel()">
+                <i class="fa-regular fa-bell"></i>
+                @{
+                    var nextLc = ViewBag.NextLiveClass as Academy.Models.LiveClass;
+                    bool hasUpcoming = nextLc != null;
+                }
+                @if (hasUpcoming)
+                {
+                    <span class="notif-dot">1</span>
+                }
+                <!-- Notification Panel -->
+                <div class="notif-panel" id="notifPanel" style="display:none;">
+                    <div class="notif-panel-header">
+                        <span>Bildirişlər</span>
+                        <span style="font-size:12px;color:rgba(255,255,255,0.5);">@(hasUpcoming ? "1 yeni" : "0")</span>
+                    </div>
+                    @if (hasUpcoming)
+                    {
+                        <div class="notif-item">
+                            <div class="notif-item-icon"><i class="fa-solid fa-video"></i></div>
+                            <div>
+                                <div class="notif-item-title">Canlı Dərs Xatırlatması</div>
+                                <div class="notif-item-sub">@nextLc.Title — @nextLc.ScheduledDate.ToString("dd MMM, HH:mm")</div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="padding:20px;text-align:center;color:rgba(255,255,255,0.4);font-size:13px;">Bildiriş yoxdur</div>
+                    }
+                </div>
+            </div>
             <img src="@(!string.IsNullOrEmpty(user.ProfilePicture) ? "/uploads/profile/" + user.ProfilePicture : "/assets/images/default-avatar.png")" class="nav-avatar" alt="Avatar"/>
         </div>
     </header>
@@ -200,14 +383,181 @@
                 <a href="#courses-sec" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Kurslarım</a>
                 <a href="#assessment-sec" class="nav-item"><i class="fa-solid fa-chart-line"></i> Nəticələrim</a>
                 <a href="#settings-sec" class="nav-item active"><i class="fa-solid fa-gear"></i> Parametrlər</a>
-                <a href="#" class="nav-item" style="color: var(--danger); margin-top: 40px;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıxış</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="margin-top:40px;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item" style="color:var(--danger);width:100%;background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;text-align:left;">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıxış
+                    </button>
+                </form>
             </nav>
         </aside>
 
         <!-- CONTENT AREA -->
         <main class="main-content">
             <h1 class="page-title"><i class="fa-solid fa-user-astronaut"></i> Profil Parametrləri</h1>
-            
+
+            <!-- ── NEXT LIVE CLASS CARD ── -->
+            @{
+                var nlc = ViewBag.NextLiveClass as Academy.Models.LiveClass;
+            }
+            @if (nlc != null)
+            {
+                bool nlcIsLive = nlc.Status == Academy.Models.LiveSessionStatus.Live ||
+                    (nlc.Status == Academy.Models.LiveSessionStatus.Scheduled && DateTime.Now >= nlc.ScheduledDate);
+                bool nlcIsSoon = !nlcIsLive && (nlc.ScheduledDate - DateTime.Now).TotalMinutes <= 30;
+
+                <div class="next-live-card" id="nlcCard">
+                    <span class="nlc-label"><span class="nlc-live-dot"></span> Növbəti Dərs</span>
+
+                    <div class="nlc-grid">
+                        <div>
+                            @if (nlcIsLive)
+                            {
+                                <div class="nlc-status-live"><i class="fa-solid fa-circle"></i> Canlı Dərs Gedir</div>
+                            }
+                            else if (nlcIsSoon)
+                            {
+                                <div class="nlc-status-soon"><i class="fa-solid fa-clock"></i> Az qalır</div>
+                            }
+
+                            <div class="nlc-title">@nlc.Title</div>
+                            <div class="nlc-meta">
+                                <div class="nlc-meta-item">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    @nlc.Course?.Title
+                                </div>
+                                @if (nlc.Instructor != null)
+                                {
+                                    <div class="nlc-meta-item">
+                                        <i class="fa-solid fa-chalkboard-user"></i>
+                                        @nlc.Instructor.FullName
+                                    </div>
+                                }
+                                <div class="nlc-meta-item">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    @nlc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")
+                                </div>
+                                <div class="nlc-meta-item">
+                                    <i class="fa-regular fa-clock"></i>
+                                    @nlc.DurationMinutes dəqiqə
+                                </div>
+                            </div>
+
+                            @if (!nlcIsLive)
+                            {
+                                <div class="nlc-countdown-wrap">
+                                    <div class="nlc-countdown-label">Başlamasına qədər</div>
+                                    <div class="nlc-countdown" id="nlcCountdown"
+                                         data-target="@nlc.ScheduledDate.ToString("yyyy-MM-ddTHH:mm:ss")">
+                                        <div class="nlc-time-box"><div class="nlc-time-val" id="nlc-d">00</div><div class="nlc-time-lbl">Gün</div></div>
+                                        <div class="nlc-sep">:</div>
+                                        <div class="nlc-time-box"><div class="nlc-time-val" id="nlc-h">00</div><div class="nlc-time-lbl">Saat</div></div>
+                                        <div class="nlc-sep">:</div>
+                                        <div class="nlc-time-box"><div class="nlc-time-val" id="nlc-m">00</div><div class="nlc-time-lbl">Dəq</div></div>
+                                        <div class="nlc-sep">:</div>
+                                        <div class="nlc-time-box"><div class="nlc-time-val" id="nlc-s">00</div><div class="nlc-time-lbl">San</div></div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (nlcIsLive)
+                            {
+                                <a href="/meeting/@nlc.RoomId" class="nlc-btn">
+                                    <i class="fa-solid fa-video"></i> Canlı Dərsə Qoşul
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="nlc-btn-disabled">
+                                    <i class="fa-solid fa-calendar-days"></i> Hələ başlamayıb
+                                </span>
+                            }
+                        </div>
+
+                        <div style="text-align:center;">
+                            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00c4a8,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;margin:0 auto 10px;box-shadow:0 8px 24px rgba(0,196,168,0.3);">
+                                @(nlc.Instructor?.FullName?.FirstOrDefault().ToString().ToUpper() ?? "?")
+                            </div>
+                            <div style="font-size:13px;color:rgba(255,255,255,0.6);">Müəllim</div>
+                            <div style="font-size:14px;font-weight:700;color:#f8fafc;">@nlc.Instructor?.FullName</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIVE POPUP (15 dəq əvvəl görünür) -->
+                <div class="live-popup" id="livePopup">
+                    <div class="lp-header">
+                        <div class="lp-icon"><i class="fa-solid fa-bell"></i></div>
+                        <div>
+                            <div class="lp-title">🔴 Canlı Dərs Başlayır!</div>
+                            <div class="lp-sub">15 dəqiqə sonra başlayır</div>
+                        </div>
+                        <button class="lp-close" onclick="document.getElementById('livePopup').classList.remove('show')">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="lp-course">@nlc.Title</div>
+                    <div class="lp-time"><i class="fa-regular fa-clock" style="margin-right:5px;"></i>@nlc.ScheduledDate.ToString("dd MMM, HH:mm")</div>
+                    <a href="/meeting/@nlc.RoomId" class="lp-btn">
+                        <i class="fa-solid fa-video"></i> İndi Qoşul
+                    </a>
+                </div>
+
+                <script>
+                (function() {
+                    var target = new Date("@nlc.ScheduledDate.ToString("yyyy-MM-ddTHH:mm:ss")");
+                    var popupShown = false;
+
+                    function updateCountdown() {
+                        var now = new Date();
+                        var diff = target - now;
+
+                        if (diff <= 0) {
+                            // Dərs başladı
+                            document.getElementById('nlc-d').textContent = '00';
+                            document.getElementById('nlc-h').textContent = '00';
+                            document.getElementById('nlc-m').textContent = '00';
+                            document.getElementById('nlc-s').textContent = '00';
+                            return;
+                        }
+
+                        var d = Math.floor(diff / 86400000);
+                        var h = Math.floor((diff % 86400000) / 3600000);
+                        var m = Math.floor((diff % 3600000) / 60000);
+                        var s = Math.floor((diff % 60000) / 1000);
+
+                        document.getElementById('nlc-d').textContent = String(d).padStart(2,'0');
+                        document.getElementById('nlc-h').textContent = String(h).padStart(2,'0');
+                        document.getElementById('nlc-m').textContent = String(m).padStart(2,'0');
+                        document.getElementById('nlc-s').textContent = String(s).padStart(2,'0');
+
+                        // 15 dəq əvvəl popup göstər
+                        var minsLeft = diff / 60000;
+                        if (!popupShown && minsLeft <= 15 && minsLeft > 0) {
+                            popupShown = true;
+                            setTimeout(function() {
+                                document.getElementById('livePopup').classList.add('show');
+                            }, 500);
+                        }
+
+                        // Renk dəyişimi: 30 dəq qaldıqda sarı, 5 dəq qaldıqda qırmızı
+                        var card = document.getElementById('nlcCard');
+                        if (minsLeft <= 5) {
+                            card.style.borderColor = 'rgba(239,68,68,0.4)';
+                            card.style.boxShadow = '0 16px 48px rgba(239,68,68,0.15)';
+                        } else if (minsLeft <= 30) {
+                            card.style.borderColor = 'rgba(245,158,11,0.4)';
+                            card.style.boxShadow = '0 16px 48px rgba(245,158,11,0.12)';
+                        }
+                    }
+
+                    updateCountdown();
+                    setInterval(updateCountdown, 1000);
+                })();
+                </script>
+            }
+            <!-- ── END NEXT LIVE CLASS ── -->
+
             <!-- ASSESSMENT SECTION (NEW) -->
             <div id="assessment-sec" class="guru-card" style="margin-bottom: 32px;">
                 <h3><i class="fa-solid fa-chart-pie"></i> Nəticələrim & İmtahanlar (Assessment)</h3>
@@ -776,6 +1126,19 @@
                 });
             });
         }
+
+        // ── NOTIFICATION PANEL ────────────────────────────────────
+        function toggleNotifPanel() {
+            var panel = document.getElementById('notifPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+        document.addEventListener('click', function(e) {
+            var wrap = document.getElementById('notifWrap');
+            if (wrap && !wrap.contains(e.target)) {
+                var panel = document.getElementById('notifPanel');
+                if (panel) panel.style.display = 'none';
+            }
+        });
 
         // ── INIT ──────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {

@@ -1,64 +1,113 @@
 @model Academy.ViewModels.LiveClass.LiveClassCreateVM
 
 @{
-    ViewData["Title"] = "Yeni Canl? D?rs";
+    ViewData["Title"] = "Yeni Canlı Dərs";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Yeni Canl? D?rs Yarat</h6>
-    </div>
-    <div class="card-body">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Title" class="form-label text-dark">Ba?l?q</label>
-                    <input asp-for="Title" class="form-control" placeholder="M?s: C# Masterclass - D?rs 1" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Topic" class="form-label text-dark">M�vzu (?xtiyari)</label>
-                    <input asp-for="Topic" class="form-control" placeholder="M?s: LINQ v? Entity Framework" />
-                    <span asp-validation-for="Topic" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="CourseId" class="form-label text-dark">Kurs Se�in</label>
-                    <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
-                        <option value="">-- Kurs Se�in --</option>
-                    </select>
-                    <span asp-validation-for="CourseId" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="ScheduledDate" class="form-label text-dark">Ba?lama Tarixi v? Vaxt?</label>
-                    <input asp-for="ScheduledDate" type="datetime-local" class="form-control" />
-                    <span asp-validation-for="ScheduledDate" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="DurationMinutes" class="form-label text-dark">M�dd?t (d?qiq?)</label>
-                    <input asp-for="DurationMinutes" type="number" class="form-control" min="1" />
-                    <span asp-validation-for="DurationMinutes" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Yarat</button>
-                <a asp-action="Index" class="btn btn-secondary ms-2"><i class="fas fa-arrow-left"></i> Geri Qay?t</a>
-            </div>
-        </form>
+<div class="p-page-header">
+    <div class="p-page-title">Yeni Canlı Dərs</div>
+    <div class="p-breadcrumb">
+        <a asp-area="Admin" asp-controller="LiveClass" asp-action="Index">Canlı Dərslər</a> / Yeni
     </div>
 </div>
 
+<div class="p-card" style="max-width:720px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="af-field">
+            <label class="af-label">Başlıq <span class="req">*</span></label>
+            <input asp-for="Title" class="form-control" placeholder="Məs: C# Masterclass - Dərs 1" />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+        </div>
+
+        <div class="af-field">
+            <label class="af-label">Mövzu (ixtiyari)</label>
+            <input asp-for="Topic" class="form-control" placeholder="Məs: LINQ və Entity Framework" />
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="af-field">
+                <label class="af-label">Kateqoriya</label>
+                <select class="form-control" id="categorySelect" onchange="loadCoursesByCategory(this.value)">
+                    <option value="">-- Kateqoriya seçin --</option>
+                    @foreach (var cat in ViewBag.Categories as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>())
+                    {
+                        <option value="@cat.Value">@cat.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="af-field">
+                <label class="af-label">Kurs <span class="req">*</span></label>
+                <select asp-for="CourseId" class="form-control" id="courseSelect">
+                    <option value="">-- Əvvəlcə kateqoriya seçin --</option>
+                </select>
+                <span asp-validation-for="CourseId" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        @if (Model.Teachers != null && Model.Teachers.Any())
+        {
+            <div class="af-field">
+                <label class="af-label">Müəllim</label>
+                <select asp-for="TeacherId" asp-items="Model.Teachers" class="form-control">
+                    <option value="">-- Özüm --</option>
+                </select>
+            </div>
+        }
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="af-field">
+                <label class="af-label">Başlama Tarixi və Vaxtı <span class="req">*</span></label>
+                <input asp-for="ScheduledDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="ScheduledDate" class="field-validation-error"></span>
+            </div>
+            <div class="af-field">
+                <label class="af-label">Müddət (dəqiqə)</label>
+                <input asp-for="DurationMinutes" type="number" class="form-control" min="1" placeholder="60" />
+            </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>
+
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" />
+<script>
+function loadCoursesByCategory(categoryId) {
+    var sel = document.getElementById('courseSelect');
+    sel.innerHTML = '<option value="">Yüklənir...</option>';
+
+    if (!categoryId) {
+        sel.innerHTML = '<option value="">-- Əvvəlcə kateqoriya seçin --</option>';
+        return;
+    }
+
+    fetch('/Admin/LiveClass/GetCoursesByCategory?categoryId=' + categoryId)
+        .then(function(r) { return r.json(); })
+        .then(function(courses) {
+            if (!courses || courses.length === 0) {
+                sel.innerHTML = '<option value="">Bu kateqoriyada kurs yoxdur</option>';
+                return;
+            }
+            sel.innerHTML = '<option value="">-- Kurs seçin --</option>';
+            courses.forEach(function(c) {
+                var opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.title;
+                sel.appendChild(opt);
+            });
+        })
+        .catch(function() {
+            sel.innerHTML = '<option value="">Kurslar yüklənmədi</option>';
+        });
+}
+</script>
 }

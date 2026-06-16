@@ -50,10 +50,23 @@ namespace Academy.Data
         public DbSet<CourseReview> CourseReviews { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<VideoProgress> VideoProgresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<VideoProgress>()
+                .HasOne(vp => vp.Video)
+                .WithMany()
+                .HasForeignKey(vp => vp.VideoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<VideoProgress>()
+                .HasOne(vp => vp.Course)
+                .WithMany()
+                .HasForeignKey(vp => vp.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Quiz>()
                 .HasOne(q => q.Course)

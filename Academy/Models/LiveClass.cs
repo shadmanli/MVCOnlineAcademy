@@ -17,6 +17,9 @@ namespace Academy.Models
         public int CourseId { get; set; }
         public Course Course { get; set; }
 
+        public int? LessonId { get; set; }
+        public Lesson? Lesson { get; set; }
+
         public int? InstructorId { get; set; }
         public Instructor Instructor { get; set; }
 
@@ -26,9 +29,9 @@ namespace Academy.Models
         public string Title { get; set; }
         public string Topic { get; set; }
 
-        // 1.1 Unikal v? T?hlük?sizlik
+        // 1.1 Unikal v? T?hlï¿½k?sizlik
         public string RoomId { get; set; } = Guid.NewGuid().ToString("N");
-        public string SecureToken { get; set; } // JWT v? ya Access Token üçün saxlanacaq
+        public string SecureToken { get; set; } // JWT v? ya Access Token ï¿½ï¿½ï¿½n saxlanacaq
 
         // 1.2 Schedule
         public DateTime ScheduledDate { get; set; }

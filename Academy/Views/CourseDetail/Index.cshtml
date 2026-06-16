@@ -178,6 +178,46 @@
                                 <span><strong>30 günlük</strong> pulsuz iade zəmanəti</span>
                             </div>
                         </div>
+                        <!-- LIVE CLASS CARD -->
+                        @if (Model.LiveClasses != null && Model.LiveClasses.Any() && (ViewBag.IsPurchased ?? false))
+                        {
+                            var lc = Model.LiveClasses.FirstOrDefault(x =>
+                                x.Status != Academy.Models.LiveSessionStatus.Ended &&
+                                x.Status != Academy.Models.LiveSessionStatus.Canceled);
+
+                            if (lc != null)
+                            {
+                                bool isLive = lc.Status == Academy.Models.LiveSessionStatus.Live ||
+                                    (lc.Status == Academy.Models.LiveSessionStatus.Scheduled && DateTime.Now >= lc.ScheduledDate);
+
+                                <div style="background:rgba(4,47,46,0.9);border:1px solid rgba(0,255,135,0.2);border-radius:20px;padding:24px;margin-top:16px;box-shadow:0 16px 40px rgba(0,0,0,0.2);">
+                                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                                        <span class="live-indicator-dot"></span>
+                                        <h4 style="margin:0;font-size:16px;font-weight:700;color:#fff;">Canlı Dərs</h4>
+                                    </div>
+                                    <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:12px;margin-bottom:16px;">
+                                        <h5 style="margin:0 0 4px;font-size:14px;color:#e2e8f0;">@lc.Title</h5>
+                                        @if (!string.IsNullOrEmpty(lc.Topic))
+                                        {
+                                            <p style="margin:0 0 4px;font-size:12px;color:#94a3b8;">📌 @lc.Topic</p>
+                                        }
+                                        <p style="margin:0;font-size:12px;color:#94a3b8;"><i class="fa-regular fa-clock"></i> @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</p>
+                                    </div>
+                                    @if (isLive)
+                                    {
+                                        <a href="/meeting/@lc.RoomId" class="neon-btn-live" style="width:100%;justify-content:center;">
+                                            <i class="fa-solid fa-video"></i> Canlı Dərsə Qoşul
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button disabled style="width:100%;background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:8px;font-weight:600;font-size:14px;cursor:not-allowed;">
+                                            <i class="fa-solid fa-calendar-days"></i> @lc.ScheduledDate.ToString("dd MMM, HH:mm")-də başlayır
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        }
                     </div>
 
                 </div>
@@ -245,36 +285,133 @@
 
                 @if (Model.Videos != null && Model.Videos.Any())
                 {
-                    <h2 class="section-title" style="margin-top: 40px; margin-bottom: 20px;">🎥 Dərslər (Mündəricat)</h2>
-
+                    bool isPurchased = ViewBag.IsPurchased ?? false;
+                    List<int> watchedIds = ViewBag.WatchedVideoIds as List<int> ?? new List<int>();
+                    int? lastWatchedId = ViewBag.LastWatchedVideoId as int?;
+                    int totalVids = Model.Videos.Count;
+                    int watchedCount = watchedIds.Count;
+                    int progressPct = totalVids > 0 ? (int)Math.Round((double)watchedCount / totalVids * 100) : 0;
                     var groupedVideos = Model.Videos.GroupBy(v => v.Level).OrderBy(g => g.Key);
 
-                    <div class="curriculum-accordion" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                    <h2 class="section-title" style="margin-top:40px;margin-bottom:20px;">
+                        🎥 Dərslər (Mündəricat)
+                        @if (isPurchased && totalVids > 0)
+                        {
+                            <span style="margin-left:12px;font-size:13px;font-weight:600;color:#00c4a8;">@watchedCount/@totalVids izlənildi</span>
+                        }
+                    </h2>
+
+                    @if (isPurchased && totalVids > 0)
+                    {
+                        <!-- Progress bar -->
+                        <div style="background:#f1f5f9;border-radius:99px;height:8px;margin-bottom:20px;overflow:hidden;">
+                            <div style="width:@progressPct%;background:linear-gradient(90deg,#00c4a8,#0ea5e9);height:100%;border-radius:99px;transition:width 0.5s ease;"></div>
+                        </div>
+                        @if (lastWatchedId.HasValue)
+                        {
+                            var lastVid = Model.Videos.FirstOrDefault(v => v.Id == lastWatchedId.Value);
+                            if (lastVid != null)
+                            {
+                                <div style="background:rgba(0,196,168,0.07);border:1px solid rgba(0,196,168,0.2);border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:14px;">
+                                    <i class="fa-solid fa-circle-play" style="color:#00c4a8;font-size:18px;"></i>
+                                    <div>
+                                        <span style="font-weight:700;color:#0f172a;">Davam et:</span>
+                                        <span style="color:#475569;margin-left:6px;">@lastVid.Title</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+
+                    @if (!isPurchased)
+                    {
+                        <!-- Locked banner -->
+                        <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;margin-bottom:20px;text-align:center;">
+                            <i class="fa-solid fa-lock" style="font-size:36px;color:#f59e0b;margin-bottom:12px;display:block;"></i>
+                            <h4 style="font-size:18px;font-weight:800;color:#f8fafc;margin-bottom:8px;">Bu bölmə kilidlidir</h4>
+                            <p style="font-size:14px;color:#94a3b8;margin-bottom:20px;">Bütün dərslərə baxmaq üçün kursu satın alın.</p>
+                            <form asp-controller="Basket" asp-action="Add" method="post" style="display:inline;">
+                                <input type="hidden" name="courseId" value="@Model.Id" />
+                                <button type="submit" style="background:linear-gradient(135deg,#ff6d34,#e8551f);color:#fff;border:none;padding:13px 32px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(255,109,52,0.3);">
+                                    <i class="fa-solid fa-cart-shopping"></i> Səbətə Əlavə Et
+                                </button>
+                            </form>
+                        </div>
+                    }
+
+
+                    <div class="curriculum-accordion" style="border:1px solid #e8edf3;border-radius:16px;overflow:hidden;">
                     @foreach (var group in groupedVideos)
                     {
-                        <div class="curriculum-group" style="border-bottom: 1px solid #ddd;">
-                            <div class="group-header" style="background: #f8f9fa; padding: 15px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-                                <h3 style="margin: 0; font-size: 1.1rem; color: #333;">@group.Key Dərsləri</h3>
-                                <span style="font-size: 0.9rem; color: #666;">@group.Count() dərs</span>
+                        <div class="curriculum-group" style="border-bottom:1px solid #e8edf3;">
+                            <div class="group-header" style="background:#f8fafc;padding:16px 20px;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+                                <h3 style="margin:0;font-size:15px;color:#0f172a;">@group.Key Dərsləri</h3>
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    @if (isPurchased)
+                                    {
+                                        int gWatched = group.Count(v => watchedIds.Contains(v.Id));
+                                        <span style="font-size:12px;color:#64748b;">@gWatched/@group.Count() izlənildi</span>
+                                    }
+                                    <span style="font-size:12px;color:#64748b;background:#e8edf3;padding:3px 10px;border-radius:99px;">@group.Count() dərs</span>
+                                    @if (!isPurchased)
+                                    {
+                                        <i class="fa-solid fa-lock" style="color:#f59e0b;font-size:13px;"></i>
+                                    }
+                                </div>
                             </div>
-                            <div class="group-body" style="background: #fff; padding: 0;">
-                                <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                            <div class="group-body" style="background:#fff;display:block;">
+                                <ul style="list-style:none;padding:0;margin:0;">
                                     @foreach (var video in group)
                                     {
-                                        <li style="padding: 15px 20px; border-top: 1px solid #eee;">
-                                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                                                <div style="display: flex; align-items: center;">
-                                                    <i class="fa-solid fa-circle-play" style="color: #00c4a8; margin-right: 12px; font-size: 1.2rem;"></i>
-                                                    <span style="font-weight: 500; font-size: 15px; color: #333;">@video.Title</span>
+                                        bool isWatched = watchedIds.Contains(video.Id);
+                                        bool isLast = video.Id == lastWatchedId;
+
+                                        <li style="padding:14px 20px;border-top:1px solid #f1f5f9;background:@(isLast ? "rgba(0,196,168,0.04)" : "transparent")">
+                                            <div style="display:flex;align-items:center;justify-content:space-between;">
+                                                <div style="display:flex;align-items:center;gap:12px;">
+                                                    @if (isPurchased)
+                                                    {
+                                                        if (isWatched)
+                                                        {
+                                                            <i class="fa-solid fa-circle-check" style="color:#00c4a8;font-size:16px;"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="fa-regular fa-circle-play" style="color:#94a3b8;font-size:16px;"></i>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa-solid fa-lock" style="color:#f59e0b;font-size:14px;"></i>
+                                                    }
+                                                    <span style="font-weight:500;font-size:14px;color:@(isWatched ? "#64748b" : "#0f172a");@(isWatched ? "text-decoration:line-through;" : "")">@video.Title</span>
+                                                    @if (isLast)
+                                                    {
+                                                        <span style="font-size:11px;font-weight:700;color:#00c4a8;background:rgba(0,196,168,0.1);padding:2px 8px;border-radius:99px;">Davam et</span>
+                                                    }
                                                 </div>
+                                                @if (isPurchased && isWatched)
+                                                {
+                                                    <span style="font-size:11px;color:#00c4a8;font-weight:600;">✓ İzlənildi</span>
+                                                }
                                             </div>
-                                            @if (!string.IsNullOrEmpty(video.Url))
+
+                                            @if (isPurchased && !string.IsNullOrEmpty(video.Url))
                                             {
-                                                <div style="margin-left: 30px; margin-top: 10px;">
-                                                    <video style="width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background-color: #000;" controls preload="metadata">
+                                                <div style="margin-left:28px;margin-top:12px;">
+                                                    <video data-video-id="@video.Id" data-course-id="@Model.Id"
+                                                           style="width:100%;max-width:600px;border-radius:12px;border:1px solid #e8edf3;box-shadow:0 4px 15px rgba(0,0,0,0.08);"
+                                                           controls preload="metadata"
+                                                           onended="markVideoWatched(@video.Id, @Model.Id, this)">
                                                         <source src="/uploads/videos/@video.Url">
-                                                        Sizin brauzeriniz video dəstəkləmir.
                                                     </video>
+                                                </div>
+                                            }
+                                            else if (!isPurchased)
+                                            {
+                                                <div style="margin-left:28px;margin-top:10px;padding:12px 16px;background:#fafafa;border:1px dashed #e2e8f0;border-radius:10px;display:flex;align-items:center;gap:8px;font-size:13px;color:#94a3b8;">
+                                                    <i class="fa-solid fa-lock" style="color:#f59e0b;"></i>
+                                                    Bu dərs kilidlidir. Kursu satın alaraq baxın.
                                                 </div>
                                             }
                                         </li>
@@ -689,9 +826,41 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadReviews(@Model.Id);
-        });
+        // Mark video as watched when it ends
+        function markVideoWatched(videoId, courseId, videoEl) {
+            fetch('/CourseDetail/MarkWatched', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'videoId=' + videoId + '&courseId=' + courseId
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    // İkon yenilə
+                    var li = videoEl.closest('li');
+                    if (li) {
+                        var icon = li.querySelector('i.fa-regular');
+                        if (icon) {
+                            icon.className = 'fa-solid fa-circle-check';
+                            icon.style.color = '#00c4a8';
+                        }
+                        var titleEl = li.querySelector('span[style*="font-weight:500"]');
+                        if (titleEl) {
+                            titleEl.style.textDecoration = 'line-through';
+                            titleEl.style.color = '#64748b';
+                        }
+                    }
+                    // Progress bar yenilə
+                    if (res.percent !== undefined) {
+                        var bar = document.querySelector('[style*="linear-gradient(90deg,#00c4a8"]');
+                        if (bar) bar.style.width = res.percent + '%';
+                        var counter = document.querySelector('[style*="izlənildi"]');
+                        if (counter) counter.textContent = res.watchedCount + '/' + res.totalVideos + ' izlənildi';
+                    }
+                }
+            })
+            .catch(() => {});
+        }
     </script>
     @Html.AntiForgeryToken()
 }
