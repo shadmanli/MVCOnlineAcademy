@@ -394,7 +394,8 @@
   <div class="db-topbar">
     <div class="db-search">
       <i class="fa fa-magnifying-glass db-search-icon"></i>
-      <input type="text" placeholder="Tələbə axtar...">
+      <input type="text" id="studentSearch" placeholder="Tələbə axtar..."
+             oninput="window.filterStudents && window.filterStudents(this.value)">
     </div>
     <div class="db-topbar-right">
       <a href="/Admin/ContactMessage" class="db-icon-btn" title="Mesajlar">
@@ -531,6 +532,7 @@
   <div class="db-students-title">
     <i class="fa fa-list" style="color:#a78bfa;"></i>
     Bütün Tələbə Nəticələri
+    <span style="margin-left:auto;font-size:12px;font-weight:500;color:#475569;" id="studentCount">@Model.Count nəfər</span>
   </div>
 
   @if (!Model.Any())
@@ -542,31 +544,135 @@
   }
   else
   {
-    <div class="row">
+    <div id="studentsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
       @foreach (var res in Model)
       {
         var initial = res.AppUser?.FullName?.Length > 0 ? res.AppUser.FullName[0].ToString().ToUpper() : "?";
-        <div class="col-md-6 col-lg-4">
-          <div class="db-student-card lv-@res.Level">
-            <div class="d-flex align-items-center">
-              <div class="db-student-avatar">@initial</div>
-              <div>
-                <div class="db-student-name">@res.AppUser?.FullName</div>
-                <div class="db-student-meta">
-                  <i class="fa fa-layer-group" style="font-size:10px;"></i>
-                  @res.Level &bull; @res.Category?.Name
+        var lvColor = res.Level == "Advanced" ? "#ef4444" : res.Level == "Intermediate" ? "#f59e0b" : "#10b981";
+        var lvBg    = res.Level == "Advanced" ? "rgba(239,68,68,0.1)" : res.Level == "Intermediate" ? "rgba(245,158,11,0.1)" : "rgba(16,185,129,0.1)";
+        var lvBorder = res.Level == "Advanced" ? "rgba(239,68,68,0.25)" : res.Level == "Intermediate" ? "rgba(245,158,11,0.25)" : "rgba(16,185,129,0.25)";
+        var pct = (int)res.Percentage;
+        var pctColor = pct >= 71 ? "#ef4444" : pct >= 41 ? "#f59e0b" : "#10b981";
+
+        <div class="student-premium-card" data-name="@res.AppUser?.FullName?.ToLower()" data-level="@res.Level?.ToLower()">
+            <!-- Top: avatar + info -->
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+                <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#a78bfa,#38bdf8);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 4px 14px rgba(167,139,250,0.3);">
+                    @initial
                 </div>
-                <span class="db-xp-badge">@res.XP XP</span>
-              </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@res.AppUser?.FullName</div>
+                    <div style="font-size:12px;color:#475569;margin-top:2px;display:flex;align-items:center;gap:6px;">
+                        <i class="fa fa-folder" style="font-size:10px;color:#64748b;"></i>
+                        @(res.Category?.Name ?? "Ümumi")
+                    </div>
+                </div>
+                <!-- Level badge -->
+                <div style="padding:5px 12px;border-radius:99px;background:@lvBg;border:1px solid @lvBorder;color:@lvColor;font-size:11px;font-weight:700;flex-shrink:0;">
+                    @res.Level
+                </div>
             </div>
-            <div class="text-end">
-              <div class="db-student-pct">@res.Percentage%</div>
+
+            <!-- Progress bar -->
+            <div style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                    <span style="font-size:12px;color:#64748b;font-weight:500;">Bal faizi</span>
+                    <span style="font-size:14px;font-weight:800;color:@pctColor;">@pct%</span>
+                </div>
+                <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">
+                    <div style="height:100%;width:@pct%;background:linear-gradient(90deg,@pctColor,@pctColor);border-radius:99px;opacity:0.85;transition:width 0.8s ease;"></div>
+                </div>
             </div>
-          </div>
+
+            <!-- Stats row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center;">
+                    <div style="font-size:16px;font-weight:800;color:#f1f5f9;">@res.Score</div>
+                    <div style="font-size:10px;color:#475569;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Düzgün</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center;">
+                    <div style="font-size:16px;font-weight:800;color:#a78bfa;">@res.XP</div>
+                    <div style="font-size:10px;color:#475569;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">XP</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center;">
+                    <div style="font-size:16px;font-weight:800;color:#38bdf8;">@res.TotalQuestions</div>
+                    <div style="font-size:10px;color:#475569;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Sual</div>
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:11px;color:#334155;display:flex;align-items:center;gap:5px;">
+                    <i class="fa fa-calendar" style="font-size:10px;"></i>
+                    @res.CreatedAt.ToString("dd MMM yyyy, HH:mm")
+                </span>
+                @if (res.CourseId.HasValue)
+                {
+                    <a href="/CourseDetail/Index/@res.CourseId" style="font-size:11px;color:#a78bfa;font-weight:600;text-decoration:none;">
+                        Kursa bax <i class="fa fa-arrow-right" style="font-size:9px;"></i>
+                    </a>
+                }
+            </div>
         </div>
       }
     </div>
+
+    <div id="noStudentsMsg" style="display:none;" class="db-empty">
+        <i class="fa fa-search"></i>
+        Axtarışa uyğun tələbə tapılmadı.
+    </div>
+
+    <!-- Pagination -->
+    <div id="paginationWrap" style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:28px;flex-wrap:wrap;"></div>
   }
+
+<style>
+.student-premium-card {
+    background: #0d1117;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.student-premium-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a78bfa, #38bdf8);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.student-premium-card:hover {
+    border-color: rgba(167,139,250,0.2);
+    background: rgba(167,139,250,0.03);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+.student-premium-card:hover::before { opacity: 1; }
+
+/* Pagination */
+.pg-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: #64748b;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.pg-btn:hover { background: rgba(167,139,250,0.1); color: #a78bfa; border-color: rgba(167,139,250,0.3); }
+.pg-btn.active {
+    background: linear-gradient(135deg, #a78bfa, #38bdf8);
+    border-color: transparent; color: #fff;
+    box-shadow: 0 4px 14px rgba(167,139,250,0.35);
+}
+</style>
 
 </div>
 
@@ -590,7 +696,83 @@ function countUp(el, target, suffix, duration) {
     }, 16);
 }
 
+// ── Student Search + Pagination ──────────────────────────
+var PAGE_SIZE = 9;
+var currentPage = 1;
+var allCards = [];
+var _lastQuery = '';
+
+function initStudentCards() {
+    allCards = Array.from(document.querySelectorAll('.student-premium-card'));
+}
+
+function getVisibleCards(query) {
+    query = (query || '').toLowerCase().trim();
+    return allCards.filter(function(card) {
+        if (!query) return true;
+        var name  = card.dataset.name  || '';
+        var level = card.dataset.level || '';
+        return name.includes(query) || level.includes(query);
+    });
+}
+
+function renderPage(page, query) {
+    currentPage = page;
+    _lastQuery = query !== undefined ? query : _lastQuery;
+    var visible = getVisibleCards(_lastQuery);
+    var total = visible.length;
+    var totalPages = Math.ceil(total / PAGE_SIZE);
+    if (totalPages < 1) totalPages = 1;
+    var start = (currentPage - 1) * PAGE_SIZE;
+    var end   = start + PAGE_SIZE;
+
+    allCards.forEach(function(c) { c.style.display = 'none'; });
+    visible.forEach(function(c, i) {
+        c.style.display = (i >= start && i < end) ? '' : 'none';
+    });
+
+    var countEl = document.getElementById('studentCount');
+    if (countEl) countEl.textContent = total + ' nəfər';
+
+    var noMsg = document.getElementById('noStudentsMsg');
+    if (noMsg) noMsg.style.display = total === 0 ? 'block' : 'none';
+
+    var wrap = document.getElementById('paginationWrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    if (currentPage > 1) {
+        var prev = makePgBtn('<i class="fa fa-chevron-left" style="font-size:11px;"></i>', currentPage - 1);
+        wrap.appendChild(prev);
+    }
+    for (var p = 1; p <= totalPages; p++) {
+        var btn = makePgBtn(p, p);
+        if (p === currentPage) btn.classList.add('active');
+        wrap.appendChild(btn);
+    }
+    if (currentPage < totalPages) {
+        var next = makePgBtn('<i class="fa fa-chevron-right" style="font-size:11px;"></i>', currentPage + 1);
+        wrap.appendChild(next);
+    }
+}
+
+function makePgBtn(label, targetPage) {
+    var btn = document.createElement('button');
+    btn.className = 'pg-btn';
+    btn.innerHTML = label;
+    btn.onclick = function() { renderPage(targetPage, _lastQuery); };
+    return btn;
+}
+
+// Global — HTML oninput-dan çağırılır
+window.filterStudents = function(query) {
+    renderPage(1, query);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
+    allCards = Array.from(document.querySelectorAll('.student-premium-card'));
+    renderPage(1, '');
     countUp(document.getElementById('cnt-students'), @totalStudents);
     countUp(document.getElementById('cnt-avg'), @Math.Round(averageScore));
 
