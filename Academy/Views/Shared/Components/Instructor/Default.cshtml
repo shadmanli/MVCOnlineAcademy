@@ -1,4 +1,7 @@
-﻿<style>
+﻿@using Academy.ViewModels.Instructor
+@model IEnumerable<InstructorVM>
+
+<style>
 @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 #instructor {
@@ -13,14 +16,9 @@
     margin: 0 auto;
 }
 
-/* Top row */
 .top-side {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 52px;
-    gap: 20px;
-    flex-wrap: wrap;
+    text-align: center;
+    margin-bottom: 56px;
 }
 
 .instructor-content span {
@@ -29,13 +27,14 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #00c4a8;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
-.instructor-content span::before {
+.instructor-content span::before,
+.instructor-content span::after {
     content: '';
     display: inline-block;
     width: 24px; height: 2px;
@@ -48,7 +47,6 @@
     font-weight: 800;
     color: #0f172a;
     letter-spacing: -0.03em;
-    line-height: 1.2;
     margin-bottom: 10px;
 }
 
@@ -56,33 +54,9 @@
     font-size: 15px;
     color: #64748b;
     line-height: 1.65;
-    max-width: 460px;
 }
 
-.top-side > a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 16px rgba(0,196,168,0.3);
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.top-side > a:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,196,168,0.45);
-    color: #fff;
-}
-
-/* Cards grid */
+/* Cards */
 .teacher-card {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -109,6 +83,7 @@
     position: relative;
     overflow: hidden;
     height: 260px;
+    background: linear-gradient(135deg, #f8fafc, #e8edf3);
 }
 
 .teacher-single .img img {
@@ -120,6 +95,19 @@
 
 .teacher-single:hover .img img {
     transform: scale(1.06);
+}
+
+/* Şəkil yoxdursa avatar */
+.teacher-avatar-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    font-size: 56px;
+    font-weight: 800;
+    color: #fff;
 }
 
 /* Social icons overlay */
@@ -136,9 +124,7 @@
     transition: opacity 0.3s ease;
 }
 
-.teacher-single:hover .content {
-    opacity: 1;
-}
+.teacher-single:hover .content { opacity: 1; }
 
 .for-icon {
     width: 34px; height: 34px;
@@ -151,7 +137,6 @@
     font-size: 14px;
     text-decoration: none;
     transition: all 0.2s ease;
-    cursor: pointer;
 }
 
 .for-icon:hover {
@@ -160,7 +145,6 @@
     transform: translateY(-3px);
 }
 
-/* Name & role */
 .teacher-single h4 {
     font-size: 16px;
     font-weight: 700;
@@ -174,15 +158,24 @@
     color: #ff6d34;
     font-weight: 600;
     display: block;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
+/* Empty state */
+.instructor-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+}
+
+@@media (max-width: 1024px) {
+    .teacher-card { grid-template-columns: repeat(3, 1fr); }
+}
 @@media (max-width: 768px) {
     #instructor { padding: 70px 20px; }
-    .top-side { flex-direction: column; align-items: flex-start; }
     .teacher-card { grid-template-columns: 1fr 1fr; }
 }
-
 @@media (max-width: 480px) {
     .teacher-card { grid-template-columns: 1fr; }
 }
@@ -199,35 +192,109 @@
         </div>
 
         <div class="teacher-card">
-            @{
-                var teachers = new[]
-                {
-                    new { Name = "Intizar Shadmanli", Role = "UI/UX Designer", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "Frontend Developer", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "Backend Engineer", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "Data Scientist", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "Mobile Developer", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "DevOps Engineer", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "Product Manager", Img = "david-leto-380x422.jpg" },
-                    new { Name = "Intizar Shadmanli", Role = "Photographer", Img = "david-leto-380x422.jpg" },
-                };
-            }
-            @foreach (var t in teachers)
+            @if (Model != null && Model.Any())
             {
-                <div class="teacher-single">
-                    <div class="img">
-                        <img src="~/assets/images/@t.Img" alt="@t.Name">
-                        <div class="content">
-                            <div class="for-icon"><i class="fa-brands fa-instagram"></i></div>
-                            <div class="for-icon"><i class="fa-brands fa-x-twitter"></i></div>
-                            <div class="for-icon"><i class="fa-brands fa-linkedin-in"></i></div>
-                            <div class="for-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                @foreach (var t in Model)
+                {
+                    <div class="teacher-single">
+                        <div class="img">
+                            @if (!string.IsNullOrEmpty(t.Image))
+                            {
+                                <img src="~/uploads/instructors/@t.Image" alt="@t.FullName">
+                            }
+                            else
+                            {
+                                <div class="teacher-avatar-fallback">
+                                    @t.FullName[0].ToString().ToUpper()
+                                </div>
+                            }
+                            <div class="content">
+                                <div class="for-icon"><i class="fa-brands fa-instagram"></i></div>
+                                <div class="for-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                                <div class="for-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                                <div class="for-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                            </div>
                         </div>
+                        <h4>@t.FullName</h4>
+                        <span>@(string.IsNullOrEmpty(t.Title) ? "Müəllim" : t.Title)</span>
+                        @if (!string.IsNullOrEmpty(t.Bio))
+                        {
+                            <p style="font-size:13px;color:#64748b;line-height:1.55;padding:0 16px 18px;margin:0;">@t.Bio</p>
+                        }
                     </div>
-                    <h4>@t.Name</h4>
-                    <span>@t.Role</span>
+                }
+            }
+            else
+            {
+                <div class="instructor-empty">
+                    <i class="fa-solid fa-chalkboard-user" style="font-size:40px;display:block;margin-bottom:12px;"></i>
+                    <p>Hələ müəllim əlavə edilməyib.</p>
                 </div>
             }
         </div>
     </div>
 </section>
+
+@if (ViewBag.TotalPages != null && (int)ViewBag.TotalPages > 1)
+{
+    int cur   = (int)ViewBag.CurrentPage;
+    int total = (int)ViewBag.TotalPages;
+
+    <div class="instr-pagination">
+        @if (cur > 1)
+        {
+            <a href="?instrPage=@(cur - 1)" class="instr-page-btn">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+        }
+        @for (int p = 1; p <= total; p++)
+        {
+            <a href="?instrPage=@p" class="instr-page-btn @(p == cur ? "active" : "")">@p</a>
+        }
+        @if (cur < total)
+        {
+            <a href="?instrPage=@(cur + 1)" class="instr-page-btn">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        }
+    </div>
+}
+
+<style>
+.instr-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 48px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.instr-page-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e8edf3;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.instr-page-btn:hover {
+    background: rgba(0,196,168,0.08);
+    border-color: rgba(0,196,168,0.3);
+    color: #00c4a8;
+    transform: translateY(-2px);
+}
+
+.instr-page-btn.active {
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0,196,168,0.3);
+}
+</style>

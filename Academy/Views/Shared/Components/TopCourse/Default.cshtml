@@ -215,7 +215,6 @@
 
     <div class="cards-common">
         <div class="card-top">
-            <span>DISCOVER NEW</span>
             <h1>Ən Yaxşı Online Kurslar</h1>
             <p>Biliklərinizi inkişaf etdirin, karyeranızı qurun. Peşəkar müəllimlərdən öyrənin.</p>
         </div>
@@ -241,7 +240,7 @@
                     : "/uploads/course/" + course.ImageUrl;
                 var catId   = course.Category?.Id ?? 0;
                 var catName = course.Category?.Name ?? "";
-                var instrName = course.Instructor?.FullName ?? "Inzara Academy";
+                var instrName = course.Instructor?.FullName ?? "";
                 var instrInit = instrName.Length > 0 ? instrName[0].ToString().ToUpper() : "I";
                 var stars = Math.Min(5, Math.Max(1, (int)Math.Round(course.Rating)));
 
@@ -283,11 +282,7 @@
         }
     </div>
 
-    <div class="tc-view-all">
-        <a asp-controller="Course" asp-action="Index">
-            Bütün Kurslara Bax <i class="fa-solid fa-arrow-right"></i>
-        </a>
-    </div>
+
 
 </section>
 

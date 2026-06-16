@@ -7,9 +7,10 @@
     <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Feature" asp-action="Index">Xüsusiyyətlər</a> / Redaktə</div>
 </div>
 <div class="p-card" style="max-width:560px;">
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="Id" type="hidden" />
+        <input asp-for="ExistingImage" type="hidden" />
         <div class="af-field">
             <label class="af-label">Başlıq <span class="req">*</span></label>
             <input asp-for="Title" class="form-control" data-no-whitespace />
@@ -19,6 +20,18 @@
             <label class="af-label">Təsvir <span class="req">*</span></label>
             <textarea asp-for="Description" class="form-control" rows="4"></textarea>
             <span asp-validation-for="Description" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">İkon / Şəkil</label>
+            @if (!string.IsNullOrEmpty(Model.ExistingImage))
+            {
+                <div style="margin-bottom:10px;">
+                    <img src="~/uploads/features/@Model.ExistingImage" style="width:80px;height:80px;object-fit:cover;border-radius:12px;border:1px solid #e2e8f0;" />
+                    <span style="margin-left:10px;font-size:12px;color:#64748b;">Mövcud şəkil</span>
+                </div>
+            }
+            <input asp-for="Image" type="file" class="form-control" accept="image/*" />
+            <span class="af-hint">Yeni şəkil seçsəniz köhnəsinin üzərinə yazılacaq</span>
         </div>
         <div style="display:flex;gap:10px;margin-top:20px;">
             <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>

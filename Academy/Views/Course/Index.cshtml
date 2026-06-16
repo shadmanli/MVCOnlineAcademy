@@ -14,12 +14,13 @@
         string? sort = Context.Request.Query["sort"];
         int? categoryId = int.TryParse(Context.Request.Query["categoryId"], out int cid) ? cid : null;
         int? instructorId = int.TryParse(Context.Request.Query["instructorId"], out int iid) ? iid : null;
+        string? level = Context.Request.Query["level"];
         decimal? minPrice = decimal.TryParse(Context.Request.Query["minPrice"], out decimal minP) ? minP : null;
         decimal? maxPrice = decimal.TryParse(Context.Request.Query["maxPrice"], out decimal maxP) ? maxP : null;
         int pageNumber = int.TryParse(Context.Request.Query["page"], out int p) && p > 0 ? p : 1;
     }
 
-    @await Component.InvokeAsync("CourseCard", new { search, sort, categoryId, instructorId, minPrice, maxPrice, page = pageNumber })
+    @await Component.InvokeAsync("CourseCard", new { search, sort, categoryId, instructorId, level, minPrice, maxPrice, page = pageNumber })
 </main>
 
 @section Scripts {

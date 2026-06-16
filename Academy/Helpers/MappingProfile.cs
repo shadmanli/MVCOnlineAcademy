@@ -46,8 +46,11 @@ namespace Academy.Helpers
             CreateMap<Statistic, StatisticEditVM>().ReverseMap(); 
 
             CreateMap<Feature, FeatureVM>();
-            CreateMap<FeatureCreateVM, Feature>();
-                CreateMap<Feature, FeatureDetailVM>();
+            CreateMap<FeatureCreateVM, Feature>()
+                .ForMember(dest => dest.Image, opt => opt.Ignore());
+            CreateMap<Feature, FeatureEditVM>()
+                .ForMember(dest => dest.Image, opt => opt.Ignore())
+                .ForMember(dest => dest.ExistingImage, opt => opt.MapFrom(src => src.Image));
             CreateMap<Feature, FeatureEditVM>();
             CreateMap<FeatureEditVM, Feature>();
             CreateMap<Banner, BannerVM>();
@@ -166,7 +169,14 @@ namespace Academy.Helpers
                 .ForMember(dest => dest.Courses,
                     opt => opt.MapFrom(src => src.Courses));
 
-            CreateMap<Course, CourseVM>();
+            CreateMap<Course, CourseVM>()
+                .ForMember(d => d.LanguageName,    o => o.MapFrom(s => s.Language != null ? s.Language.Name : ""))
+                .ForMember(d => d.CategoryName,    o => o.MapFrom(s => s.Category != null ? s.Category.Name : ""))
+                .ForMember(d => d.InstructorName,  o => o.MapFrom(s => s.Instructor != null ? s.Instructor.FullName : ""))
+                .ForMember(d => d.CategoryId,      o => o.MapFrom(s => s.CategoryId))
+                .ForMember(d => d.InstructorId,    o => o.MapFrom(s => s.InstructorId))
+                .ForMember(d => d.Rating,          o => o.MapFrom(s => s.Rating))
+                .ForMember(d => d.StudentCount,    o => o.MapFrom(s => s.StudentCount));
 
 
             CreateMap<Lesson, LessonVM>()
@@ -180,18 +190,12 @@ namespace Academy.Helpers
                     opt => opt.MapFrom(src => src.Course.Title));
             CreateMap<Instructor, InstructorVM>();
 
-            CreateMap<InstructorCreateVM, Instructor>();
+            CreateMap<InstructorCreateVM, Instructor>()
+                .ForMember(dest => dest.Image, opt => opt.Ignore());
 
             CreateMap<Instructor, InstructorDetailVM>()
                 .ForMember(dest => dest.Courses,
                     opt => opt.MapFrom(src => src.Courses));
-
-            CreateMap<Course, CourseVM>();
-
-            CreateMap<Course, CourseVM>()
-    .ForMember(d => d.LanguageName, o => o.MapFrom(s => s.Language.Name))
-    .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.Name))
-    .ForMember(d => d.InstructorName, o => o.MapFrom(s => s.Instructor.FullName));
 
             CreateMap<CourseCreateVM, Course>();
 
@@ -205,13 +209,11 @@ namespace Academy.Helpers
       .ForMember(d => d.InstructorName,
           o => o.MapFrom(s => s.Instructor.FullName))
 
-     
       .ForMember(d => d.Features,
           o => o.MapFrom(s => s.Features != null
               ? s.Features.Select(f => f.Text).ToList()
               : new List<string>()))
 
-     
       .ForMember(d => d.StudentCount,
           o => o.MapFrom(s => s.StudentCount))
 
@@ -232,8 +234,6 @@ namespace Academy.Helpers
             CreateMap<CategoryCreateVM, Category>();
             CreateMap<Category, CategoryDetailVM>()
                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
-            CreateMap<Course, CourseVM>();
-
 
             CreateMap<Language, LanguageEditVM>();
             CreateMap<LanguageEditVM, Language>();
@@ -241,23 +241,11 @@ namespace Academy.Helpers
             CreateMap<Lesson, LessonEditVM>();
             CreateMap<LessonEditVM, Lesson>();
 
-
-
             CreateMap<Category, CategoryEditVM>();
             CreateMap<CategoryEditVM, Category>();
 
-
             CreateMap<Instructor, InstructorEditVM>();
             CreateMap<InstructorEditVM, Instructor>();
-
-
-            CreateMap<Course, CourseVM>()
-    .ForMember(dest => dest.InstructorName,
-        opt => opt.MapFrom(src => src.Instructor.FullName))
-    .ForMember(dest => dest.CategoryName,
-        opt => opt.MapFrom(src => src.Category.Name))
-    .ForMember(dest => dest.LanguageName,
-        opt => opt.MapFrom(src => src.Language.Name));
 
 
 

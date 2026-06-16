@@ -10,9 +10,11 @@
         public string LanguageName { get; set; }
         public string CategoryName { get; set; }
         public string InstructorName { get; set; }
-        public int CategoryId { get; set; }      
-        public int InstructorId { get; set; }
-        
+        public int CategoryId { get; set; }
+        public int? InstructorId { get; set; }
+
         public string Level { get; set; }
+        public double Rating { get; set; }
+        public int StudentCount { get; set; }
     }
 }

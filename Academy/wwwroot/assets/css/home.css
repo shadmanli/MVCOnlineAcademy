@@ -1044,6 +1044,7 @@ margin-bottom: 25px;
   display: flex;
   gap: 30px;               
   transition: transform 0.5s ease;
+  align-items: stretch;
 }
 
 #many-card .card{
@@ -1053,6 +1054,10 @@ margin-bottom: 25px;
   border-radius: 16px;
   text-align: center;
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #many-card .card i{
@@ -1079,6 +1084,10 @@ margin-bottom: 25px;
 .green { background: #00bfa6; }
 .light-green { background: #8ed081; }
 .yellow { background: #ffc15c; }
+.blue { background: #3b82f6; }
+.purple { background: #8b5cf6; }
+.pink { background: #ec4899; }
+.teal { background: #14b8a6; }
 
 
 .prev-btn,

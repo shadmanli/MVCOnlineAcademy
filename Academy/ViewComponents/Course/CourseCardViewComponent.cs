@@ -35,7 +35,7 @@ namespace Academy.ViewComponents.Course
             var courses = await _courseService.GetAllAsync();
 
             if (!string.IsNullOrEmpty(search))
-                courses = courses.Where(x => x.Title.Contains(search, StringComparison.OrdinalIgnoreCase) || (x.CategoryName != null && x.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+                courses = courses.Where(x => (x.Title != null && x.Title.Contains(search, StringComparison.OrdinalIgnoreCase)) || (x.CategoryName != null && x.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)));
 
             if (categoryId != null)
                 courses = courses.Where(x => x.CategoryId == categoryId);
@@ -44,7 +44,8 @@ namespace Academy.ViewComponents.Course
                 courses = courses.Where(x => x.InstructorId == instructorId);
                 
             if (!string.IsNullOrEmpty(level))
-                courses = courses.Where(x => x.Level == level);
+                courses = courses.Where(x => !string.IsNullOrEmpty(x.Level) &&
+                    x.Level.Equals(level, StringComparison.OrdinalIgnoreCase));
 
             if (minPrice != null)
                 courses = courses.Where(x => x.Price >= minPrice);
@@ -58,6 +59,10 @@ namespace Academy.ViewComponents.Course
                 courses = courses.OrderBy(x => x.Price);
             else if (sort == "high")
                 courses = courses.OrderByDescending(x => x.Price);
+            else if (sort == "rating")
+                courses = courses.OrderByDescending(x => x.Rating);
+            else if (sort == "popular")
+                courses = courses.OrderByDescending(x => x.StudentCount);
 
             int pageSize = 6;
             int totalItems = courses.Count();
@@ -75,6 +80,7 @@ namespace Academy.ViewComponents.Course
                 MaxPrice = maxPrice,
                 CategoryId = categoryId,
                 InstructorId = instructorId,
+                Level = level,
                 CurrentPage = page,
                 TotalPages = totalPages,
                 Search = search,

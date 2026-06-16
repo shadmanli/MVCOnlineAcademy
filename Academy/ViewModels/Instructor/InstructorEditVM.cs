@@ -9,5 +9,13 @@ namespace Academy.ViewModels.Instructor
         [Required(ErrorMessage = "Ad Soyad mütləqdir.")]
         [StringLength(100, MinimumLength = 2)]
         public string FullName { get; set; } = null!;
+
+        [StringLength(100)]
+        public string? Title { get; set; }
+
+        public string? Bio { get; set; }
+
+        public IFormFile? Image { get; set; }
+        public string? ExistingImage { get; set; }
     }
 }

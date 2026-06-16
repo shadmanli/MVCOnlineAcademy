@@ -43,8 +43,15 @@ namespace Academy.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                await _service.DeleteAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         public async Task<IActionResult> Edit(int id)

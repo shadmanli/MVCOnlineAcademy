@@ -132,6 +132,10 @@
            class="p-nav-link @(currentPath.Contains("/admin/aboutus") ? "active" : "")">
           <i class="fa fa-circle-info"></i> Haqqımızda
         </a>
+        <a asp-area="Admin" asp-controller="About" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/about") && !currentPath.Contains("/admin/aboutus") ? "active" : "")">
+          <i class="fa fa-photo-film"></i> Haqqımızda (Video)
+        </a>
         <a asp-area="Admin" asp-controller="Mission" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/mission") ? "active" : "")">
           <i class="fa fa-bullseye"></i> Missiya
@@ -147,6 +151,10 @@
         <a asp-area="Admin" asp-controller="ImpactItem" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/impactitem") ? "active" : "")">
           <i class="fa fa-list"></i> Impact Items
+        </a>
+        <a asp-area="Admin" asp-controller="Feature" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/feature") ? "active" : "")">
+          <i class="fa fa-paper-plane"></i> Xüsusiyyətlər (Feature)
         </a>
 
         <div class="p-nav-section">Əlaqə</div>

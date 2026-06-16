@@ -445,11 +445,9 @@ gap:39px;
   justify-content: center;
 }
 
-
-
 .card {
   position: relative;
-  flex: 1 1 320px;        
+  flex: 1 1 320px;
   max-width: 360px;
   padding: 40px 30px;
   background: #fff;
@@ -461,7 +459,7 @@ gap:39px;
 }
 
 .card:hover {
-  transform: translateY(-15px);
+  transform: translateY(-10px);
   box-shadow: 0 20px 50px rgba(0,0,0,0.15);
 }
 
@@ -477,11 +475,17 @@ gap:39px;
   align-items: center;
   justify-content: center;
   transition: 0.4s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .icon-box i {
   font-size: 32px;
   color: #fff;
+  position: relative;
+  z-index: 1;
 }
 
 .card:hover .icon-box {
@@ -494,12 +498,17 @@ gap:39px;
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 15px;
+  color: #0f172a;
+  position: relative;
+  z-index: 1;
 }
 
 .card p {
   font-size: 16px;
   color: #6c757d;
   line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }
 
 /* BACKGROUND SHAPE */
@@ -508,11 +517,13 @@ gap:39px;
   position: absolute;
   width: 150px;
   height: 150px;
-  background: rgba(255,109,52,0.08);
+  background: rgba(0,196,168,0.06);
   border-radius: 50%;
   top: -40px;
   right: -40px;
   transition: 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .card:hover .card-bg {

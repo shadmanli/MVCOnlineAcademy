@@ -5,7 +5,14 @@ namespace Academy.ViewModels.Instructor
     public class InstructorCreateVM
     {
         [Required(ErrorMessage = "Ad Soyad mütləqdir.")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "Ad Soyad 2-100 simvol arasında olmalıdır.")]
+        [StringLength(100, MinimumLength = 2)]
         public string FullName { get; set; } = null!;
+
+        [StringLength(100)]
+        public string? Title { get; set; }
+
+        public string? Bio { get; set; }
+
+        public IFormFile? Image { get; set; }
     }
 }

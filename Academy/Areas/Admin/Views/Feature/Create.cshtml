@@ -9,7 +9,7 @@
 </div>
 
 <div class="p-card" style="max-width:560px;">
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div class="af-field">
             <label class="af-label">Başlıq <span class="req">*</span></label>
@@ -20,6 +20,11 @@
             <label class="af-label">Təsvir <span class="req">*</span></label>
             <textarea asp-for="Description" class="form-control" rows="4" placeholder="Xüsusiyyət haqqında..."></textarea>
             <span asp-validation-for="Description" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">İkon / Şəkil</label>
+            <input asp-for="Image" type="file" class="form-control" accept="image/*" />
+            <span class="af-hint">Kart üzərində görünəcək ikon və ya şəkil (PNG, JPG, SVG)</span>
         </div>
         <div style="display:flex;gap:10px;margin-top:20px;">
             <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>

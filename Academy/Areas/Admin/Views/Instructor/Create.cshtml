@@ -8,13 +8,26 @@
     <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Instructor" asp-action="Index">Müəllimlər</a> / Yeni</div>
 </div>
 
-<div class="p-card" style="max-width:480px;">
-    <form asp-action="Create" method="post">
+<div class="p-card" style="max-width:520px;">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div class="af-field">
             <label class="af-label">Ad Soyad <span class="req">*</span></label>
             <input asp-for="FullName" class="form-control" placeholder="Məs: Əli Həsənov" data-no-whitespace />
             <span asp-validation-for="FullName" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Vəzifə / İxtisas</label>
+            <input asp-for="Title" class="form-control" placeholder="Məs: Frontend Developer" />
+        </div>
+        <div class="af-field">
+            <label class="af-label">Bio</label>
+            <textarea asp-for="Bio" class="form-control" rows="3" placeholder="Müəllim haqqında qısa məlumat..."></textarea>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Şəkil</label>
+            <input asp-for="Image" type="file" class="form-control" accept="image/*" />
+            <span class="af-hint">Müəllimin profil şəkli (JPG, PNG, WebP)</span>
         </div>
         <div style="display:flex;gap:10px;margin-top:20px;">
             <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>

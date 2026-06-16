@@ -54,7 +54,7 @@
 .cards-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    gap: 32px;
 }
 
 .blog-card-single {
@@ -206,6 +206,45 @@
     #last-card { padding: 60px 16px 80px; }
     .cards-container { grid-template-columns: 1fr; }
 }
+
+/* Pagination */
+.blog-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+}
+
+.blog-page-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e8edf3;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.blog-page-btn:hover {
+    background: rgba(0,196,168,0.08);
+    border-color: rgba(0,196,168,0.3);
+    color: #00c4a8;
+    transform: translateY(-2px);
+}
+
+.blog-page-btn.active {
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0,196,168,0.3);
+}
 </style>
 
 <section id="last-card">
@@ -238,10 +277,36 @@
             }
         </div>
 
-        <div class="btn-wrapper">
-            <a href="#">
-                <i class="fa-solid fa-rotate"></i> Load More
-            </a>
-        </div>
+        @if (ViewBag.TotalPages != null && (int)ViewBag.TotalPages > 1)
+        {
+            int cur   = (int)ViewBag.CurrentPage;
+            int total = (int)ViewBag.TotalPages;
+
+            <div class="blog-pagination">
+                @if (cur > 1)
+                {
+                    <a href="?blogPage=@(cur - 1)" class="blog-page-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                }
+                @for (int p = 1; p <= total; p++)
+                {
+                    @if (p == 1 || p == total || (p >= cur - 2 && p <= cur + 2))
+                    {
+                        <a href="?blogPage=@p" class="blog-page-btn @(p == cur ? "active" : "")">@p</a>
+                    }
+                    else if (p == cur - 3 || p == cur + 3)
+                    {
+                        <span class="blog-page-btn" style="pointer-events:none;opacity:0.4;">...</span>
+                    }
+                }
+                @if (cur < total)
+                {
+                    <a href="?blogPage=@(cur + 1)" class="blog-page-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                }
+            </div>
+        }
     </div>
 </section>

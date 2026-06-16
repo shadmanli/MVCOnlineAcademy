@@ -4,6 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Academy.ViewComponents.Home
 {
+    public class TrendingCategoryVM
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int CourseCount { get; set; }
+    }
+
     public class TrendingCategoriesViewComponent : ViewComponent
     {
         private readonly AppDbContext _context;
@@ -17,21 +24,16 @@ namespace Academy.ViewComponents.Home
         {
             // Kateqoriyaları kurs sayı ilə birlikdə yüklə
             var categories = await _context.Categories
-                .Select(c => new
+                .Select(c => new TrendingCategoryVM
                 {
                     Id         = c.Id,
                     Name       = c.Name,
-                    CourseCount = c.Courses.Count(co => co.IsActive && !co.IsDeleted)
+                    CourseCount = c.Courses.Count(co => !co.IsDeleted)
                 })
                 .OrderByDescending(c => c.CourseCount)
                 .ToListAsync();
 
-            // anonymous type → tuple list kimi ötür
-            var result = categories
-                .Select(c => (c.Id, c.Name, c.CourseCount))
-                .ToList();
-
-            return View(result);
+            return View(categories);
         }
     }
 }

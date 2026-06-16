@@ -1,24 +1,393 @@
-﻿
-@model IEnumerable<FeatureVM>
+﻿@model IEnumerable<FeatureVM>
 
+@{
+    // Teacher səhifəsindəyiksə premium dizayn, About-da isə klassik
+    var isTeacher = Context.Request.Path.Value?.ToLower().Contains("/teacher") == true;
+}
+
+@if (isTeacher)
+{
+<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+#teacher-feature {
+    width: 100%;
+    padding: 120px 32px;
+    background: linear-gradient(135deg, #f0fdf9 0%, #e8f8ff 50%, #f5f3ff 100%);
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+#teacher-feature::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,196,168,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -200px; left: -150px;
+    pointer-events: none;
+}
+
+#teacher-feature::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,109,52,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -100px; right: -100px;
+    pointer-events: none;
+}
+
+.tf-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0,196,168,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,196,168,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+}
+
+.tf-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.tf-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 72px;
+    flex-wrap: wrap;
+}
+
+.tf-header-left {}
+
+.tf-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.tf-label::before,
+.tf-label::after {
+    content: '';
+    display: inline-block;
+    width: 28px; height: 1.5px;
+    background: linear-gradient(90deg, transparent, #00c4a8);
+    border-radius: 2px;
+}
+.tf-label::after { background: linear-gradient(90deg, #00c4a8, transparent); }
+
+.tf-header-left h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    max-width: 600px;
+}
+
+.tf-header-left h2 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tf-header-right {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.7;
+    max-width: 340px;
+    flex-shrink: 0;
+}
+
+/* Cards */
+.tf-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.tf-cards-row2 {
+    display: grid;
+    gap: 20px;
+}
+
+.tf-card {
+    background: #ffffff;
+    border: 1px solid #e2f8f5;
+    border-radius: 24px;
+    padding: 36px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    opacity: 0;
+    transform: translateY(36px);
+    box-shadow: 0 4px 20px rgba(0,196,168,0.06);
+}
+
+.tf-card.tf-vis {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tf-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    background: radial-gradient(circle at var(--mx,50%) var(--my,50%),
+        rgba(0,196,168,0.13) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.35s;
+    pointer-events: none;
+}
+
+.tf-card:hover {
+    border-color: rgba(0,196,168,0.35);
+    transform: translateY(-10px) scale(1.01);
+    box-shadow: 0 24px 60px rgba(0,196,168,0.15), 0 0 0 1px rgba(0,196,168,0.1);
+}
+
+.tf-card:hover::before { opacity: 1; }
+
+.tf-top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00c4a8, #0ea5e9, transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.tf-card:hover .tf-top-bar { opacity: 1; }
+
+.tf-num {
+    position: absolute;
+    top: 10px; right: 18px;
+    font-size: 60px;
+    font-weight: 900;
+    color: rgba(0,196,168,0.06);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    user-select: none;
+    transition: color 0.4s;
+}
+.tf-card:hover .tf-num { color: rgba(0,196,168,0.12); }
+
+.tf-icon {
+    width: 60px; height: 60px;
+    border-radius: 16px;
+    background: rgba(0,196,168,0.08);
+    border: 1px solid rgba(0,196,168,0.14);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+    position: relative; z-index: 1;
+    transition: all 0.4s ease;
+}
+
+.tf-icon img { width: 32px; height: 32px; object-fit: contain; }
+.tf-icon i { font-size: 24px; color: #00c4a8; transition: transform 0.4s; }
+
+.tf-card:hover .tf-icon {
+    background: rgba(0,196,168,0.15);
+    border-color: rgba(0,196,168,0.3);
+    box-shadow: 0 0 22px rgba(0,196,168,0.2);
+    transform: rotate(-6deg) scale(1.1);
+}
+.tf-card:hover .tf-icon i { transform: rotate(6deg); }
+
+.tf-body { position: relative; z-index: 1; }
+
+.tf-body h4 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    transition: color 0.3s;
+}
+.tf-card:hover .tf-body h4 { color: #00c4a8; }
+
+.tf-body p {
+    font-size: 13.5px;
+    color: #64748b;
+    line-height: 1.75;
+    margin: 0 0 18px;
+}
+
+.tf-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #00c4a8;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+}
+.tf-cta::after { content: '→'; transition: transform 0.2s; }
+.tf-card:hover .tf-cta { opacity: 1; transform: translateX(0); }
+.tf-cta:hover::after { transform: translateX(4px); }
+
+/* Bottom stats */
+.tf-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #e2f8f5;
+    border: 1px solid #e2f8f5;
+    border-radius: 20px;
+    margin-top: 60px;
+    overflow: hidden;
+}
+
+.tf-stat {
+    padding: 28px;
+    background: #ffffff;
+    text-align: center;
+    transition: background 0.3s;
+}
+.tf-stat:hover { background: #f0fdf9; }
+
+.tf-stat-n {
+    display: block;
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #0f172a 0%, #00c4a8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.tf-stat-l {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+@@media (max-width: 1024px) { .tf-cards { grid-template-columns: repeat(2, 1fr); } }
+@@media (max-width: 640px) {
+    #teacher-feature { padding: 80px 16px; }
+    .tf-cards { grid-template-columns: 1fr; }
+    .tf-header { flex-direction: column; }
+    .tf-stats { grid-template-columns: 1fr; }
+}
+</style>
+
+<section id="teacher-feature">
+    <div class="tf-pattern"></div>
+    <div class="tf-inner">
+
+        <div class="tf-header">
+            <div class="tf-header-left">
+                <span class="tf-label">GLOBAL TƏSİR</span>
+                <h2>Öyrən, İnkişaf Et,<br><em>Uğur Qazан</em></h2>
+            </div>
+            <div class="tf-header-right">
+                Peşəkar müəllimlərindən öyrənin. Biliklərinizi inkişaf etdirin, karyeranızı qurun və gəlirinizi artırın.
+            </div>
+        </div>
+
+        <div class="tf-cards">
+            @{
+                var faIcons = new[] { "fa-rocket","fa-graduation-cap","fa-users","fa-chart-line","fa-book-open","fa-trophy","fa-bolt","fa-star","fa-infinity" };
+                int tfN = 0;
+            }
+            @foreach (var item in Model)
+            {
+                <div class="tf-card" style="transition-delay: @(tfN * 90)ms">
+                    <div class="tf-top-bar"></div>
+                    <span class="tf-num">0@(tfN+1)</span>
+                    <div class="tf-icon">
+                        @if (!string.IsNullOrEmpty(item.Image))
+                        {
+                            <img src="~/uploads/features/@item.Image" alt="@item.Title" />
+                        }
+                        else
+                        {
+                            <i class="fa-solid @faIcons[tfN % faIcons.Length]"></i>
+                        }
+                    </div>
+                    <div class="tf-body">
+                        <h4>@item.Title</h4>
+                        <p>@item.Description</p>
+                        <a href="/Course" class="tf-cta">Kəşf et</a>
+                    </div>
+                </div>
+                tfN++;
+            }
+        </div>
+
+        <div class="tf-stats">
+            <div class="tf-stat"><span class="tf-stat-n">50K+</span><span class="tf-stat-l">Tələbə</span></div>
+            <div class="tf-stat"><span class="tf-stat-n">200+</span><span class="tf-stat-l">Kurs</span></div>
+            <div class="tf-stat"><span class="tf-stat-n">98%</span><span class="tf-stat-l">Məmnunluq</span></div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+(function(){
+    var cards = document.querySelectorAll('.tf-card');
+    var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('tf-vis'); obs.unobserve(e.target); } });
+    },{ threshold: 0.12 });
+    cards.forEach(function(c){ obs.observe(c); });
+
+    cards.forEach(function(card){
+        card.addEventListener('mousemove', function(e){
+            var r = card.getBoundingClientRect();
+            card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+            card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+        });
+    });
+})();
+</script>
+}
+else
+{
 <section id="about-card">
     <div class="card-common">
-
-
         @foreach(var item in Model)
         {
             <div class="card">
                 <div class="icon-box">
-                    <i class="fa-solid fa-paper-plane"></i>
+                    @if (!string.IsNullOrEmpty(item.Image))
+                    {
+                        <img src="~/uploads/features/@item.Image" alt="@item.Title"
+                             style="width:44px;height:44px;object-fit:contain;" />
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-paper-plane"></i>
+                    }
                 </div>
                 <h4>@item.Title</h4>
                 <p>@item.Description</p>
                 <div class="card-bg"></div>
             </div>
-
         }
-      
-
-
     </div>
 </section>
+}

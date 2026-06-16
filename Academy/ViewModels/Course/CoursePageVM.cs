@@ -13,6 +13,7 @@ namespace Academy.ViewModels.Course
         public decimal? MaxPrice { get; set; }
         public int? CategoryId { get; set; }
         public int? InstructorId { get; set; }
+        public string? Level { get; set; }
 
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }

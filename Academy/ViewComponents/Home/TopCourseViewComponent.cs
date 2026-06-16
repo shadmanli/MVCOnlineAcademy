@@ -19,9 +19,9 @@ namespace Academy.ViewComponents.TopCourse
             var courses = await _context.Courses
                 .Include(c => c.Category)
                 .Include(c => c.Instructor)
-                .Where(c => c.IsActive && !c.IsDeleted)
-                .OrderByDescending(c => c.StudentCount)
-                .Take(12)
+                .Where(c => !c.IsDeleted) // Removed IsActive check so newly created courses can be displayed
+                .OrderByDescending(c => c.Id)
+                .Take(3)
                 .ToListAsync();
 
             // Unikal kateqoriyalar

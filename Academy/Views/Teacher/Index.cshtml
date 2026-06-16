@@ -10,12 +10,15 @@
 
     @await Component.InvokeAsync("Teacher")
 
-    @await Component.InvokeAsync("Global")
+    @await Component.InvokeAsync("AboutCard")
 
 
     @await Component.InvokeAsync("TeacherBenefit")
 
-    @await Component.InvokeAsync("Instructor")
+    @{
+        int instrPage = int.TryParse(Context.Request.Query["instrPage"], out int ip) && ip > 0 ? ip : 1;
+    }
+    @await Component.InvokeAsync("Instructor", new { page = instrPage })
 
 
     @await Component.InvokeAsync("BecomeInstructor")

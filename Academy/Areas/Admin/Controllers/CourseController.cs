@@ -33,9 +33,16 @@ namespace Academy.Areas.Admin.Controllers
         {
             var model = new CourseCreateVM
             {
-                Languages = _context.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList(),
-                Categories = _context.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList(),
-                Instructors = _context.Instructors.Select(x => new SelectListItem(x.FullName, x.Id.ToString())).ToList()
+                Languages   = await _context.Languages
+                    .Select(x => new SelectListItem(x.Name ?? "", x.Id.ToString()))
+                    .ToListAsync(),
+                Categories  = await _context.Categories
+                    .Select(x => new SelectListItem(x.Name ?? "", x.Id.ToString()))
+                    .ToListAsync(),
+                Instructors = await _context.Instructors
+                    .Where(x => x.FullName != null)
+                    .Select(x => new SelectListItem(x.FullName, x.Id.ToString()))
+                    .ToListAsync()
             };
 
             return View(model);
@@ -53,9 +60,16 @@ namespace Academy.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                model.Languages   = _context.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
-                model.Categories  = _context.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
-                model.Instructors = _context.Instructors.Select(x => new SelectListItem(x.FullName, x.Id.ToString())).ToList();
+                model.Languages   = await _context.Languages
+                    .Select(x => new SelectListItem(x.Name ?? "", x.Id.ToString()))
+                    .ToListAsync();
+                model.Categories  = await _context.Categories
+                    .Select(x => new SelectListItem(x.Name ?? "", x.Id.ToString()))
+                    .ToListAsync();
+                model.Instructors = await _context.Instructors
+                    .Where(x => x.FullName != null)
+                    .Select(x => new SelectListItem(x.FullName, x.Id.ToString()))
+                    .ToListAsync();
                 return View(model);
             }
 

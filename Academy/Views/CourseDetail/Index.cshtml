@@ -89,7 +89,6 @@
                                 ⚡ @Model.CategoryName
                             </span>
                             <span class="badge badge-level">Başlanğıc → Ekspert</span>
-                            <span class="badge badge-live">🔴 CANLI DƏRS VAR</span>
                         </div>
 
                   
@@ -107,8 +106,8 @@
                                     else { <i class="fa-regular fa-star" style="color: #f1c40f;"></i> }
                                 }
                             </span>
-                            <span class="rating-txt"><strong>@Model.Rating</strong> (1,240 rəy)</span>
-                            <span class="students-txt">· @Model.StudentCount+ tələbə qeydiyyatda</span>
+                            <span class="rating-txt"><strong>@Model.Rating.ToString("0.0")</strong> rəy</span>
+                            <span class="students-txt">· @Model.StudentCount tələbə qeydiyyatda</span>
                         </div>
 
                
@@ -124,9 +123,7 @@
 
                       
                         <div class="hero-stats">
-
-                            <div class="stat"><span class="stat-num">@Model.Duration</span><span class="stat-lbl">Video</span></div>
-                            <div class="stat"><span class="stat-num">6</span><span class="stat-lbl">Canli Zoom</span></div>
+                            <div class="stat"><span class="stat-num">@(Model.Videos?.Count ?? 0)</span><span class="stat-lbl">Video</span></div>
                             <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">Giriş</span></div>
                             <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Layihə</span></div>
                         </div>
@@ -168,7 +165,7 @@
                                 }
                                 else
                                 {
-                                    <li><span class="feat-icon">📹</span> @Model.Duration HD video dərs</li>
+                                    <li><span class="feat-icon">📹</span> @(Model.Videos?.Count ?? 0) HD video dərs</li>
                                     <li><span class="feat-icon">📁</span> İndirilə bilən qaynaqlar</li>
                                     <li><span class="feat-icon">🏆</span> Tamamlama sertifikatı</li>
                                     <li><span class="feat-icon">📱</span> Mobil & masaüstü giriş</li>
@@ -180,51 +177,6 @@
                                 <span class="shield">🛡️</span>
                                 <span><strong>30 günlük</strong> pulsuz iade zəmanəti</span>
                             </div>
-                        </div>
-
-                        <!-- LIVE CLASS CARD (PREMIUM DARK GREEN UI) -->
-                        <div class="live-class-card" style="background: rgba(4, 47, 46, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 135, 0.2); border-radius: 20px; padding: 24px; box-shadow: 0 16px 40px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,255,135,0.05); color: #fff;">
-                            @if (Model.LiveClasses != null && Model.LiveClasses.Any())
-                            {
-                                <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 16px;">
-                                    <span class="live-indicator-dot"></span>
-                                    <h4 style="margin:0; font-size: 18px; font-weight: 700; color: #fff;">Canlı Dərs</h4>
-                                </div>
-                                var lc = Model.LiveClasses.FirstOrDefault();
-                                if (lc != null)
-                                {
-                                    bool isLive = lc.Status == Academy.Models.LiveSessionStatus.Live || (lc.Status == Academy.Models.LiveSessionStatus.Scheduled && DateTime.Now >= lc.ScheduledDate);
-                                    bool isScheduled = !isLive && lc.Status == Academy.Models.LiveSessionStatus.Scheduled;
-
-                                    <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
-                                        <h5 style="margin: 0 0 4px 0; font-size: 15px; color: #e2e8f0;">@lc.Title</h5>
-                                        <p style="margin: 0; font-size: 13px; color: #94a3b8;"><i class="fa-regular fa-clock"></i> @lc.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</p>
-                                    </div>
-                                    @if(isLive)
-                                    {
-                                        <a href="/meeting/@lc.RoomId" class="neon-btn-live w-100" style="display:flex; justify-content:center;">
-                                            <i class="fa-solid fa-video"></i> Canlı Dərsə Qoşul
-                                        </a>
-                                    }
-                                    else if(isScheduled)
-                                    {
-                                        <button disabled class="w-100" style="background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid rgba(255,255,255,0.1); padding: 12px; border-radius:8px; font-weight:600; font-size: 14px; cursor:not-allowed;">
-                                            <i class="fa-solid fa-calendar-days"></i> Vaxtı Gözlənilir
-                                        </button>
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 12px;">
-                                    <i class="fa-solid fa-video" style="color: rgba(255,255,255,0.4); font-size:18px;"></i>
-                                    <h4 style="margin:0; font-size: 18px; font-weight: 700; color: #cbd5e1;">Canlı Dərs</h4>
-                                </div>
-                                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.5;">Hazırda bu kurs üçün təyin edilmiş canlı dərs yoxdur.</p>
-                                <a href="/meeting/index" class="w-100" style="display:flex; justify-content:center; background:rgba(255,255,255,0.05); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1); padding: 10px; border-radius:8px; font-weight:600; font-size: 14px; text-decoration:none; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
-                                    Bütün Görüşlər
-                                </a>
-                            }
                         </div>
                     </div>
 

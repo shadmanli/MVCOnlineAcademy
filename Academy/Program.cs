@@ -116,6 +116,43 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    // Feature cədvəlinə Image sütununu əlavə et (migration conflict workaround)
+    try
+    {
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (
+                SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = 'Feature' AND COLUMN_NAME = 'Image'
+            )
+            BEGIN
+                ALTER TABLE [Feature] ADD [Image] nvarchar(max) NULL;
+            END
+        ");
+
+        // Instructor cədvəlinə yeni sütunları əlavə et
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Instructors' AND COLUMN_NAME='Image')
+                ALTER TABLE [Instructors] ADD [Image] nvarchar(max) NULL;
+            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Instructors' AND COLUMN_NAME='Title')
+                ALTER TABLE [Instructors] ADD [Title] nvarchar(100) NULL;
+            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Instructors' AND COLUMN_NAME='Bio')
+                ALTER TABLE [Instructors] ADD [Bio] nvarchar(max) NULL;
+        ");
+
+        // Migration history-ə qeyd et ki, yenidən run etməsin
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (
+                SELECT * FROM [__EFMigrationsHistory] 
+                WHERE [MigrationId] = '20260614113538_AddImageToFeature'
+            )
+            BEGIN
+                INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+                VALUES ('20260614113538_AddImageToFeature', '8.0.0');
+            END
+        ");
+    }
+    catch { /* Sütunlar artıq mövcuddur */ }
+
     // Orders və OrderItems cədvəllərini avtomatik yarat
     try
     {

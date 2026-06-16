@@ -141,6 +141,7 @@ namespace Academy.Services
             data.Price = model.Price;
             data.Duration = model.Duration;
             data.StudentCount = model.StudentCount;
+            data.Level = model.Level;
 
             data.LanguageId = model.LanguageId;
             data.CategoryId = model.CategoryId;

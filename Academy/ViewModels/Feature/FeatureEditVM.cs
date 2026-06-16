@@ -13,5 +13,8 @@ namespace Academy.ViewModels.Feature
         [Required(ErrorMessage = "Təsvir mütləqdir.")]
         [StringLength(1000, MinimumLength = 5)]
         public string Description { get; set; } = null!;
+
+        public IFormFile? Image { get; set; }
+        public string? ExistingImage { get; set; }
     }
 }

@@ -1,13 +1,18 @@
-﻿@section css {
-    <link rel="stylesheet" href="~/assets/css/blog.css">
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section css {
+    <link rel="stylesheet" href="~/assets/css/blog.css">
+}
 
 <main>
     @await Component.InvokeAsync("Blog")
 
-    @await Component.InvokeAsync("BlogCard")
-
+    @{
+        int blogPage = int.TryParse(Context.Request.Query["blogPage"], out int bp) && bp > 0 ? bp : 1;
+    }
+    @await Component.InvokeAsync("BlogCard", new { page = blogPage })
 </main>
 
 @section Scripts {

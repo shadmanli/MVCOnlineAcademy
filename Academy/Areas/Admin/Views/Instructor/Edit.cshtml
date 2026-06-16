@@ -6,14 +6,36 @@
     <div class="p-page-title">Müəllim Redaktə</div>
     <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Instructor" asp-action="Index">Müəllimlər</a> / Redaktə</div>
 </div>
-<div class="p-card" style="max-width:480px;">
-    <form asp-action="Edit" method="post">
+<div class="p-card" style="max-width:520px;">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="Id" type="hidden" />
+        <input asp-for="ExistingImage" type="hidden" />
         <div class="af-field">
             <label class="af-label">Ad Soyad <span class="req">*</span></label>
             <input asp-for="FullName" class="form-control" data-no-whitespace />
             <span asp-validation-for="FullName" class="field-validation-error"></span>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Vəzifə / İxtisas</label>
+            <input asp-for="Title" class="form-control" placeholder="Məs: Frontend Developer" />
+        </div>
+        <div class="af-field">
+            <label class="af-label">Bio</label>
+            <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Şəkil</label>
+            @if (!string.IsNullOrEmpty(Model.ExistingImage))
+            {
+                <div style="margin-bottom:10px;">
+                    <img src="~/uploads/instructors/@Model.ExistingImage"
+                         style="width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid #e2e8f0;" />
+                    <span style="margin-left:10px;font-size:12px;color:#64748b;">Mövcud şəkil</span>
+                </div>
+            }
+            <input asp-for="Image" type="file" class="form-control" accept="image/*" />
+            <span class="af-hint">Yeni şəkil seçsəniz köhnəsinin üzərinə yazılacaq</span>
         </div>
         <div style="display:flex;gap:10px;margin-top:20px;">
             <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>

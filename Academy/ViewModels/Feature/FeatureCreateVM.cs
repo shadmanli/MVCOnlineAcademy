@@ -11,5 +11,7 @@ namespace Academy.ViewModels.Feature
         [Required(ErrorMessage = "Təsvir mütləqdir.")]
         [StringLength(1000, MinimumLength = 5, ErrorMessage = "Təsvir 5-1000 simvol arasında olmalıdır.")]
         public string Description { get; set; } = null!;
+
+        public IFormFile? Image { get; set; }
     }
 }

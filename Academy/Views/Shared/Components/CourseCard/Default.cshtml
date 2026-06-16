@@ -114,6 +114,7 @@
             background: transparent;
             border: none;
             padding: 0 18px;
+            margin-top: 3px;
             color: #00c4a8;
             cursor: pointer;
             height: 100%;
@@ -516,10 +517,12 @@
         <div class="filter-actions">
             <!-- SORT -->
             <select name="sort" onchange="this.form.submit()">
-                <option value="">Default Sorting</option>
-                <option value="latest">Sort by latest</option>
-                <option value="low">Price: low to high</option>
-                <option value="high">Price: high to low</option>
+                <!option value="" @(string.IsNullOrEmpty(Model.Sort) ? "selected" : "")>Default Sorting</!option>
+                <!option value="latest" @(Model.Sort == "latest" ? "selected" : "")>Sort by latest</!option>
+                <!option value="low" @(Model.Sort == "low" ? "selected" : "")>Price: low to high</!option>
+                <!option value="high" @(Model.Sort == "high" ? "selected" : "")>Price: high to low</!option>
+                <!option value="rating" @(Model.Sort == "rating" ? "selected" : "")>Top Rated</!option>
+                <!option value="popular" @(Model.Sort == "popular" ? "selected" : "")>Most Popular</!option>
             </select>
 
             <!-- CATEGORY -->
@@ -627,13 +630,17 @@
                                 <div class="pcc-meta">
                                     <div class="pcc-rating">
                                         <div class="pcc-rating-stars">
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star-half-stroke"></i>
+                                            @{
+                                                var rating = course.Rating;
+                                                int fullStars = (int)Math.Floor(rating);
+                                                bool halfStar = (rating - fullStars) >= 0.5;
+                                                int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+                                            }
+                                            @for (int s = 0; s < fullStars; s++) { <i class="fa-solid fa-star"></i> }
+                                            @if (halfStar) { <i class="fa-solid fa-star-half-stroke"></i> }
+                                            @for (int s = 0; s < emptyStars; s++) { <i class="fa-regular fa-star"></i> }
                                         </div>
-                                        <span class="pcc-rating-text">4.8 (120+ reviews)</span>
+                                        <span class="pcc-rating-text">@rating.ToString("0.0") (@course.StudentCount tələbə)</span>
                                     </div>
                                     <div class="pcc-price">
                                         <span>$</span>@course.Price
