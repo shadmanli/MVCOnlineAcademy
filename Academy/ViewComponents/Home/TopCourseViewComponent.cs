@@ -19,12 +19,12 @@ namespace Academy.ViewComponents.TopCourse
             var courses = await _context.Courses
                 .Include(c => c.Category)
                 .Include(c => c.Instructor)
-                .Where(c => !c.IsDeleted) // Removed IsActive check so newly created courses can be displayed
+                .Where(c => !c.IsDeleted)
                 .OrderByDescending(c => c.Id)
-                .Take(3)
+                .Take(100)
                 .ToListAsync();
 
-            // Unikal kateqoriyalar
+            // Unikal kateqoriyalar — bütün kurslardan
             var categories = courses
                 .Where(c => c.Category != null)
                 .Select(c => c.Category!)

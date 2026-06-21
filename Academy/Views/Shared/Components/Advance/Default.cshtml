@@ -249,8 +249,8 @@
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <div class="about-badge-txt">
-                    <strong>10K+</strong>
-                    <span>Məmnun Tələbə</span>
+                    <strong>@(ViewBag.BadgeStat != null ? ViewBag.BadgeStat.Count.ToString() + "+" : "10K+")</strong>
+                    <span>@(ViewBag.BadgeStat != null ? ViewBag.BadgeStat.Title : "Məmnun Tələbə")</span>
                 </div>
             </div>
         </div>

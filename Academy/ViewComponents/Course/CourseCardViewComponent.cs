@@ -35,7 +35,10 @@ namespace Academy.ViewComponents.Course
             var courses = await _courseService.GetAllAsync();
 
             if (!string.IsNullOrEmpty(search))
-                courses = courses.Where(x => (x.Title != null && x.Title.Contains(search, StringComparison.OrdinalIgnoreCase)) || (x.CategoryName != null && x.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+                courses = courses.Where(x =>
+                    (x.Title != null && x.Title.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                    (x.CategoryName != null && x.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                    (x.InstructorName != null && x.InstructorName.Contains(search, StringComparison.OrdinalIgnoreCase)));
 
             if (categoryId != null)
                 courses = courses.Where(x => x.CategoryId == categoryId);

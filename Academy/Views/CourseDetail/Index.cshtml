@@ -218,6 +218,44 @@
                                 </div>
                             }
                         }
+
+                        <!-- CERTIFICATE SECTION -->
+                        @if (ViewBag.IsPurchased ?? false)
+                        {
+                            <div id="certSection" style="margin-top:16px;"></div>
+                            <script>
+                            (function() {
+                                fetch('/Certificate/Check/@Model.Id')
+                                    .then(function(r){return r.json();})
+                                    .then(function(d){
+                                        var sec = document.getElementById('certSection');
+                                        if (!sec) return;
+                                        if (d.hasCert) {
+                                            sec.innerHTML = '<div style="background:rgba(0,196,168,0.08);border:1px solid rgba(0,196,168,0.2);border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div><div style="font-size:13px;font-weight:700;color:#00c4a8;margin-bottom:3px;">🏆 Sertifikat Alınıb</div><div style="font-size:11px;color:#64748b;font-family:monospace;">' + d.certNumber + '</div></div><a href="/Certificate/View/' + d.certNumber + '" style="padding:9px 18px;background:linear-gradient(135deg,#00c4a8,#0ea5e9);color:#fff;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none;">Bax</a></div>';
+                                        } else if (d.eligible) {
+                                            sec.innerHTML = '<button id="claimBtn" onclick="claimCert(@Model.Id)" style="width:100%;padding:14px;background:linear-gradient(135deg,#00c4a8,#0ea5e9);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;"><i class="fa-solid fa-certificate"></i> Sertifikatı Əldə Et</button>';
+                                        } else {
+                                            sec.innerHTML = '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px 18px;"><div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:6px;">📋 Sertifikat Şərtləri</div><div style="font-size:12px;color:#94a3b8;"><div style="margin-bottom:4px;">' + (d.paid ? '✅' : '❌') + ' Kurs alınıb</div><div>' + (d.pct === 100 ? '✅' : '⏳ ' + d.pct + '%') + ' Videolar (' + d.watchedCount + '/' + d.totalVideos + ')</div></div></div>';
+                                        }
+                                    }).catch(function(){});
+                            })();
+
+                            function claimCert(courseId) {
+                                var btn = document.getElementById('claimBtn');
+                                if(btn){btn.disabled=true;btn.textContent='Yüklənir...';}
+                                fetch('/Certificate/Claim',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'courseId='+courseId})
+                                .then(function(r){return r.json();})
+                                .then(function(d){
+                                    if(d.success){
+                                        document.getElementById('certSection').innerHTML='<div style="background:rgba(0,196,168,0.1);border:1px solid rgba(0,196,168,0.25);border-radius:14px;padding:16px 18px;text-align:center;"><div style="font-size:16px;font-weight:800;color:#00c4a8;margin-bottom:8px;">🎉 Sertifikat Verildi!</div><div style="font-size:11px;color:#64748b;font-family:monospace;margin-bottom:12px;">'+d.certNumber+'</div><a href="/Certificate/View/'+d.certNumber+'" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:linear-gradient(135deg,#00c4a8,#0ea5e9);color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;">Sertifikata Bax</a></div>';
+                                    } else {
+                                        if(btn){btn.disabled=false;btn.textContent='Sertifikatı Əldə Et';}
+                                        alert(d.message);
+                                    }
+                                });
+                            }
+                            </script>
+                        }
                     </div>
 
                 </div>

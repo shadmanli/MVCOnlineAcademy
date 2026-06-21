@@ -372,27 +372,59 @@
                 </p>
 
                 <div class="footer-contact-list">
-                    <div class="footer-contact-row">
-                        <div class="fc-icon"><i class="fa-solid fa-location-dot"></i></div>
-                        <div class="fc-text">
-                            <span class="fc-label">Address</span>
-                            <span class="fc-value">27 Division St, New York, NY 10002, USA</span>
+                    @{
+                        var items = ViewBag.ContactItems as List<Academy.Models.ContactItem>;
+                        // Address tipli (Description-da "address" keçirsə)
+                        var addrItem  = items?.FirstOrDefault(x => x.Description != null && x.Description.ToLower().Contains("address"));
+                        var emailItem = items?.FirstOrDefault(x => x.Description != null && x.Description.ToLower().Contains("email"));
+                        var phoneItem = items?.FirstOrDefault(x => x.Description != null && x.Description.ToLower().Contains("phone") || x.Description != null && x.Description.ToLower().Contains("tel"));
+
+                        // fallback — sadəcə sıra ilə götür
+                        if (addrItem == null && items?.Count > 0)  addrItem  = items.ElementAtOrDefault(0);
+                        if (emailItem == null && items?.Count > 1) emailItem = items.ElementAtOrDefault(1);
+                        if (phoneItem == null && items?.Count > 2) phoneItem = items.ElementAtOrDefault(2);
+                    }
+
+                    @if (addrItem != null)
+                    {
+                        <div class="footer-contact-row">
+                            <div class="fc-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div class="fc-text">
+                                <span class="fc-label">Ünvan</span>
+                                <span class="fc-value">@addrItem.Address</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="footer-contact-row">
-                        <div class="fc-icon"><i class="fa-solid fa-envelope"></i></div>
-                        <div class="fc-text">
-                            <span class="fc-label">Email</span>
-                            <span class="fc-value">iguru@mail.com</span>
+                    }
+                    @if (emailItem != null)
+                    {
+                        <div class="footer-contact-row">
+                            <div class="fc-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="fc-text">
+                                <span class="fc-label">Email</span>
+                                <span class="fc-value">@emailItem.Address</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="footer-contact-row">
-                        <div class="fc-icon"><i class="fa-solid fa-phone"></i></div>
-                        <div class="fc-text">
-                            <span class="fc-label">Phone</span>
-                            <span class="fc-value">507-452-1254</span>
+                    }
+                    @if (phoneItem != null)
+                    {
+                        <div class="footer-contact-row">
+                            <div class="fc-icon"><i class="fa-solid fa-phone"></i></div>
+                            <div class="fc-text">
+                                <span class="fc-label">Telefon</span>
+                                <span class="fc-value">@phoneItem.Address</span>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    @if (items == null || !items.Any())
+                    {
+                        <div class="footer-contact-row">
+                            <div class="fc-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div class="fc-text">
+                                <span class="fc-label">Ünvan</span>
+                                <span class="fc-value">Bakı, Azərbaycan</span>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <div class="footer-socials">

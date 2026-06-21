@@ -1,0 +1,261 @@
+@model Academy.Models.Certificate
+@{
+    Layout = null;
+    var instructor = Model.Course?.Instructor?.FullName ?? "iNzara Academy";
+    var studentName = Model.AppUser?.FullName ?? "Tələbə";
+    var courseName = Model.Course?.Title ?? "Kurs";
+    var date = Model.IssuedAt.ToString("dd MMMM yyyy");
+}
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sertifikat — @Model.CertificateNumber</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#f0f4f8; font-family:'Inter',sans-serif; display:flex; flex-direction:column; align-items:center; padding:40px 20px; min-height:100vh; }
+
+        .cert-actions { display:flex; gap:12px; margin-bottom:32px; flex-wrap:wrap; justify-content:center; }
+        .cert-actions a, .cert-actions button {
+            padding:11px 24px; border-radius:10px; font-size:14px; font-weight:600;
+            cursor:pointer; text-decoration:none; border:none; transition:all 0.2s;
+            display:inline-flex; align-items:center; gap:7px;
+        }
+        .btn-dl  { background:linear-gradient(135deg,#00c4a8,#0ea5e9); color:#fff; box-shadow:0 4px 14px rgba(0,196,168,0.3); }
+        .btn-dl:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,196,168,0.4); }
+        .btn-share { background:#fff; color:#0f172a; border:1px solid #e2e8f0; }
+        .btn-share:hover { background:#f8fafc; }
+        .btn-verify { background:#f8fafc; color:#0f172a; border:1px solid #e2e8f0; }
+
+        /* ── CERTIFICATE ── */
+        #certCard {
+            width:900px; max-width:100%;
+            background:#fff;
+            border-radius:20px;
+            box-shadow:0 20px 80px rgba(0,0,0,0.12);
+            overflow:hidden;
+            position:relative;
+        }
+
+        /* Top gold bar */
+        .cert-top-bar {
+            height:10px;
+            background:linear-gradient(90deg, #00c4a8, #0ea5e9, #6366f1, #a78bfa);
+        }
+
+        .cert-body { padding:60px 72px; position:relative; }
+
+        /* Watermark */
+        .cert-watermark {
+            position:absolute; inset:0;
+            display:flex; align-items:center; justify-content:center;
+            pointer-events:none; z-index:0;
+        }
+        .cert-watermark span {
+            font-size:120px; font-weight:900;
+            color:rgba(0,196,168,0.04);
+            letter-spacing:-6px;
+            font-family:'Playfair Display',serif;
+            white-space:nowrap;
+        }
+
+        .cert-content { position:relative; z-index:1; }
+
+        /* Logo + platform */
+        .cert-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:44px; }
+
+        .cert-logo-wrap { display:flex; align-items:center; gap:10px; }
+        .cert-logo-icon {
+            width:44px; height:44px;
+            background:linear-gradient(135deg,#00c4a8,#0ea5e9);
+            border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:20px; color:#fff;
+        }
+        .cert-logo-name { font-size:22px; font-weight:800; color:#0f172a; letter-spacing:-0.5px; }
+        .cert-logo-name span { color:#00c4a8; }
+
+        .cert-badge {
+            background:linear-gradient(135deg,rgba(0,196,168,0.1),rgba(14,165,233,0.1));
+            border:1px solid rgba(0,196,168,0.25);
+            border-radius:99px;
+            padding:7px 18px;
+            font-size:11px; font-weight:700;
+            color:#00c4a8;
+            letter-spacing:0.1em;
+            text-transform:uppercase;
+        }
+
+        /* Title */
+        .cert-title {
+            text-align:center;
+            margin-bottom:36px;
+        }
+        .cert-title .pre { font-size:13px; font-weight:600; color:#94a3b8; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px; }
+        .cert-title h1 {
+            font-family:'Playfair Display',serif;
+            font-size:48px; font-weight:800;
+            background:linear-gradient(135deg,#0f172a,#1e293b);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            letter-spacing:-1px;
+            margin-bottom:10px;
+        }
+        .cert-title .sub { font-size:14px; color:#64748b; line-height:1.6; max-width:480px; margin:0 auto; }
+
+        /* Student name */
+        .cert-student {
+            text-align:center;
+            border-top:1px solid #f1f5f9;
+            border-bottom:1px solid #f1f5f9;
+            padding:28px 0;
+            margin-bottom:32px;
+        }
+        .cert-student .label { font-size:11px; font-weight:700; color:#94a3b8; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px; }
+        .cert-student .name {
+            font-family:'Playfair Display',serif;
+            font-size:38px; font-weight:700;
+            color:#0f172a;
+            letter-spacing:-0.5px;
+        }
+
+        /* Course */
+        .cert-course {
+            text-align:center;
+            margin-bottom:40px;
+        }
+        .cert-course .label { font-size:11px; font-weight:700; color:#94a3b8; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px; }
+        .cert-course .title {
+            font-size:22px; font-weight:700; color:#0f172a;
+            letter-spacing:-0.3px;
+        }
+
+        /* Bottom info */
+        .cert-footer {
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            gap:24px;
+            border-top:1px solid #f1f5f9;
+            padding-top:28px;
+        }
+
+        .cert-footer-item { }
+        .cert-footer-item .lbl { font-size:10px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:5px; }
+        .cert-footer-item .val { font-size:14px; font-weight:600; color:#0f172a; }
+
+        /* Signature */
+        .cert-sig {
+            text-align:center;
+        }
+        .cert-sig .sig-line {
+            border-top:2px solid #e2e8f0;
+            margin-bottom:6px;
+            position:relative;
+        }
+        .cert-sig .sig-name { font-size:13px; font-weight:600; color:#0f172a; }
+        .cert-sig .sig-role { font-size:11px; color:#64748b; }
+
+        /* QR + cert id */
+        .cert-qr-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; }
+        .cert-id { font-size:11px; font-weight:700; color:#00c4a8; font-family:monospace; }
+
+        /* Revoked */
+        .cert-revoked-banner {
+            background:#fef2f2; border-bottom:2px solid #ef4444;
+            padding:12px 24px; text-align:center;
+            font-size:13px; font-weight:700; color:#ef4444;
+        }
+
+        @@media (max-width:640px) {
+            .cert-body { padding:32px 24px; }
+            .cert-title h1 { font-size:32px; }
+            .cert-student .name { font-size:26px; }
+            .cert-footer { grid-template-columns:1fr; }
+        }
+        @@media print {
+            body { background:#fff; padding:0; }
+            .cert-actions { display:none; }
+            #certCard { box-shadow:none; border-radius:0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cert-actions">
+    <button class="btn-dl" onclick="window.print()">
+        <i class="fa-solid fa-print"></i> Çap Et / PDF
+    </button>
+    <a href="/Certificate/Verify?code=@Model.CertificateNumber" class="btn-verify">
+        <i class="fa-solid fa-shield-halved"></i> Yoxla
+    </a>
+    <a href="/Certificate/My" class="btn-share">
+        <i class="fa-solid fa-arrow-left"></i> Sertifikatlarım
+    </a>
+</div>
+
+<div id="certCard">
+    @if (Model.IsRevoked)
+    {
+        <div class="cert-revoked-banner">⚠️ Bu sertifikat ləğv edilib. @(Model.RevokeReason != null ? "Səbəb: " + Model.RevokeReason : "")</div>
+    }
+    <div class="cert-top-bar"></div>
+    <div class="cert-body">
+        <div class="cert-watermark"><span>CERTIFIED</span></div>
+        <div class="cert-content">
+
+            <!-- Header -->
+            <div class="cert-header">
+                <div class="cert-logo-wrap">
+                    <div class="cert-logo-icon">🎓</div>
+                    <div class="cert-logo-name">i<span>N</span>zara</div>
+                </div>
+                <span class="cert-badge">Rəsmi Sertifikat</span>
+            </div>
+
+            <!-- Title -->
+            <div class="cert-title">
+                <div class="pre">Bu sertifikat</div>
+                <h1>Tamamlama Sertifikatı</h1>
+                <p class="sub">Bu sertifikat kursun bütün tələblərini uğurla yerinə yetirmiş tələbəyə təqdim olunur.</p>
+            </div>
+
+            <!-- Student -->
+            <div class="cert-student">
+                <div class="label">Verilən şəxs</div>
+                <div class="name">@studentName</div>
+            </div>
+
+            <!-- Course -->
+            <div class="cert-course">
+                <div class="label">Kurs adı</div>
+                <div class="title">@courseName</div>
+            </div>
+
+            <!-- Footer -->
+            <div class="cert-footer">
+                <div class="cert-footer-item">
+                    <div class="lbl">Tarix</div>
+                    <div class="val">@date</div>
+                </div>
+
+                <div class="cert-sig">
+                    <div class="sig-line"></div>
+                    <div class="sig-name">@instructor</div>
+                    <div class="sig-role">Təlimçi</div>
+                </div>
+
+                <div class="cert-qr-wrap">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/Certificate/Verify?code={Model.CertificateNumber}")"
+                         alt="QR" style="border-radius:8px;border:2px solid #e2e8f0;">
+                    <div class="cert-id">@Model.CertificateNumber</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</body>
+</html>

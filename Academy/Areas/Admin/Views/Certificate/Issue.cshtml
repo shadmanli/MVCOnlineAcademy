@@ -1,0 +1,35 @@
+@{ViewData["Title"] = "Manual Sertifikat Ver";}
+<partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
+<div class="p-page-header">
+    <div class="p-page-title">Manual Sertifikat Ver</div>
+    <div class="p-breadcrumb"><a asp-action="Index">Sertifikatlar</a> / Manual Ver</div>
+</div>
+<div class="p-card" style="max-width:480px;">
+    <form asp-action="Issue" method="post">
+        @Html.AntiForgeryToken()
+        <div class="af-field">
+            <label class="af-label">Tələbə <span class="req">*</span></label>
+            <select name="userId" class="form-control" required>
+                <option value="">-- Tələbə seçin --</option>
+                @foreach (var u in ViewBag.Users as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>())
+                {
+                    <option value="@u.Value">@u.Text</option>
+                }
+            </select>
+        </div>
+        <div class="af-field">
+            <label class="af-label">Kurs <span class="req">*</span></label>
+            <select name="courseId" class="form-control" required>
+                <option value="">-- Kurs seçin --</option>
+                @foreach (var c in ViewBag.Courses as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>())
+                {
+                    <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+            <button type="submit" class="af-submit"><i class="fa fa-certificate"></i> Sertifikat Ver</button>
+            <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
+        </div>
+    </form>
+</div>

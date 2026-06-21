@@ -1,0 +1,126 @@
+@model IEnumerable<Academy.Models.Certificate>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Mənim Sertifikatlarım";
+}
+
+<style>
+.certs-page { padding: 100px 32px 80px; background: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif; }
+.certs-inner { max-width: 1100px; margin: 0 auto; }
+.certs-header { margin-bottom: 48px; }
+.certs-header h1 { font-size: 32px; font-weight: 800; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 6px; }
+.certs-header p { font-size: 15px; color: #64748b; }
+.certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+
+.cert-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e8edf3;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+}
+.cert-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,196,168,0.12); border-color: rgba(0,196,168,0.2); }
+
+.cert-card-top {
+    height: 6px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9, #6366f1);
+}
+.cert-card-body { padding: 24px; }
+.cert-card-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, rgba(0,196,168,0.1), rgba(14,165,233,0.08));
+    border: 1px solid rgba(0,196,168,0.2);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 16px;
+}
+.cert-card-course { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 6px; letter-spacing: -0.02em; }
+.cert-card-date { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
+.cert-card-num { font-size: 11px; font-weight: 700; color: #00c4a8; font-family: monospace; background: rgba(0,196,168,0.08); padding: 5px 10px; border-radius: 99px; display: inline-block; margin-bottom: 20px; }
+
+.cert-card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.cert-btn {
+    flex: 1; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 700;
+    text-align: center; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.cert-btn-primary { background: linear-gradient(135deg, #00c4a8, #0ea5e9); color: #fff; box-shadow: 0 3px 12px rgba(0,196,168,0.25); }
+.cert-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,196,168,0.4); color:#fff; }
+.cert-btn-outline { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; }
+.cert-btn-outline:hover { background: #f1f5f9; color: #0f172a; }
+
+.share-row { display: flex; gap: 8px; margin-top: 10px; }
+.share-btn {
+    width: 34px; height: 34px; border-radius: 9px; border: 1px solid #e2e8f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;
+}
+.share-btn:hover { transform: translateY(-2px); }
+.share-fb { color: #1877f2; } .share-fb:hover { background: #e8f0fe; border-color: #1877f2; }
+.share-tw { color: #1da1f2; } .share-tw:hover { background: #e8f5fe; border-color: #1da1f2; }
+.share-li { color: #0077b5; } .share-li:hover { background: #e8f0f6; border-color: #0077b5; }
+.share-wa { color: #25d366; } .share-wa:hover { background: #e8fef0; border-color: #25d366; }
+
+.empty-certs { text-align: center; padding: 80px 20px; }
+.empty-certs i { font-size: 52px; color: #cbd5e1; margin-bottom: 16px; display: block; }
+.empty-certs h3 { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+.empty-certs p { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+</style>
+
+<div class="certs-page">
+    <div class="certs-inner">
+        <div class="certs-header">
+            <h1>🏆 Mənim Sertifikatlarım</h1>
+            <p>Uğurla tamamladığınız kursların sertifikatları</p>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-certs">
+                <i class="fa-solid fa-certificate"></i>
+                <h3>Hələ sertifikat yoxdur</h3>
+                <p>Bir kursu tamamlayın və sertifikatınızı qazanın!</p>
+                <a href="/Course" style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#00c4a8,#0ea5e9);color:#fff;border-radius:12px;text-decoration:none;font-size:14px;font-weight:700;">
+                    <i class="fa-solid fa-graduation-cap"></i> Kurslara Bax
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="certs-grid">
+                @foreach (var cert in Model)
+                {
+                    var certUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/Certificate/View/{cert.CertificateNumber}";
+                    var verifyUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/Certificate/Verify?code={cert.CertificateNumber}";
+                    <div class="cert-card">
+                        <div class="cert-card-top"></div>
+                        <div class="cert-card-body">
+                            <div class="cert-card-icon">🎓</div>
+                            <div class="cert-card-course">@cert.Course?.Title</div>
+                            <div class="cert-card-date"><i class="fa-regular fa-calendar" style="margin-right:5px;"></i>@cert.IssuedAt.ToString("dd MMM yyyy")</div>
+                            <div class="cert-card-num">@cert.CertificateNumber</div>
+
+                            <div class="cert-card-actions">
+                                <a href="/Certificate/View/@cert.CertificateNumber" class="cert-btn cert-btn-primary">
+                                    <i class="fa-solid fa-eye"></i> Bax / PDF
+                                </a>
+                                <a href="/Certificate/Verify?code=@cert.CertificateNumber" class="cert-btn cert-btn-outline">
+                                    <i class="fa-solid fa-shield-halved"></i> Yoxla
+                                </a>
+                            </div>
+
+                            <div class="share-row">
+                                <span style="font-size:11px;color:#94a3b8;align-self:center;margin-right:4px;">Paylaş:</span>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString(certUrl)" target="_blank" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="https://twitter.com/intent/tweet?url=@Uri.EscapeDataString(certUrl)&text=@Uri.EscapeDataString("iNzara Academy sertifikatı qazandım!")" target="_blank" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=@Uri.EscapeDataString(certUrl)" target="_blank" class="share-btn share-li"><i class="fa-brands fa-linkedin-in"></i></a>
+                                <a href="https://wa.me/?text=@Uri.EscapeDataString("iNzara Academy sertifikatım: " + certUrl)" target="_blank" class="share-btn share-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

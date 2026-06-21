@@ -787,43 +787,41 @@ header {
 .search-box {
     display: flex;
     align-items: center;
-    background: #eee;
-    padding: 5px;
     border-radius: 10px;
     width: 280px;
-    margin-top: -50px;
-    height: 50px;
+    margin-top: 0;
+    height: 44px;
 }
 
     .search-box input {
         flex: 1;
         border: none;
         outline: none;
-        padding: 8px 15px;
+        padding: 0 16px;
         background: transparent;
-        font-size: 16px;
+        font-size: 14px;
+        color: #fff;
+    }
+
+    .search-box input::placeholder {
+        color: rgba(255,255,255,0.3);
     }
 
     .search-box button {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
         border: none;
-        border-radius: 10px;
-        background: #00bda6;
-        color: white;
-        font-size: 18px;
+        border-radius: 0 10px 10px 0;
+        background: transparent;
+        color: #00c4a8;
+        font-size: 15px;
         cursor: pointer;
-        transition: 0.3s;
     }
-
-        .search-box button:hover {
-            background: #009e8b;
-        }
 
 .sort-box {
     position: relative;
     width: 250px;
-    margin-top: -59px;
+    margin-top: 0;
 }
 
     .sort-box select {

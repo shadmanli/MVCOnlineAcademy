@@ -1,0 +1,99 @@
+@model Academy.ViewModels.Partner.PartnerEditVM
+@{
+    ViewData["Title"] = "Partneri Düzəlt";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="p-page-header">
+    <div>
+        <h1 class="p-page-title">Partneri Düzəlt</h1>
+        <p class="p-page-sub">Partner məlumatlarını yeniləyin</p>
+    </div>
+    <a asp-action="Index" class="p-btn p-btn-secondary">
+        <i class="fa fa-arrow-left"></i> Geri
+    </a>
+</div>
+
+<div class="p-card" style="max-width: 540px;">
+    <div class="p-card-body">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden">
+            <input asp-for="Image" type="hidden">
+
+            <div class="p-form-group">
+                <label class="p-label">Partner Adı <span class="text-danger">*</span></label>
+                <input asp-for="Name" class="p-input" required>
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="p-form-group">
+                <label class="p-label">Logo Şəkli</label>
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <div class="current-img mb-2">
+                        <img src="~/uploads/partners/@Model.Image"
+                             style="max-height:70px; border-radius:8px; border:1px solid #e2e8f0; background:#f8fafc; padding:6px;">
+                        <span class="p-hint">Mövcud şəkil — dəyişmək üçün yeni seçin</span>
+                    </div>
+                }
+                <div class="p-file-upload" onclick="document.getElementById('imgInput').click()">
+                    <i class="fa fa-cloud-upload-alt"></i>
+                    <span id="imgLabel">Yeni şəkil seçin</span>
+                </div>
+                <input type="file" id="imgInput" asp-for="ImageFile" accept="image/*" class="d-none"
+                       onchange="previewImg(this)">
+                <div id="imgPreview" class="mt-2" style="display:none;">
+                    <img id="previewEl" style="max-height:80px; border-radius:8px; border:1px solid #e2e8f0;">
+                </div>
+            </div>
+
+            <div class="p-form-group">
+                <label class="p-label">Sıra (Order)</label>
+                <input asp-for="Order" type="number" class="p-input" min="0">
+                <span class="p-hint">Kiçik rəqəm daha əvvəl göstərilir</span>
+            </div>
+
+            <div class="p-form-group">
+                <label class="p-checkbox-wrap">
+                    <input asp-for="IsActive" type="checkbox">
+                    <span>Aktiv</span>
+                </label>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="p-btn p-btn-primary">
+                    <i class="fa fa-save"></i> Yadda Saxla
+                </button>
+                <a asp-action="Index" class="p-btn p-btn-secondary">Ləğv et</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.p-file-upload {
+    border: 2px dashed #e2e8f0; border-radius: 10px;
+    padding: 20px; text-align: center; cursor: pointer;
+    color: #94a3b8; transition: border-color 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.p-file-upload:hover { border-color: #00c4a8; color: #00c4a8; }
+.p-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; display: block; }
+.p-checkbox-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: #374151; }
+.gap-3 { gap: 12px; }
+</style>
+
+<script>
+function previewImg(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById('imgLabel').textContent = input.files[0].name;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('previewEl').src = e.target.result;
+            document.getElementById('imgPreview').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>

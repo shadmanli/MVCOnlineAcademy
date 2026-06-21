@@ -51,10 +51,24 @@ namespace Academy.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<VideoProgress> VideoProgresses { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<Partner> Partners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Certificate>()
+                .HasOne(c => c.AppUser)
+                .WithMany()
+                .HasForeignKey(c => c.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Certificate>()
+                .HasOne(c => c.Course)
+                .WithMany()
+                .HasForeignKey(c => c.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<VideoProgress>()
                 .HasOne(vp => vp.Video)

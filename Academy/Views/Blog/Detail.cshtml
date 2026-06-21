@@ -1,0 +1,675 @@
+@model Academy.ViewModels.Blog.BlogDetailVM
+@using Academy.ViewModels.Blog
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var related = ViewBag.RelatedBlogs as List<BlogVM>;
+}
+
+<style>
+@@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+.blog-detail-page {
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+/* ── Hero ── */
+.bd-hero {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+}
+
+.bd-hero-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.bd-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(4,8,20,0.3) 0%,
+        rgba(4,8,20,0.65) 60%,
+        rgba(4,8,20,0.92) 100%
+    );
+}
+
+.bd-hero-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0 32px 48px;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.bd-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.bd-breadcrumb a {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.bd-breadcrumb a:hover { color: #00c4a8; }
+.bd-breadcrumb .sep { font-size: 10px; opacity: 0.5; }
+.bd-breadcrumb .current { color: #fff; }
+
+.bd-cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+}
+
+.bd-hero-title {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    margin: 0 0 20px;
+}
+
+.bd-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.bd-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+}
+
+.bd-meta-item i {
+    font-size: 12px;
+    color: #00c4a8;
+}
+
+/* ── Body ── */
+.bd-body {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 48px;
+    align-items: start;
+}
+
+/* ── Article content ── */
+.bd-article {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #e8edf3;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+
+.bd-article-header {
+    padding: 36px 40px 28px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.bd-article-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.bd-article-label::before {
+    content: '';
+    width: 20px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.bd-article-title {
+    font-size: clamp(20px, 2.5vw, 30px);
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.bd-article-body {
+    padding: 36px 40px;
+}
+
+.bd-article-body p {
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.85;
+    margin-bottom: 20px;
+}
+
+/* Author card */
+.bd-author-card {
+    margin: 32px 40px 36px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(0,196,168,0.05), rgba(14,165,233,0.05));
+    border: 1px solid rgba(0,196,168,0.15);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bd-author-avatar {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.bd-author-info strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.bd-author-info span {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* Share */
+.bd-share {
+    padding: 24px 40px 36px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.bd-share-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.bd-share-btn {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid #e8edf3;
+    background: #f8fafc;
+    color: #64748b;
+}
+
+.bd-share-btn:hover { transform: translateY(-2px); }
+.bd-share-btn.tw:hover { background: #1da1f2; color: #fff; border-color: #1da1f2; }
+.bd-share-btn.fb:hover { background: #1877f2; color: #fff; border-color: #1877f2; }
+.bd-share-btn.lk:hover { background: #0a66c2; color: #fff; border-color: #0a66c2; }
+.bd-share-btn.cp:hover { background: #00c4a8; color: #fff; border-color: #00c4a8; }
+
+/* ── Sidebar ── */
+.bd-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 100px;
+}
+
+.bd-sidebar-card {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #e8edf3;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.bd-sidebar-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.bd-sidebar-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bd-sidebar-title i { color: #00c4a8; font-size: 14px; }
+
+/* Related posts */
+.bd-related-list {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bd-related-item {
+    display: flex;
+    gap: 14px;
+    text-decoration: none;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.bd-related-item:hover { background: #f8fafc; }
+
+.bd-related-img {
+    width: 70px; height: 55px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.bd-related-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.bd-related-info {
+    flex: 1;
+}
+
+.bd-related-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s;
+}
+
+.bd-related-item:hover .bd-related-title { color: #00c4a8; }
+
+.bd-related-author {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Info card */
+.bd-info-list {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bd-info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.bd-info-row i {
+    width: 28px; height: 28px;
+    background: rgba(0,196,168,0.1);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #00c4a8;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* ── Related section below ── */
+.bd-related-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+}
+
+.bd-rel-header {
+    margin-bottom: 32px;
+}
+
+.bd-rel-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00c4a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.bd-rel-label::before {
+    content: '';
+    width: 20px; height: 2px;
+    background: linear-gradient(90deg, #00c4a8, #0ea5e9);
+    border-radius: 2px;
+}
+
+.bd-rel-header h2 {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.bd-rel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.bd-rel-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e8edf3;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.bd-rel-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+    border-color: rgba(0,196,168,0.2);
+}
+
+.bd-rel-card-img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+}
+
+.bd-rel-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.bd-rel-card:hover .bd-rel-card-img img { transform: scale(1.06); }
+
+.bd-rel-card-body {
+    padding: 20px 22px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bd-rel-card-meta {
+    font-size: 12px;
+    color: #00c4a8;
+    font-weight: 600;
+}
+
+.bd-rel-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s;
+}
+
+.bd-rel-card:hover .bd-rel-card-title { color: #00c4a8; }
+
+.bd-rel-card-link {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ff6d34;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bd-rel-card-link::after { content: '→'; transition: transform 0.2s; }
+.bd-rel-card:hover .bd-rel-card-link::after { transform: translateX(4px); }
+
+@@media (max-width: 1024px) {
+    .bd-body { grid-template-columns: 1fr; }
+    .bd-sidebar { position: static; }
+    .bd-rel-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@@media (max-width: 640px) {
+    .bd-hero { height: 320px; }
+    .bd-hero-content { padding: 0 20px 32px; }
+    .bd-body { padding: 40px 16px 60px; }
+    .bd-article-header, .bd-article-body, .bd-author-card, .bd-share { padding-left: 20px; padding-right: 20px; }
+    .bd-related-section { padding: 0 16px 60px; }
+    .bd-rel-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="blog-detail-page">
+
+    <!-- Hero -->
+    <div class="bd-hero">
+        <img class="bd-hero-img" src="~/uploads/blog/@Model.Image" alt="@Model.Title">
+        <div class="bd-hero-overlay"></div>
+        <div class="bd-hero-content">
+            <div class="bd-breadcrumb">
+                <a href="/"><i class="fa-solid fa-house"></i></a>
+                <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
+                <a href="/Blog">Blog</a>
+                <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
+                <span class="current">@Model.Title</span>
+            </div>
+            <div class="bd-cat-badge">
+                <i class="fa-solid fa-tag"></i> Blog
+            </div>
+            <h1 class="bd-hero-title">@Model.Title</h1>
+            <div class="bd-hero-meta">
+                <div class="bd-meta-item">
+                    <i class="fa-solid fa-user"></i>
+                    <span>@Model.Name</span>
+                </div>
+                <div class="bd-meta-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span>@Model.CreatedAt.ToString("dd MMMM yyyy")</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="bd-body">
+
+        <!-- Article -->
+        <article class="bd-article">
+            <div class="bd-article-header">
+                <div class="bd-article-label">Məqalə</div>
+                <h2 class="bd-article-title">@Model.Title</h2>
+            </div>
+
+            <div class="bd-article-body">
+                @foreach (var paragraph in (Model.Description ?? "").Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <p>@paragraph</p>
+                }
+            </div>
+
+            <!-- Author -->
+            <div class="bd-author-card">
+                <div class="bd-author-avatar">
+                    @(Model.Name?.Length > 0 ? Model.Name[0].ToString().ToUpper() : "A")
+                </div>
+                <div class="bd-author-info">
+                    <strong>@Model.Name</strong>
+                    <span>Müəllif</span>
+                </div>
+            </div>
+
+            <!-- Share -->
+            <div class="bd-share">
+                <span class="bd-share-label">Paylaş:</span>
+                <a href="https://twitter.com/intent/tweet?url=@Uri.EscapeDataString(Context.Request.Path)"
+                   target="_blank" class="bd-share-btn tw" title="Twitter">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString(Context.Request.Path)"
+                   target="_blank" class="bd-share-btn fb" title="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=@Uri.EscapeDataString(Context.Request.Path)"
+                   target="_blank" class="bd-share-btn lk" title="LinkedIn">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+                <button onclick="copyLink()" class="bd-share-btn cp" title="Linki Kopyala" style="cursor:pointer;border:none;">
+                    <i class="fa-solid fa-link" id="copyIcon"></i>
+                </button>
+            </div>
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="bd-sidebar">
+
+            <!-- Info card -->
+            <div class="bd-sidebar-card">
+                <div class="bd-sidebar-header">
+                    <div class="bd-sidebar-title">
+                        <i class="fa-solid fa-circle-info"></i> Məlumat
+                    </div>
+                </div>
+                <div class="bd-info-list">
+                    <div class="bd-info-row">
+                        <i class="fa-solid fa-user"></i>
+                        <span><strong>Müəllif:</strong> @Model.Name</span>
+                    </div>
+                    <div class="bd-info-row">
+                        <i class="fa-solid fa-calendar"></i>
+                        <span><strong>Tarix:</strong> @Model.CreatedAt.ToString("dd.MM.yyyy")</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Related in sidebar -->
+            @if (related != null && related.Any())
+            {
+                <div class="bd-sidebar-card">
+                    <div class="bd-sidebar-header">
+                        <div class="bd-sidebar-title">
+                            <i class="fa-solid fa-newspaper"></i> Oxşar Yazılar
+                        </div>
+                    </div>
+                    <div class="bd-related-list">
+                        @foreach (var rel in related)
+                        {
+                            <a href="/Blog/Detail/@rel.Id" class="bd-related-item">
+                                <div class="bd-related-img">
+                                    <img src="~/uploads/blog/@rel.Image" alt="@rel.Title">
+                                </div>
+                                <div class="bd-related-info">
+                                    <div class="bd-related-title">@rel.Description</div>
+                                    <div class="bd-related-author">@rel.Name</div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Back button -->
+            <a href="/Blog" style="display:flex;align-items:center;gap:10px;padding:14px 20px;background:#fff;border:1px solid #e8edf3;border-radius:14px;font-size:14px;font-weight:600;color:#64748b;text-decoration:none;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.04);"
+               onmouseover="this.style.color='#00c4a8';this.style.borderColor='rgba(0,196,168,0.3)'"
+               onmouseout="this.style.color='#64748b';this.style.borderColor='#e8edf3'">
+                <i class="fa-solid fa-arrow-left"></i> Bloga Qayıt
+            </a>
+        </aside>
+    </div>
+
+    <!-- Related grid below -->
+    @if (related != null && related.Any())
+    {
+        <div class="bd-related-section">
+            <div class="bd-rel-header">
+                <div class="bd-rel-label">Tövsiyə</div>
+                <h2>Digər Yazılar</h2>
+            </div>
+            <div class="bd-rel-grid">
+                @foreach (var rel in related)
+                {
+                    <a href="/Blog/Detail/@rel.Id" class="bd-rel-card">
+                        <div class="bd-rel-card-img">
+                            <img src="~/uploads/blog/@rel.Image" alt="@rel.Title">
+                        </div>
+                        <div class="bd-rel-card-body">
+                            <div class="bd-rel-card-meta">@rel.Title</div>
+                            <div class="bd-rel-card-title">@rel.Description</div>
+                            <div class="bd-rel-card-link">Daha Çox</div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+</div>
+
+<script>
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        const icon = document.getElementById('copyIcon');
+        icon.className = 'fa-solid fa-check';
+        setTimeout(() => icon.className = 'fa-solid fa-link', 2000);
+    });
+}
+</script>

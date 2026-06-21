@@ -9,7 +9,7 @@
         #courses-common {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
-            padding: 160px 20px 60px;
+            padding: 40px 20px 60px;
             max-width: 1300px;
             margin: 0 auto;
         }
@@ -25,6 +25,7 @@
             padding: 16px 24px;
             border-radius: 18px;
             margin-bottom: 40px;
+            margin-top: 40px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.18);
             border: 1px solid rgba(255,255,255,0.06);
         }
@@ -508,7 +509,13 @@
 
     <form class="courses-filter-wrapper top-filter" method="get" asp-controller="Course" asp-action="Index">
         <div class="search-box">
-            <input type="text" name="search" placeholder="Search amazing courses..." value="@Context.Request.Query["search"]" />
+            <input type="text" name="search" placeholder="Search amazing courses..." 
+                   value="@Context.Request.Query["search"]" 
+                   autocomplete="off" 
+                   autocorrect="off" 
+                   autocapitalize="off" 
+                   spellcheck="false"
+                   style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;padding:0 16px;" />
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>

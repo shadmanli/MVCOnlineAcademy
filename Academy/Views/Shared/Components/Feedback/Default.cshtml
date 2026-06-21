@@ -1,4 +1,6 @@
-﻿<style>
+﻿@model IEnumerable<Academy.Models.Feature>
+
+<style>
 @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 #feedback-part {
@@ -41,17 +43,9 @@
     z-index: 1;
 }
 
-/* ── Left side: info cards ── */
-.fb-left {
-    display: flex;
-    gap: 60px;
-    flex-wrap: wrap;
-}
+.fb-left { display: flex; gap: 60px; flex-wrap: wrap; }
 
-.fb-info-card {
-    position: relative;
-    max-width: 240px;
-}
+.fb-info-card { position: relative; max-width: 240px; }
 
 .fb-icon-wrap {
     width: 72px; height: 72px;
@@ -62,6 +56,7 @@
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.2);
     transition: all 0.3s ease;
+    overflow: hidden;
 }
 
 .fb-info-card:hover .fb-icon-wrap {
@@ -70,42 +65,20 @@
     box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
-.fb-icon-wrap i {
-    font-size: 28px;
-    color: #ffffff;
-}
+.fb-icon-wrap i { font-size: 28px; color: #ffffff; }
+.fb-icon-wrap img { width: 40px; height: 40px; object-fit: contain; }
 
-.fb-info-card h3 {
-    font-size: 20px;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 10px;
-    letter-spacing: -0.02em;
-}
-
-.fb-info-card p {
-    color: rgba(255,255,255,0.75);
-    font-size: 14px;
-    line-height: 1.65;
-    margin: 0 0 14px;
-}
+.fb-info-card h3 { font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 10px; letter-spacing: -0.02em; }
+.fb-info-card p { color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.65; margin: 0 0 14px; }
 
 .fb-info-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: gap 0.2s ease;
+    display: inline-flex; align-items: center; gap: 5px;
+    color: #ffffff; font-size: 14px; font-weight: 700;
+    text-decoration: none; letter-spacing: 0.02em; transition: gap 0.2s ease;
 }
-
 .fb-info-link::after { content: '+'; font-size: 16px; font-weight: 900; }
 .fb-info-card:hover .fb-info-link { gap: 8px; }
 
-/* ── Right side: CTA card ── */
 .fb-right { flex-shrink: 0; }
 
 .fb-cta-card {
@@ -124,143 +97,119 @@
     background: rgba(255,255,255,0.2);
     border-radius: 18px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    color: #fff;
+    font-size: 28px; color: #fff;
     margin: 0 auto 20px;
     border: 1px solid rgba(255,255,255,0.3);
 }
 
-.fb-cta-card h3 {
-    font-size: 20px;
-    font-weight: 800;
-    color: #ffffff;
-    margin: 0 0 10px;
-    letter-spacing: -0.02em;
-}
-
-.fb-cta-card p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.8);
-    line-height: 1.65;
-    margin: 0 0 24px;
-}
+.fb-cta-card h3 { font-size: 20px; font-weight: 800; color: #ffffff; margin: 0 0 10px; letter-spacing: -0.02em; }
+.fb-cta-card p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.65; margin: 0 0 24px; }
 
 .fb-cta-stats {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 28px;
-    padding-bottom: 24px;
+    display: flex; justify-content: center; gap: 24px;
+    margin-bottom: 28px; padding-bottom: 24px;
     border-bottom: 1px solid rgba(255,255,255,0.15);
 }
-
-.fb-cta-stat strong {
-    display: block;
-    font-size: 22px;
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: -0.03em;
-}
-
-.fb-cta-stat span {
-    font-size: 11px;
-    color: rgba(255,255,255,0.65);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-}
+.fb-cta-stat strong { display: block; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.03em; }
+.fb-cta-stat span { font-size: 11px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
 
 .fb-cta-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 14px;
-    background: #ff6d34;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    border-radius: 12px;
-    text-decoration: none;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 14px;
+    background: #ff6d34; color: #fff;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700;
+    border-radius: 12px; text-decoration: none;
     transition: all 0.25s ease;
-    box-shadow: 0 6px 20px rgba(255,109,52,0.4);
-    letter-spacing: 0.02em;
+    box-shadow: 0 6px 20px rgba(255,109,52,0.4); letter-spacing: 0.02em;
 }
+.fb-cta-btn:hover { background: #e8551f; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,109,52,0.5); color: #fff; }
 
-.fb-cta-btn:hover {
-    background: #e8551f;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(255,109,52,0.5);
-    color: #fff;
-}
-
-/* ── Responsive ── */
-@@media (max-width: 992px) {
-    .fb-inner { flex-direction: column; align-items: flex-start; gap: 40px; }
-    .fb-right { width: 100%; }
-    .fb-cta-card { width: 100%; max-width: 420px; }
-}
-
-@@media (max-width: 640px) {
-    #feedback-part { padding: 60px 20px; }
-    .fb-left { gap: 36px; }
-    .fb-info-card { max-width: 100%; }
-}
+@@media (max-width: 992px) { .fb-inner { flex-direction: column; align-items: flex-start; gap: 40px; } .fb-right { width: 100%; } .fb-cta-card { width: 100%; max-width: 420px; } }
+@@media (max-width: 640px) { #feedback-part { padding: 60px 20px; } .fb-left { gap: 36px; } .fb-info-card { max-width: 100%; } }
 </style>
 
 <section id="feedback-part">
     <div class="fb-inner">
 
-        <!-- ── Left: info cards ── -->
+        <!-- ── Left: Feature kartları — DB-dən ── -->
         <div class="fb-left">
-            <div class="fb-info-card">
-                <div class="fb-icon-wrap">
-                    <i class="fa-solid fa-rocket"></i>
+            @{
+                var icons = new[] { "fa-rocket", "fa-earth-americas", "fa-bolt", "fa-star", "fa-graduation-cap" };
+                int fi = 0;
+            }
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var feature in Model)
+                {
+                    <div class="fb-info-card">
+                        <div class="fb-icon-wrap">
+                            @if (!string.IsNullOrEmpty(feature.Image))
+                            {
+                                <img src="~/uploads/features/@feature.Image" alt="@feature.Title" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid @icons[fi % icons.Length]"></i>
+                            }
+                        </div>
+                        <h3>@feature.Title</h3>
+                        <p>@feature.Description</p>
+                      
+                    </div>
+                    fi++;
+                }
+            }
+            else
+            {
+                <!-- Fallback: DB boşdursa statik mətn -->
+                <div class="fb-info-card">
+                    <div class="fb-icon-wrap"><i class="fa-solid fa-rocket"></i></div>
+                    <h3>Learn Anything</h3>
+                    <p>Join millions of people from around the world learning together. Try it now!</p>
+                  
                 </div>
-                <h3>Learn Anything</h3>
-                <p>Join millions of people from around the world learning together. Try it now!</p>
-                <a href="/Course" class="fb-info-link">View More</a>
-            </div>
-
-            <div class="fb-info-card">
-                <div class="fb-icon-wrap">
-                    <i class="fa-solid fa-earth-americas"></i>
+                <div class="fb-info-card">
+                    <div class="fb-icon-wrap"><i class="fa-solid fa-earth-americas"></i></div>
+                    <h3>Learn Together</h3>
+                    <p>Join millions of people from around world learning together. Try it now!</p>
+                  
                 </div>
-                <h3>Learn Together</h3>
-                <p>Join millions of people from around world learning together. Try it now!</p>
-                <a href="/Course" class="fb-info-link">View More</a>
-            </div>
+            }
         </div>
 
-        <!-- ── Right: CTA card ── -->
+        <!-- ── Right: CTA card — Statistic DB-dən ── -->
         <div class="fb-right">
             <div class="fb-cta-card">
-                <div class="fb-cta-icon">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
+                <div class="fb-cta-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                 <h3>Öyrənməyə Başla</h3>
                 <p>Peşəkar müəllimlərdən öyrən, karyeranı inkişaf etdir.</p>
 
-                <div class="fb-cta-stats">
-                    <div class="fb-cta-stat">
-                        <strong>50K+</strong>
-                        <span>Tələbə</span>
+                @{
+                    var stats = ViewBag.Statistics as List<Academy.Models.Statistic>;
+                }
+                @if (stats != null && stats.Any())
+                {
+                    <div class="fb-cta-stats">
+                        @foreach (var stat in stats)
+                        {
+                            <div class="fb-cta-stat">
+                                <strong>@stat.Count</strong>
+                                <span>@stat.Title</span>
+                            </div>
+                        }
                     </div>
-                    <div class="fb-cta-stat">
-                        <strong>200+</strong>
-                        <span>Kurs</span>
+                }
+                else
+                {
+                    <div class="fb-cta-stats">
+                        <div class="fb-cta-stat"><strong>50K+</strong><span>Tələbə</span></div>
+                        <div class="fb-cta-stat"><strong>200+</strong><span>Kurs</span></div>
+                        <div class="fb-cta-stat"><strong>98%</strong><span>Məmnun</span></div>
                     </div>
-                    <div class="fb-cta-stat">
-                        <strong>98%</strong>
-                        <span>Məmnun</span>
-                    </div>
-                </div>
+                }
 
                 <a href="/Course" class="fb-cta-btn">
-                    <i class="fa-solid fa-arrow-right"></i>
-                    Kurslara Bax
+                    <i class="fa-solid fa-arrow-right"></i> Kurslara Bax
                 </a>
             </div>
         </div>

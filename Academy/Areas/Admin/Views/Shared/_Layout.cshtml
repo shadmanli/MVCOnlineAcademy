@@ -110,6 +110,10 @@
            class="p-nav-link @(currentPath.Contains("/admin/slider") ? "active" : "")">
           <i class="fa fa-images"></i> Slider
         </a>
+        <a asp-area="Admin" asp-controller="Partner" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/partner") ? "active" : "")">
+          <i class="fa fa-handshake"></i> Partner Logolar
+        </a>
         <a asp-area="Admin" asp-controller="Banner" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/banner") ? "active" : "")">
           <i class="fa fa-flag"></i> Banner
@@ -175,6 +179,11 @@
         <a asp-area="Admin" asp-controller="Review" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/review") ? "active" : "")">
           <i class="fa fa-star-half-stroke"></i> Rəy İdarəetmə
+        </a>
+        <div class="p-nav-section">Sertifikatlar</div>
+        <a asp-area="Admin" asp-controller="Certificate" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/certificate") ? "active" : "")">
+          <i class="fa fa-certificate"></i> Sertifikatlar
         </a>
       }
 

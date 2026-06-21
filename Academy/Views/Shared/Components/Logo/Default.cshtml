@@ -1,12 +1,122 @@
-﻿<section id="logos">
-    <div class="logo-img">
-        <div class="logos-container" id="logosContainer">
-            <img src="~/assets/images/logo1.png" alt="">
-            <img src="~/assets/images/logo2.png" alt="">
-            <img src="~/assets/images/logo3.png" alt="">
-            <img src="~/assets/images/logo4.png" alt="">
-            <img src="~/assets/images/logo5.png" alt="">
-            <img src="~/assets/images/logo6.png" alt="">
+﻿@model IEnumerable<Academy.Models.Partner>
+
+@if (Model != null && Model.Any())
+{
+<style>
+#logos {
+    width: 100%;
+    background: #ff6d34;
+    padding: 40px 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.logos-scroll-wrap {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.logos-track {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    white-space: nowrap;
+    animation: logoScroll 25s linear infinite;
+    flex-shrink: 0;
+}
+
+.logos-track:hover {
+    animation-play-state: paused;
+}
+
+@@keyframes logoScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.logo-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    height: 80px;
+    padding: 0 16px;
+    opacity: 1;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.logo-item:hover { opacity: 0.85; transform: scale(1.05); }
+
+.logo-item img {
+    height: 64px !important;
+    min-height: 64px !important;
+    max-width: 200px !important;
+    min-width: 80px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    image-rendering: auto;
+    filter: none !important;
+    display: block !important;
+    transform: scale(1.8);
+    transform-origin: center center;
+}
+
+.logo-text-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px !important;
+    font-weight: 800;
+    color: #fff !important;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block !important;
+}
+
+.logo-divider {
+    width: 5px;
+    height: 5px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+</style>
+
+<section id="logos">
+    <div class="logos-scroll-wrap">
+        <div class="logos-track">
+            @* İlk set *@
+            @foreach (var partner in Model)
+            {
+                <div class="logo-item">
+                    @if (!string.IsNullOrEmpty(partner.Image))
+                    {
+                        <img src="~/uploads/partners/@partner.Image" alt="@partner.Name" title="@partner.Name">
+                    }
+                    else
+                    {
+                        <span class="logo-text-name">@partner.Name</span>
+                    }
+                </div>
+                <div class="logo-divider"></div>
+            }
+            @* Dublikat set — seamless loop üçün *@
+            @foreach (var partner in Model)
+            {
+                <div class="logo-item">
+                    @if (!string.IsNullOrEmpty(partner.Image))
+                    {
+                        <img src="~/uploads/partners/@partner.Image" alt="@partner.Name" title="@partner.Name">
+                    }
+                    else
+                    {
+                        <span class="logo-text-name">@partner.Name</span>
+                    }
+                </div>
+                <div class="logo-divider"></div>
+            }
         </div>
     </div>
 </section>
+}

@@ -1,0 +1,143 @@
+@model IEnumerable<Academy.ViewModels.Partner.PartnerVM>
+@{
+    ViewData["Title"] = "Partner Logolar";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="p-page-header">
+    <div>
+        <h1 class="p-page-title">Partner Logolar</h1>
+        <p class="p-page-sub">Ana səhifədəki logo slayderi idarə edin</p>
+    </div>
+    <a asp-action="Create" class="p-btn p-btn-primary">
+        <i class="fa fa-plus"></i> Yeni Partner
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="p-alert p-alert-success mb-4">
+        <i class="fa fa-check-circle"></i> @TempData["Success"]
+    </div>
+}
+
+<div class="p-card">
+    <div class="p-card-body">
+        @if (!Model.Any())
+        {
+            <div class="p-empty-state">
+                <i class="fa fa-images"></i>
+                <p>Hələ heç bir partner əlavə edilməyib.</p>
+                <a asp-action="Create" class="p-btn p-btn-primary">İlk Partneri Əlavə Et</a>
+            </div>
+        }
+        else
+        {
+            <div class="partner-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="partner-card @(!item.IsActive ? "inactive" : "")">
+                        <div class="partner-img-wrap">
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <img src="~/uploads/partners/@item.Image" alt="@item.Name">
+                            }
+                            else
+                            {
+                                <div class="partner-no-img">
+                                    <i class="fa fa-image"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="partner-info">
+                            <span class="partner-name">@item.Name</span>
+                            <span class="partner-order">Sıra: @item.Order</span>
+                            <span class="partner-status @(item.IsActive ? "active" : "passive")">
+                                @(item.IsActive ? "Aktiv" : "Deaktiv")
+                            </span>
+                        </div>
+                        <div class="partner-actions">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="p-btn-icon" title="Düzəlt">
+                                <i class="fa fa-pen"></i>
+                            </a>
+                            <form asp-action="ToggleActive" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="p-btn-icon @(item.IsActive ? "text-warning" : "text-success")"
+                                        title="@(item.IsActive ? "Deaktiv Et" : "Aktiv Et")">
+                                    <i class="fa @(item.IsActive ? "fa-eye-slash" : "fa-eye")"></i>
+                                </button>
+                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.Id"
+                               onclick="return confirm('Bu partneri silmək istədiyinizdən əminsiniz?')"
+                               class="p-btn-icon text-danger" title="Sil">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+.partner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+.partner-card {
+    background: #fff;
+    border: 1px solid #e8edf3;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+.partner-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.partner-card.inactive { opacity: 0.5; }
+.partner-img-wrap {
+    height: 100px;
+    background: #f8fafc;
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.partner-img-wrap img { max-width: 100%; max-height: 70px; object-fit: contain; }
+.partner-no-img { font-size: 32px; color: #cbd5e1; }
+.partner-info {
+    padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+    flex: 1;
+}
+.partner-name { font-size: 13px; font-weight: 600; color: #0f172a; }
+.partner-order { font-size: 11px; color: #94a3b8; }
+.partner-status { font-size: 11px; font-weight: 600; }
+.partner-status.active { color: #10b981; }
+.partner-status.passive { color: #ef4444; }
+.partner-actions {
+    padding: 8px 12px;
+    border-top: 1px solid #f1f5f9;
+    display: flex; gap: 6px; justify-content: flex-end;
+}
+.p-btn-icon {
+    width: 30px; height: 30px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; border: 1px solid #e2e8f0;
+    background: #f8fafc; color: #64748b;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.p-btn-icon:hover { background: #f1f5f9; color: #0f172a; }
+.p-btn-icon.text-danger { color: #ef4444; }
+.p-btn-icon.text-warning { color: #f59e0b; }
+.p-btn-icon.text-success { color: #10b981; }
+.p-empty-state {
+    text-align: center; padding: 60px 20px; color: #94a3b8;
+}
+.p-empty-state i { font-size: 48px; display: block; margin-bottom: 12px; }
+.p-alert { padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.p-alert-success { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+</style>

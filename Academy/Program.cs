@@ -153,6 +153,22 @@ using (var scope = app.Services.CreateScope())
     }
     catch { /* Sütunlar artıq mövcuddur */ }
 
+    // Partners cədvəlini avtomatik yarat
+    try
+    {
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Partners' AND xtype='U')
+            CREATE TABLE Partners (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                Name NVARCHAR(MAX) NOT NULL,
+                Image NVARCHAR(MAX) NULL,
+                [Order] INT NOT NULL DEFAULT 0,
+                IsActive BIT NOT NULL DEFAULT 1,
+                CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()
+            )");
+    }
+    catch { /* Cədvəl artıq varsa keç */ }
+
     // Orders və OrderItems cədvəllərini avtomatik yarat
     try
     {

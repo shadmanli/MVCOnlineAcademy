@@ -1,0 +1,136 @@
+@model Academy.Models.Certificate
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Sertifikat Yoxlama";
+}
+
+<style>
+.verify-page {
+    min-height: 80vh;
+    background: #f8fafc;
+    padding: 80px 20px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.verify-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 48px;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    text-align: center;
+}
+.verify-form input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s;
+    margin-bottom: 14px;
+    font-family: 'Inter', sans-serif;
+}
+.verify-form input:focus { border-color: #00c4a8; box-shadow: 0 0 0 3px rgba(0,196,168,0.12); }
+.verify-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #00c4a8, #0ea5e9);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+}
+.verify-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,196,168,0.35); }
+
+.result-valid {
+    background: #f0fdf9;
+    border: 1px solid rgba(0,196,168,0.25);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 24px;
+}
+.result-invalid {
+    background: #fef2f2;
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 24px;
+}
+.result-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.result-title { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 14px;
+    text-align: left;
+}
+.result-row:last-child { border-bottom: none; }
+.result-row .lbl { color: #64748b; font-weight: 500; }
+.result-row .val { font-weight: 700; color: #0f172a; }
+</style>
+
+<div class="verify-page">
+    <div class="verify-card">
+        <div style="font-size:48px;margin-bottom:16px;">🔍</div>
+        <h1 style="font-size:26px;font-weight:800;color:#0f172a;margin-bottom:8px;">Sertifikat Yoxla</h1>
+        <p style="font-size:14px;color:#64748b;margin-bottom:32px;line-height:1.6;">Sertifikat nömrəsini daxil edərək həqiqiliyini yoxlayın.</p>
+
+        <form method="get" action="/Certificate/Verify" class="verify-form">
+            <input type="text" name="code" value="@Context.Request.Query["code"]"
+                   placeholder="Məs: CERT-XXXXXXXX-XXXXXX" required />
+            <button type="submit" class="verify-btn">
+                <i class="fa-solid fa-shield-halved"></i> Yoxla
+            </button>
+        </form>
+
+        @if (Context.Request.Query.ContainsKey("code"))
+        {
+            if (Model != null && !Model.IsRevoked)
+            {
+                <div class="result-valid">
+                    <span class="result-icon">✅</span>
+                    <div class="result-title" style="color:#00c4a8;">Sertifikat Etibarlıdır</div>
+                    <div class="result-row"><span class="lbl">Tələbə</span><span class="val">@Model.AppUser?.FullName</span></div>
+                    <div class="result-row"><span class="lbl">Kurs</span><span class="val">@Model.Course?.Title</span></div>
+                    <div class="result-row"><span class="lbl">Tarix</span><span class="val">@Model.IssuedAt.ToString("dd MMM yyyy")</span></div>
+                    <div class="result-row"><span class="lbl">Sertifikat №</span><span class="val" style="color:#00c4a8;font-family:monospace;">@Model.CertificateNumber</span></div>
+                    <div class="result-row"><span class="lbl">Status</span><span class="val" style="color:#10b981;">✓ Aktiv</span></div>
+                    <a href="/Certificate/View/@Model.CertificateNumber"
+                       style="display:inline-flex;align-items:center;gap:7px;margin-top:16px;padding:10px 22px;background:linear-gradient(135deg,#00c4a8,#0ea5e9);color:#fff;border-radius:10px;text-decoration:none;font-size:13px;font-weight:700;">
+                        <i class="fa-solid fa-eye"></i> Sertifikata Bax
+                    </a>
+                </div>
+            }
+            else if (Model != null && Model.IsRevoked)
+            {
+                <div class="result-invalid">
+                    <span class="result-icon">⚠️</span>
+                    <div class="result-title" style="color:#ef4444;">Sertifikat Ləğv Edilib</div>
+                    <div class="result-row"><span class="lbl">Tələbə</span><span class="val">@Model.AppUser?.FullName</span></div>
+                    <div class="result-row"><span class="lbl">Ləğv tarixi</span><span class="val">@(Model.RevokedAt?.ToString("dd MMM yyyy") ?? "-")</span></div>
+                    @if (!string.IsNullOrEmpty(Model.RevokeReason))
+                    {
+                        <div class="result-row"><span class="lbl">Səbəb</span><span class="val">@Model.RevokeReason</span></div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="result-invalid">
+                    <span class="result-icon">❌</span>
+                    <div class="result-title" style="color:#ef4444;">Sertifikat Tapılmadı</div>
+                    <p style="font-size:13px;color:#64748b;margin-top:8px;">Bu sertifikat nömrəsi sistemdə mövcud deyil.</p>
+                </div>
+            }
+        }
+    </div>
+</div>
