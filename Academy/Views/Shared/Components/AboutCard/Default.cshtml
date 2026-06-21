@@ -339,9 +339,23 @@
         </div>
 
         <div class="tf-stats">
-            <div class="tf-stat"><span class="tf-stat-n">50K+</span><span class="tf-stat-l">Tələbə</span></div>
-            <div class="tf-stat"><span class="tf-stat-n">200+</span><span class="tf-stat-l">Kurs</span></div>
-            <div class="tf-stat"><span class="tf-stat-n">98%</span><span class="tf-stat-l">Məmnunluq</span></div>
+            @{
+                var tfStats = ViewBag.Statistics as List<Academy.Models.Statistic>;
+            }
+            @if (tfStats != null && tfStats.Any())
+            {
+                @foreach (var stat in tfStats)
+                {
+                    <div class="tf-stat">
+                        <span class="tf-stat-n">@stat.Count</span>
+                        <span class="tf-stat-l">@stat.Title</span>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="tf-stat"><span class="tf-stat-n">—</span><span class="tf-stat-l">Statistika əlavə edin</span></div>
+            }
         </div>
 
     </div>

@@ -22,6 +22,7 @@ namespace Academy.ViewComponents.Home
                 .Take(2)
                 .ToListAsync();
 
+            // Birbaşa Statistics cədvəlindən al
             var statistics = await _context.Statistics
                 .OrderBy(s => s.Id)
                 .Take(3)
