@@ -35,7 +35,7 @@ namespace Academy.Controllers
         }
 
         // GET /Certificate/My
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> My()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -52,8 +52,9 @@ namespace Academy.Controllers
         }
 
         // POST /Certificate/Claim — tələbə kursunu bitirib sertifikat istəyir
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Claim(int courseId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -66,9 +67,14 @@ namespace Academy.Controllers
                 return Json(new { success = false, message = "Bu kurs üçün artıq sertifikatınız var.", certNumber = existing.CertificateNumber });
 
             // Ödənilib mi?
-            bool paid = await _context.OrderItems
-                .AnyAsync(oi => oi.CourseId == courseId &&
-                    _context.Orders.Any(o => o.Id == oi.OrderId && o.AppUserId == user.Id && o.Status == OrderStatus.Paid));
+            bool paid = await (
+                from oi in _context.OrderItems
+                join o in _context.Orders on oi.OrderId equals o.Id
+                where oi.CourseId == courseId
+                      && o.AppUserId == user.Id
+                      && o.Status == OrderStatus.Paid
+                select oi.Id
+            ).AnyAsync();
             if (!paid)
                 return Json(new { success = false, message = "Bu kursu satın almamışsınız." });
 
@@ -96,7 +102,7 @@ namespace Academy.Controllers
         }
 
         // GET /Certificate/Check/{courseId} — kursda sertifikat hüququ varmı?
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpGet]
         public async Task<IActionResult> Check(int courseId)
         {
@@ -107,9 +113,14 @@ namespace Academy.Controllers
             var watchedCount = await _context.VideoProgresses
                 .CountAsync(vp => vp.AppUserId == user.Id && vp.CourseId == courseId && vp.IsWatched);
 
-            bool paid = await _context.OrderItems
-                .AnyAsync(oi => oi.CourseId == courseId &&
-                    _context.Orders.Any(o => o.Id == oi.OrderId && o.AppUserId == user.Id && o.Status == OrderStatus.Paid));
+            bool paid = await (
+                from oi in _context.OrderItems
+                join o in _context.Orders on oi.OrderId equals o.Id
+                where oi.CourseId == courseId
+                      && o.AppUserId == user.Id
+                      && o.Status == OrderStatus.Paid
+                select oi.Id
+            ).AnyAsync();
 
             var existing = await _context.Certificates
                 .FirstOrDefaultAsync(c => c.AppUserId == user.Id && c.CourseId == courseId && !c.IsRevoked);
@@ -133,6 +144,8 @@ namespace Academy.Controllers
         }
 
         // GET /Certificate/View/{certNumber}
+        [HttpGet]
+        [Route("Certificate/View/{certNumber}")]
         public async Task<IActionResult> View(string certNumber)
         {
             var cert = await _context.Certificates

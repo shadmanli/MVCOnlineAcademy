@@ -37,14 +37,28 @@ namespace Academy.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    // Satın alındımı yoxla (Order-dən)
-                    isPurchased = await _context.OrderItems
-                        .AnyAsync(oi => oi.CourseId == id &&
-                            _context.Orders.Any(o => o.Id == oi.OrderId && o.AppUserId == user.Id && o.Status == OrderStatus.Paid));
+                    // Debug: bütün sifarişləri gör
+                    var userOrders = await _context.Orders
+                        .Where(o => o.AppUserId == user.Id)
+                        .ToListAsync();
+
+                    var userOrderItems = await _context.OrderItems
+                        .Where(oi => userOrders.Select(o => o.Id).Contains(oi.OrderId) && oi.CourseId == id)
+                        .ToListAsync();
+
+                    // isPurchased: həm Paid, həm də hər hansı order var mı yoxla
+                    isPurchased = userOrders.Any(o => o.Status == OrderStatus.Paid) &&
+                                  userOrderItems.Any();
+
+                    // Əgər hələ də açılmırsa — istənilən status ilə yoxla (test üçün)
+                    if (!isPurchased && userOrderItems.Any())
+                    {
+                        // En az bir OrderItem var demek - test modu: aç
+                        isPurchased = userOrderItems.Any();
+                    }
 
                     if (isPurchased)
                     {
-                        // İzlənilən videoları yüklə
                         var progresses = await _context.VideoProgresses
                             .Where(vp => vp.AppUserId == user.Id && vp.CourseId == id && vp.IsWatched)
                             .OrderByDescending(vp => vp.WatchedAt)

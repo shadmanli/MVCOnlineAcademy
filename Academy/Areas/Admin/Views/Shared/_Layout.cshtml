@@ -180,6 +180,11 @@
            class="p-nav-link @(currentPath.Contains("/admin/review") ? "active" : "")">
           <i class="fa fa-star-half-stroke"></i> Rəy İdarəetmə
         </a>
+        <div class="p-nav-section">Maliyyə</div>
+        <a asp-area="Admin" asp-controller="OrderManage" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/ordermanage") ? "active" : "")">
+          <i class="fa fa-receipt"></i> Sifarişlər
+        </a>
         <div class="p-nav-section">Sertifikatlar</div>
         <a asp-area="Admin" asp-controller="Certificate" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/certificate") ? "active" : "")">

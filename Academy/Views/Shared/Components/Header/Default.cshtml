@@ -406,10 +406,17 @@
             @if (User.Identity.IsAuthenticated)
             {
                 var user = await UserManager.GetUserAsync(User);
+                var roles = await UserManager.GetRolesAsync(user!);
+                var isUserRole = roles.Contains("User");
                 var initial = user?.FullName?.Length > 0 ? user.FullName[0].ToString().ToUpper() : "U";
-                <a href="/Certificate/My" class="nav-icon-btn" title="Sertifikatlarım">
-                    <i class="fa-solid fa-certificate" style="color:#fbbf24;font-size:14px;"></i>
-                </a>
+
+                @* Sertifikat ikonu yalnız User rolunda görünsün *@
+                @if (isUserRole)
+                {
+                    <a href="/Certificate/My" class="nav-icon-btn" title="Sertifikatlarım">
+                        <i class="fa-solid fa-certificate" style="color:#fbbf24;font-size:14px;"></i>
+                    </a>
+                }
                 <a href="/Profile" class="user-pill">
                     <div class="user-av">@initial</div>
                     @user?.FullName
