@@ -53,6 +53,9 @@ namespace Academy.Data
         public DbSet<VideoProgress> VideoProgresses { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Partner> Partners { get; set; }
+        public DbSet<CourseName> CourseNames { get; set; }
+        public DbSet<CourseNameCategory> CourseNameCategories { get; set; }
+        public DbSet<InstructorCategory> InstructorCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -129,6 +132,45 @@ namespace Academy.Data
                 .WithMany()
                 .HasForeignKey(r => r.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // CourseName <-> Category Many-to-Many
+            builder.Entity<CourseNameCategory>()
+                .HasKey(cnc => new { cnc.CourseNameId, cnc.CategoryId });
+
+            builder.Entity<CourseNameCategory>()
+                .HasOne(cnc => cnc.CourseName)
+                .WithMany(cn => cn.CourseNameCategories)
+                .HasForeignKey(cnc => cnc.CourseNameId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<CourseNameCategory>()
+                .HasOne(cnc => cnc.Category)
+                .WithMany()
+                .HasForeignKey(cnc => cnc.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // InstructorCategory Many-to-Many
+            builder.Entity<InstructorCategory>()
+                .HasKey(ic => new { ic.InstructorId, ic.CategoryId });
+
+            builder.Entity<InstructorCategory>()
+                .HasOne(ic => ic.Instructor)
+                .WithMany(i => i.InstructorCategories)
+                .HasForeignKey(ic => ic.InstructorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<InstructorCategory>()
+                .HasOne(ic => ic.Category)
+                .WithMany()
+                .HasForeignKey(ic => ic.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Course -> CourseName
+            builder.Entity<Course>()
+                .HasOne(c => c.CourseName)
+                .WithMany(cn => cn.Courses)
+                .HasForeignKey(c => c.CourseNameId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -692,33 +692,70 @@
     <!-- Modern Pagination -->
     @if (Model.TotalPages >= 1)
     {
-        <div class="modern-pagination">
+        <div class="modern-pagination" id="coursePagination">
             @if (Model.CurrentPage > 1)
             {
-                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage - 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="prev">
+                <button onclick="loadCoursePage(@(Model.CurrentPage - 1))" class="prev">
                     <i class="fa-solid fa-chevron-left"></i>
-                </a>
+                </button>
             }
 
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
                 @if (i == 1 || i == Model.TotalPages || (i >= Model.CurrentPage - 2 && i <= Model.CurrentPage + 2))
                 {
-                    <a href="@Url.Action("Index", "Course", new { page = i, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })"
-                       class="page @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                    <button onclick="loadCoursePage(@i)"
+                       class="page @(i == Model.CurrentPage ? "active" : "")">@i</button>
                 }
                 else if (i == Model.CurrentPage - 3 || i == Model.CurrentPage + 3)
                 {
-                    <a style="pointer-events:none;opacity:0.4;">...</a>
+                    <span style="pointer-events:none;opacity:0.4;">...</span>
                 }
             }
 
             @if (Model.CurrentPage < Model.TotalPages)
             {
-                <a href="@Url.Action("Index", "Course", new { page = Model.CurrentPage + 1, search = Model.Search, sort = Model.Sort, categoryId = Model.CategoryId, instructorId = Model.InstructorId, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice })" class="next">
+                <button onclick="loadCoursePage(@(Model.CurrentPage + 1))" class="next">
                     <i class="fa-solid fa-chevron-right"></i>
-                </a>
+                </button>
             }
         </div>
     }
 </section>
+
+<script>
+(function() {
+    // Current filter state
+    function getFilters() {
+        var form = document.querySelector('.courses-filter-wrapper');
+        if (!form) return {};
+        var data = {};
+        new FormData(form).forEach(function(v, k) { data[k] = v; });
+        return data;
+    }
+
+    window.loadCoursePage = function(page) {
+        var grid = document.getElementById('courseCardsGrid');
+        if (!grid) return;
+        grid.style.opacity = '0.5';
+        grid.style.pointerEvents = 'none';
+
+        // Build URL with current filters + new page
+        var params = new URLSearchParams(window.location.search);
+        params.set('page', page);
+
+        fetch('/Course/GetPage?' + params.toString())
+            .then(function(r) { return r.text(); })
+            .then(function(html) {
+                grid.innerHTML = html;
+                grid.style.opacity = '1';
+                grid.style.pointerEvents = 'auto';
+                window.scrollTo({ top: (grid.offsetTop || 0) - 120, behavior: 'smooth' });
+            })
+            .catch(function() {
+                grid.style.opacity = '1';
+                grid.style.pointerEvents = 'auto';
+            });
+    };
+})();
+</script>

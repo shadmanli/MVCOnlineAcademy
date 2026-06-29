@@ -7,6 +7,10 @@
             public string Title { get; set; }
             public string Description { get; set; }
 
+            // CourseName template-dən gəlir
+            public int? CourseNameId { get; set; }
+            public CourseName? CourseName { get; set; }
+
             public decimal Price { get; set; }
 
             public string ImageUrl { get; set; }

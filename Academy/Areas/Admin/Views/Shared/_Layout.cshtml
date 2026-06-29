@@ -53,6 +53,10 @@
       @if (isSuperAdmin || isAdmin || isMuellim)
       {
         <div class="p-nav-section">Kurs</div>
+        <a asp-area="Admin" asp-controller="CourseName" asp-action="Index"
+           class="p-nav-link @(currentPath.Contains("/admin/coursename") ? "active" : "")">
+          <i class="fa fa-bookmark"></i> Kurs Adları
+        </a>
         <a asp-area="Admin" asp-controller="Course" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/course") ? "active" : "")">
           <i class="fa fa-book-open"></i> Kurslar
@@ -243,9 +247,28 @@
         <i class="fa fa-bars"></i>
       </button>
 
-      <div class="p-search">
+      <div class="p-search" style="position:relative;">
         <i class="fa fa-magnifying-glass p-search-icon"></i>
-        <input type="text" placeholder="Axtar...">
+        <input type="text" id="adminSearchInput" placeholder="Axtar..." 
+               autocomplete="off"
+               oninput="adminSearch(this.value)"
+               onfocus="showAdminResults()"
+               onblur="setTimeout(hideAdminResults, 200)">
+        <div id="adminSearchResults" style="
+            display:none;
+            position:absolute;
+            top:calc(100% + 8px);
+            left:0;
+            right:0;
+            background:#fff;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            box-shadow:0 8px 32px rgba(0,0,0,0.12);
+            max-height:360px;
+            overflow-y:auto;
+            z-index:9999;
+            font-family:'Inter',sans-serif;
+        "></div>
       </div>
 
       <div class="p-header-right">
@@ -286,7 +309,78 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // ===== SIDEBAR TOGGLE =====
+  // ===== ADMIN SEARCH =====
+  var adminSearchTimer;
+  function adminSearch(query) {
+      clearTimeout(adminSearchTimer);
+      var res = document.getElementById('adminSearchResults');
+      if (!query || query.trim().length < 2) {
+          res.style.display = 'none';
+          return;
+      }
+      res.style.display = 'block';
+      res.innerHTML = '<div style="padding:16px;text-align:center;color:#94a3b8;font-size:13px;"><i class="fa fa-spinner fa-spin"></i> Axtarılır...</div>';
+
+      adminSearchTimer = setTimeout(function() {
+          fetch('/Admin/AdminSearch/Search?q=' + encodeURIComponent(query.trim()))
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                  renderAdminResults(data, query.trim());
+              })
+              .catch(function() {
+                  res.innerHTML = '<div style="padding:16px;text-align:center;color:#ef4444;font-size:13px;">Xəta baş verdi</div>';
+              });
+      }, 350);
+  }
+
+  function renderAdminResults(data, query) {
+      var res = document.getElementById('adminSearchResults');
+      if (!data || data.length === 0) {
+          res.innerHTML = '<div style="padding:16px;text-align:center;color:#94a3b8;font-size:13px;"><i class="fa fa-search" style="display:block;font-size:24px;margin-bottom:8px;"></i>"' + query + '" üçün nəticə tapılmadı</div>';
+          return;
+      }
+
+      var icons = { 'Kurs':'fa-book-open', 'Müəllim':'fa-chalkboard-user', 'Tələbə':'fa-user-graduate', 'Blog':'fa-newspaper', 'Kateqoriya':'fa-tags' };
+      var colors = { 'Kurs':'#6366f1', 'Müəllim':'#00c4a8', 'Tələbə':'#f59e0b', 'Blog':'#ff6d34', 'Kateqoriya':'#0ea5e9' };
+
+      var grouped = {};
+      data.forEach(function(item) {
+          if (!grouped[item.type]) grouped[item.type] = [];
+          grouped[item.type].push(item);
+      });
+
+      var html = '';
+      Object.keys(grouped).forEach(function(type) {
+          html += '<div style="padding:8px 14px 4px;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8;border-top:1px solid #f1f5f9;">' + type + '</div>';
+          grouped[type].forEach(function(item) {
+              var icon = icons[type] || 'fa-circle';
+              var color = colors[type] || '#64748b';
+              html += '<a href="' + item.url + '" style="display:flex;align-items:center;gap:12px;padding:10px 14px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'transparent\'">' +
+                  '<div style="width:32px;height:32px;border-radius:8px;background:' + color + '18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                  '<i class="fa ' + icon + '" style="color:' + color + ';font-size:13px;"></i></div>' +
+                  '<div style="flex:1;min-width:0;">' +
+                  '<div style="font-size:13px;font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + item.title + '</div>' +
+                  (item.subtitle ? '<div style="font-size:11px;color:#94a3b8;margin-top:1px;">' + item.subtitle + '</div>' : '') +
+                  '</div>' +
+                  '<i class="fa fa-chevron-right" style="color:#cbd5e1;font-size:10px;flex-shrink:0;"></i>' +
+                  '</a>';
+          });
+      });
+
+      res.innerHTML = html;
+  }
+
+  function showAdminResults() {
+      var input = document.getElementById('adminSearchInput');
+      if (input && input.value.trim().length >= 2) {
+          document.getElementById('adminSearchResults').style.display = 'block';
+      }
+  }
+
+  function hideAdminResults() {
+      var res = document.getElementById('adminSearchResults');
+      if (res) res.style.display = 'none';
+  }
   function toggleSidebar() {
     var s = document.getElementById('sidebar');
     var o = document.getElementById('sidebarOverlay');

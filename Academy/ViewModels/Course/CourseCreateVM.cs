@@ -5,6 +5,10 @@ namespace Academy.ViewModels.Course
 {
     public class CourseCreateVM
     {
+        [Required(ErrorMessage = "Kurs adı seçilməlidir.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Kurs adı seçilməlidir.")]
+        public int CourseNameId { get; set; }
+
         [Required(ErrorMessage = "Başlıq mütləqdir.")]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Başlıq 3-200 simvol arasında olmalıdır.")]
         public string Title { get; set; } = null!;
@@ -44,5 +48,6 @@ namespace Academy.ViewModels.Course
         public List<SelectListItem>? Languages { get; set; }
         public List<SelectListItem>? Categories { get; set; }
         public List<SelectListItem>? Instructors { get; set; }
+        public List<SelectListItem>? CourseNameItems { get; set; }
     }
 }

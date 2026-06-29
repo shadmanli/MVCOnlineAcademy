@@ -1,0 +1,57 @@
+@using Academy.ViewModels.Blog
+@model IEnumerable<BlogVM>
+@{
+    int cur   = ViewBag.CurrentPage ?? 1;
+    int total = ViewBag.TotalPages  ?? 1;
+}
+
+<div class="cards-container">
+    @foreach (var item in Model)
+    {
+        <div class="blog-card-single">
+            <div class="blog-img">
+                <img src="@Url.Content("~/uploads/blog/" + item.Image)" alt="@item.Title">
+            </div>
+            <div class="blog-text">
+                <div class="blog-meta">
+                    <span class="cat-name">@item.Title</span>
+                    <span class="dot-sep"></span>
+                    <a href="" class="author-link">@item.Name</a>
+                </div>
+                <h3>@item.Description</h3>
+                <div class="blog-footer-row">
+                    <a href="/Blog/Detail/@item.Id" class="link2">Daha Çox</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (total > 1)
+{
+    <div class="blog-pagination" id="blogPagination">
+        @if (cur > 1)
+        {
+            <button onclick="loadBlogPage(@(cur - 1))" class="blog-page-btn">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        }
+        @for (int p = 1; p <= total; p++)
+        {
+            @if (p == 1 || p == total || (p >= cur - 2 && p <= cur + 2))
+            {
+                <button onclick="loadBlogPage(@p)" class="blog-page-btn @(p == cur ? "active" : "")">@p</button>
+            }
+            else if (p == cur - 3 || p == cur + 3)
+            {
+                <span class="blog-page-btn" style="pointer-events:none;opacity:0.4;">...</span>
+            }
+        }
+        @if (cur < total)
+        {
+            <button onclick="loadBlogPage(@(cur + 1))" class="blog-page-btn">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        }
+    </div>
+}

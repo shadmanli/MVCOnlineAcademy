@@ -37,25 +37,21 @@ namespace Academy.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    // Debug: bütün sifarişləri gör
-                    var userOrders = await _context.Orders
-                        .Where(o => o.AppUserId == user.Id)
-                        .ToListAsync();
-
-                    var userOrderItems = await _context.OrderItems
-                        .Where(oi => userOrders.Select(o => o.Id).Contains(oi.OrderId) && oi.CourseId == id)
-                        .ToListAsync();
-
-                    // isPurchased: həm Paid, həm də hər hansı order var mı yoxla
-                    isPurchased = userOrders.Any(o => o.Status == OrderStatus.Paid) &&
-                                  userOrderItems.Any();
-
-                    // Əgər hələ də açılmırsa — istənilən status ilə yoxla (test üçün)
-                    if (!isPurchased && userOrderItems.Any())
-                    {
-                        // En az bir OrderItem var demek - test modu: aç
-                        isPurchased = userOrderItems.Any();
-                    }
+                    // Raw SQL ilə birbaşa yoxla — EF mapping problemlərini tamamilə keç
+                    var userId = user.Id;
+                    var sql = $@"SELECT COUNT(1) FROM Orders o 
+                                 INNER JOIN OrderItems oi ON o.Id = oi.OrderId 
+                                 WHERE o.AppUserId = '{userId.Replace("'", "''")}' 
+                                 AND oi.CourseId = {id}";
+                    
+                    var conn = _context.Database.GetDbConnection();
+                    await conn.OpenAsync();
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = sql;
+                    var result = await cmd.ExecuteScalarAsync();
+                    await conn.CloseAsync();
+                    
+                    isPurchased = result != null && Convert.ToInt32(result) > 0;
 
                     if (isPurchased)
                     {

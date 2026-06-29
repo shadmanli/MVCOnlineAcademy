@@ -197,7 +197,8 @@ namespace Academy.Helpers
                 .ForMember(dest => dest.Courses,
                     opt => opt.MapFrom(src => src.Courses));
 
-            CreateMap<CourseCreateVM, Course>();
+            CreateMap<CourseCreateVM, Course>()
+                .ForMember(d => d.CourseNameId, o => o.MapFrom(s => s.CourseNameId > 0 ? s.CourseNameId : (int?)null));
 
             CreateMap<Course, CourseDetailVM>()
       .ForMember(d => d.LanguageName,

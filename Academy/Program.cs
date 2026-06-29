@@ -31,6 +31,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICourseFeatureService, CourseFeatureService>();
 builder.Services.AddScoped<ICourseRequirementService, CourseRequirementService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<ICourseNameService, CourseNameService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddSession(options =>
@@ -153,6 +154,46 @@ using (var scope = app.Services.CreateScope())
     }
     catch { /* Sütunlar artıq mövcuddur */ }
 
+    // CourseName və CourseNameCategory cədvəllərini avtomatik yarat
+    try
+    {
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='CourseNames' AND xtype='U')
+            CREATE TABLE CourseNames (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                Name NVARCHAR(200) NOT NULL,
+                Description NVARCHAR(MAX) NULL,
+                IsActive BIT NOT NULL DEFAULT 1,
+                CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()
+            )");
+
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='CourseNameCategories' AND xtype='U')
+            CREATE TABLE CourseNameCategories (
+                CourseNameId INT NOT NULL,
+                CategoryId INT NOT NULL,
+                CONSTRAINT PK_CourseNameCategories PRIMARY KEY (CourseNameId, CategoryId),
+                CONSTRAINT FK_CNC_CourseName FOREIGN KEY (CourseNameId) REFERENCES CourseNames(Id) ON DELETE CASCADE,
+                CONSTRAINT FK_CNC_Category FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+            )");
+
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Courses' AND COLUMN_NAME='CourseNameId')
+                ALTER TABLE Courses ADD CourseNameId INT NULL;
+        ");
+
+        db.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='InstructorCategories' AND xtype='U')
+            CREATE TABLE InstructorCategories (
+                InstructorId INT NOT NULL,
+                CategoryId INT NOT NULL,
+                CONSTRAINT PK_InstructorCategories PRIMARY KEY (InstructorId, CategoryId),
+                CONSTRAINT FK_IC_Instructor FOREIGN KEY (InstructorId) REFERENCES Instructors(Id) ON DELETE CASCADE,
+                CONSTRAINT FK_IC_Category FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+            )");
+    }
+    catch { }
+
     // Partners cədvəlini avtomatik yarat
     try
     {
@@ -199,6 +240,14 @@ using (var scope = app.Services.CreateScope())
                 CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
                 CONSTRAINT FK_OrderItems_Orders FOREIGN KEY (OrderId) REFERENCES Orders(Id) ON DELETE CASCADE
             )");
+
+        // Mövcud Pending sifarişləri Paid et (manual/bank ödənişlər üçün)
+        db.Database.ExecuteSqlRaw(@"
+            UPDATE Orders SET Status = 1 
+            WHERE Status = 0 
+            AND StripePaymentIntentId IS NOT NULL
+            AND StripePaymentIntentId LIKE 'manual_%'
+        ");
     }
     catch { /* Cədvəl artıq varsa keç */ }
 

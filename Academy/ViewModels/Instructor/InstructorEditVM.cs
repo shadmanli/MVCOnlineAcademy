@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Academy.ViewModels.Instructor
 {
@@ -17,5 +18,8 @@ namespace Academy.ViewModels.Instructor
 
         public IFormFile? Image { get; set; }
         public string? ExistingImage { get; set; }
+
+        public List<int> CategoryIds { get; set; } = new();
+        public List<SelectListItem>? AllCategories { get; set; }
     }
 }

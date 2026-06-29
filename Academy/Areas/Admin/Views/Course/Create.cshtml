@@ -51,12 +51,27 @@
         <!-- Əsas məlumatlar -->
         <div class="section-title"><i class="fa fa-book-open" style="color:#6366f1;"></i> Əsas Məlumatlar</div>
 
+        <!-- 1. KURS ADI SEÇ (CourseName-dən) -->
         <div class="val-field">
-            <label class="val-label">Kurs Adı *</label>
-            <input asp-for="Title" class="val-input" placeholder="Məs: C# ilə Backend Proqramlaşdırma"
-                   data-val="true" data-val-required="Kurs adı daxil edilməlidir."
-                   data-val-minlength="Kurs adı minimum 3 simvol olmalıdır." data-val-minlength-min="3"
-                   data-val-maxlength="Kurs adı maksimum 200 simvol ola bilər." data-val-maxlength-max="200" />
+            <label class="val-label">Kurs Adı * <a href="/Admin/CourseName/Create" target="_blank" style="font-size:11px;color:#6366f1;margin-left:8px;text-decoration:none;"><i class="fa fa-plus"></i> Yeni ad əlavə et</a></label>
+            <select asp-for="CourseNameId" asp-items="Model.CourseNameItems" class="val-select"
+                    id="courseNameSelect"
+                    onchange="onCourseNameChanged(this.value)"
+                    data-val="true" data-val-required="Kurs adı seçilməlidir."
+                    data-val-range="Kurs adı seçilməlidir." data-val-range-min="1" data-val-range-max="999999">
+                <option value="0">-- Kurs adı seçin --</option>
+            </select>
+            <span asp-validation-for="CourseNameId" class="val-error"></span>
+        </div>
+
+        <!-- 2. KURS BAŞLIĞI (CourseName seçiləndən sonra avtomatik doldur, manual dəyişmək mümkün) -->
+        <div class="val-field">
+            <label class="val-label">Kurs Başlığı *</label>
+            <input asp-for="Title" class="val-input" placeholder="Kurs adı seçiləndə avtomatik doldurulur"
+                   id="courseTitleInput"
+                   data-val="true" data-val-required="Başlıq mütləqdir."
+                   data-val-minlength="Başlıq min 3 simvol olmalıdır." data-val-minlength-min="3"
+                   data-val-maxlength="Başlıq max 200 simvol ola bilər." data-val-maxlength-max="200" />
             <span asp-validation-for="Title" class="val-error"></span>
         </div>
 
@@ -88,10 +103,12 @@
         <div class="form-row-2">
             <div class="val-field">
                 <label class="val-label">Kateqoriya *</label>
-                <select asp-for="CategoryId" asp-items="Model.Categories" class="val-select"
+                <select asp-for="CategoryId" id="categorySelect"
+                        onchange="filterInstructorsByCategory(this.value)"
+                        class="val-select"
                         data-val="true" data-val-required="Kateqoriya seçilməlidir."
                         data-val-range="Kateqoriya seçilməlidir." data-val-range-min="1" data-val-range-max="999999">
-                    <option value="0">-- Kateqoriya seçin --</option>
+                    <option value="0">-- Əvvəlcə kurs adı seçin --</option>
                 </select>
                 <span asp-validation-for="CategoryId" class="val-error"></span>
             </div>
@@ -109,10 +126,14 @@
         <div class="form-row-2">
             <div class="val-field">
                 <label class="val-label">Müəllim *</label>
-                <select asp-for="InstructorId" asp-items="Model.Instructors" class="val-select"
+                <select asp-for="InstructorId" id="instructorSelect" class="val-select"
                         data-val="true" data-val-required="Müəllim seçilməlidir."
                         data-val-range="Müəllim seçilməlidir." data-val-range-min="1" data-val-range-max="999999">
-                    <option value="0">-- Müəllim seçin --</option>
+                    <option value="0">-- Əvvəlcə kateqoriya seçin --</option>
+                    @foreach (var ins in (Model.Instructors ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>()))
+                    {
+                        <option value="@ins.Value">@ins.Text</option>
+                    }
                 </select>
                 <span asp-validation-for="InstructorId" class="val-error"></span>
             </div>
@@ -190,6 +211,82 @@
 @section Scripts {
 <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
 <script>
+// ── Kurs adı seçiləndə kateqoriyaları yüklə ─────────────
+function onCourseNameChanged(courseNameId) {
+    var catSel = document.getElementById('categorySelect');
+    var instrSel = document.getElementById('instructorSelect');
+    var titleInput = document.getElementById('courseTitleInput');
+
+    // Title-ı avtomatik doldur
+    if (courseNameId && courseNameId !== '0') {
+        var opt = document.querySelector('#courseNameSelect option[value="' + courseNameId + '"]');
+        if (opt && titleInput && !titleInput.value) {
+            titleInput.value = opt.textContent.trim();
+        }
+    }
+
+    catSel.innerHTML = '<option value="0">Yüklənir...</option>';
+    catSel.disabled = true;
+    if (instrSel) {
+        instrSel.innerHTML = '<option value="0">-- Kateqoriya seçin --</option>';
+        instrSel.disabled = true;
+    }
+
+    if (!courseNameId || courseNameId === '0') {
+        catSel.innerHTML = '<option value="0">-- Əvvəlcə kurs adı seçin --</option>';
+        return;
+    }
+
+    fetch('/Admin/CourseName/GetCategories?courseNameId=' + courseNameId)
+        .then(function(r) { return r.json(); })
+        .then(function(cats) {
+            catSel.innerHTML = '<option value="0">-- Kateqoriya seçin --</option>';
+            if (cats.length === 0) {
+                catSel.innerHTML = '<option value="0">Bu kurs adına kateqoriya təyin edilməyib</option>';
+            } else {
+                cats.forEach(function(c) {
+                    var opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    catSel.appendChild(opt);
+                });
+                catSel.disabled = false;
+            }
+        })
+        .catch(function() {
+            catSel.innerHTML = '<option value="0">Xəta baş verdi</option>';
+        });
+}
+
+// ── Kateqoriyaya görə müəllimləri filter et ─────────────
+function filterInstructorsByCategory(categoryId) {
+    var sel = document.getElementById('instructorSelect');
+    sel.innerHTML = '<option value="0">Yüklənir...</option>';
+    sel.disabled = true;
+
+    if (!categoryId || categoryId === '0') {
+        sel.innerHTML = '<option value="0">-- Əvvəlcə kateqoriya seçin --</option>';
+        return;
+    }
+
+    fetch('/Admin/Instructor/GetByCategory?categoryId=' + categoryId)
+        .then(function(r) { return r.json(); })
+        .then(function(list) {
+            sel.innerHTML = '<option value="0">-- Müəllim seçin --</option>';
+            list.forEach(function(ins) {
+                var opt = document.createElement('option');
+                opt.value = ins.id;
+                opt.textContent = ins.name;
+                sel.appendChild(opt);
+            });
+            sel.disabled = false;
+        })
+        .catch(function() {
+            sel.innerHTML = '<option value="0">Xəta baş verdi</option>';
+            sel.disabled = false;
+        });
+}
+
 // ── File validation ──────────────────────────────────────
 const ALLOWED_IMG = ['.jpg','.jpeg','.png','.webp'];
 const ALLOWED_VID = ['.mp4','.mov','.avi'];

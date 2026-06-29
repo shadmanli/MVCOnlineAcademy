@@ -1,0 +1,77 @@
+@model Academy.ViewModels.CourseName.CourseNameCreateVM
+@{
+    ViewData["Title"] = "Yeni Kurs Adı";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var allCategories = ViewBag.AllCategories as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+                        ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+}
+
+<div class="p-page-header">
+    <div>
+        <h1 class="p-page-title">Yeni Kurs Adı</h1>
+        <p class="p-page-sub">Kurs şablonu yaradın və kateqoriyalar təyin edin</p>
+    </div>
+    <a asp-action="Index" class="p-btn p-btn-secondary">
+        <i class="fa fa-arrow-left"></i> Geri
+    </a>
+</div>
+
+<div class="p-card" style="max-width:600px;">
+    <div class="p-card-body">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="p-form-group">
+                <label class="p-label">Kurs Adı <span class="text-danger">*</span></label>
+                <input asp-for="Name" class="p-input" placeholder="Məs: Python Proqramlaşdırma" required>
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="p-form-group">
+                <label class="p-label">Təsvir</label>
+                <textarea asp-for="Description" class="p-input" rows="3"
+                          placeholder="Kurs adı haqqında qısa məlumat..."></textarea>
+            </div>
+
+            <div class="p-form-group">
+                <label class="p-label">Kateqoriyalar</label>
+                <p style="font-size:12px;color:#94a3b8;margin-bottom:8px;">
+                    Bu kurs adına aid olan kateqoriyaları seçin (birdən çox seçmək olar)
+                </p>
+                <div class="cat-checkbox-grid">
+                    @foreach (var cat in allCategories)
+                    {
+                        <label class="cat-checkbox-item">
+                            <input type="checkbox" name="CategoryIds" value="@cat.Value"
+                                   @(Model.CategoryIds.Contains(int.Parse(cat.Value)) ? "checked" : "")>
+                            <span>@cat.Text</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div class="p-form-group">
+                <label class="p-checkbox-wrap">
+                    <input asp-for="IsActive" type="checkbox" checked>
+                    <span>Aktiv</span>
+                </label>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="p-btn p-btn-primary">
+                    <i class="fa fa-save"></i> Yadda Saxla
+                </button>
+                <a asp-action="Index" class="p-btn p-btn-secondary">Ləğv et</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.cat-checkbox-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:10px; }
+.cat-checkbox-item { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:13px; transition:all 0.15s; }
+.cat-checkbox-item:hover { border-color:#00c4a8; background:rgba(0,196,168,0.05); }
+.cat-checkbox-item input[type="checkbox"]:checked + span { color:#00c4a8; font-weight:600; }
+.p-checkbox-wrap { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; color:#374151; }
+.gap-3 { gap:12px; }
+</style>

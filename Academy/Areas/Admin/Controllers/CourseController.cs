@@ -42,6 +42,11 @@ namespace Academy.Areas.Admin.Controllers
                 Instructors = await _context.Instructors
                     .Where(x => x.FullName != null)
                     .Select(x => new SelectListItem(x.FullName, x.Id.ToString()))
+                    .ToListAsync(),
+                CourseNameItems = await _context.CourseNames
+                    .Where(cn => cn.IsActive)
+                    .OrderBy(cn => cn.Name)
+                    .Select(cn => new SelectListItem(cn.Name, cn.Id.ToString()))
                     .ToListAsync()
             };
 
@@ -70,15 +75,48 @@ namespace Academy.Areas.Admin.Controllers
                     .Where(x => x.FullName != null)
                     .Select(x => new SelectListItem(x.FullName, x.Id.ToString()))
                     .ToListAsync();
+                model.CourseNameItems = await _context.CourseNames
+                    .Where(cn => cn.IsActive)
+                    .OrderBy(cn => cn.Name)
+                    .Select(cn => new SelectListItem(cn.Name, cn.Id.ToString()))
+                    .ToListAsync();
                 return View(model);
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Detail(int id)
+        // AJAX: kateqoriyaya görə müəllimləri gətir
+        [HttpGet]
+        public async Task<IActionResult> GetInstructorsByCategory(int categoryId)
         {
-            return View(await _service.GetByIdAsync(id));
+            // Həmin kateqoriyada kursu olan müəllimlər
+            var instructorIds = await _context.Courses
+                .Where(c => c.CategoryId == categoryId)
+                .Select(c => c.InstructorId)
+                .Distinct()
+                .ToListAsync();
+
+            List<object> instructors;
+
+            if (instructorIds.Any())
+            {
+                // Kateqoriyaya aid müəllimlər
+                instructors = await _context.Instructors
+                    .Where(i => instructorIds.Contains(i.Id))
+                    .Select(i => new { id = i.Id, name = i.FullName })
+                    .ToListAsync<object>();
+            }
+            else
+            {
+                // Bu kateqoriyada hələ kurs yoxdursa — bütün müəllimləri göstər
+                instructors = await _context.Instructors
+                    .Where(i => i.FullName != null)
+                    .Select(i => new { id = i.Id, name = i.FullName })
+                    .ToListAsync<object>();
+            }
+
+            return Json(instructors);
         }
 
 

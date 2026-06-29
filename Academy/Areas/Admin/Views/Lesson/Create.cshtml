@@ -11,18 +11,34 @@
 <div class="p-card" style="max-width:560px;">
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
+
         <div class="af-field">
             <label class="af-label">Dərs Başlığı <span class="req">*</span></label>
             <input asp-for="Title" class="form-control" placeholder="Məs: Giriş dərsi" data-no-whitespace />
             <span asp-validation-for="Title" class="field-validation-error"></span>
         </div>
+
+        <!-- 1. KATEQORİYA SEÇ -->
+        <div class="af-field">
+            <label class="af-label">Kateqoriya <span class="req">*</span></label>
+            <select id="categorySelect" class="form-select" onchange="loadCourses(this.value)">
+                <option value="">-- Kateqoriya seçin --</option>
+                @foreach (var cat in (ViewBag.Categories as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>()))
+                {
+                    <option value="@cat.Value">@cat.Text</option>
+                }
+            </select>
+        </div>
+
+        <!-- 2. KURSU SEÇ (kateqoriyadan sonra yüklənir) -->
         <div class="af-field">
             <label class="af-label">Kurs <span class="req">*</span></label>
-            <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
-                <option value="0">-- Kurs seçin --</option>
+            <select asp-for="CourseId" id="courseSelect" class="form-select" disabled>
+                <option value="0">-- Əvvəlcə kateqoriya seçin --</option>
             </select>
             <span asp-validation-for="CourseId" class="field-validation-error"></span>
         </div>
+
         <div style="display:flex;gap:10px;margin-top:20px;">
             <button type="submit" class="af-submit"><i class="fa fa-check"></i> Yarat</button>
             <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
@@ -30,4 +46,38 @@
     </form>
 </div>
 
-@section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }
+@section Scripts {
+    <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" />
+    <script>
+    function loadCourses(categoryId) {
+        var courseSelect = document.getElementById('courseSelect');
+        courseSelect.innerHTML = '<option value="0">Yüklənir...</option>';
+        courseSelect.disabled = true;
+
+        if (!categoryId) {
+            courseSelect.innerHTML = '<option value="0">-- Əvvəlcə kateqoriya seçin --</option>';
+            return;
+        }
+
+        fetch('/Admin/Lesson/GetCoursesByCategory?categoryId=' + categoryId)
+            .then(function(r) { return r.json(); })
+            .then(function(courses) {
+                courseSelect.innerHTML = '<option value="0">-- Kurs seçin --</option>';
+                if (courses.length === 0) {
+                    courseSelect.innerHTML = '<option value="0">Bu kateqoriyada kurs yoxdur</option>';
+                } else {
+                    courses.forEach(function(c) {
+                        var opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.title;
+                        courseSelect.appendChild(opt);
+                    });
+                    courseSelect.disabled = false;
+                }
+            })
+            .catch(function() {
+                courseSelect.innerHTML = '<option value="0">Xəta baş verdi</option>';
+            });
+    }
+    </script>
+}

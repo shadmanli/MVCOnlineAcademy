@@ -119,12 +119,15 @@ namespace Academy.Controllers
                 if (!courses.Any())
                     return Json(new { success = false, message = "Kurs tapılmadı." });
 
-                // Stripe PaymentIntent yoxla
-                var service = new PaymentIntentService();
-                var intent = await service.GetAsync(req.PaymentIntentId);
+                // Stripe PaymentIntent yoxla (manual ödənişlər üçün keç)
+                if (!req.PaymentIntentId.StartsWith("manual_"))
+                {
+                    var service = new PaymentIntentService();
+                    var intent = await service.GetAsync(req.PaymentIntentId);
 
-                if (intent.Status != "succeeded")
-                    return Json(new { success = false, message = "Ödəniş təsdiqlənmədi." });
+                    if (intent.Status != "succeeded")
+                        return Json(new { success = false, message = "Ödəniş təsdiqlənmədi." });
+                }
 
                 // Sifariş yarat
                 var order = new Models.Order

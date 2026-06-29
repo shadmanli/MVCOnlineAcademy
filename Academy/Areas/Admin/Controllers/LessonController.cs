@@ -29,13 +29,15 @@ namespace Academy.Areas.Admin.Controllers
         {
             var model = new LessonCreateVM
             {
-                Courses = await _context.Courses
-                    .Select(x => new SelectListItem
-                    {
-                        Text = x.Title,
-                        Value = x.Id.ToString()
-                    }).ToListAsync()
+                Courses = new List<SelectListItem>()
             };
+
+            ViewBag.Categories = await _context.Categories
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).ToListAsync();
 
             return View(model);
         }
@@ -52,11 +54,29 @@ namespace Academy.Areas.Admin.Controllers
                         Value = x.Id.ToString()
                     }).ToListAsync();
 
+                ViewBag.Categories = await _context.Categories
+                    .Select(x => new SelectListItem
+                    {
+                        Text = x.Name,
+                        Value = x.Id.ToString()
+                    }).ToListAsync();
+
                 return View(model);
             }
 
             await _service.CreateAsync(model);
             return RedirectToAction(nameof(Index));
+        }
+
+        // AJAX: kateqoriyaya görə kursları gətir
+        [HttpGet]
+        public async Task<IActionResult> GetCoursesByCategory(int categoryId)
+        {
+            var courses = await _context.Courses
+                .Where(c => c.CategoryId == categoryId)
+                .Select(c => new { id = c.Id, title = c.Title })
+                .ToListAsync();
+            return Json(courses);
         }
 
  

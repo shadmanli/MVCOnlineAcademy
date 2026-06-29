@@ -49,6 +49,7 @@
     border-radius: 14px;
     padding: 12px 18px;
     margin-bottom: 24px;
+    justify-content: flex-end;
 }
 
 .db-search {
@@ -392,11 +393,6 @@
 
   <!-- Top Bar -->
   <div class="db-topbar">
-    <div class="db-search">
-      <i class="fa fa-magnifying-glass db-search-icon"></i>
-      <input type="text" id="studentSearch" placeholder="Tələbə axtar..."
-             oninput="window.filterStudents && window.filterStudents(this.value)">
-    </div>
     <div class="db-topbar-right">
       <a href="/Admin/ContactMessage" class="db-icon-btn" title="Mesajlar">
         <i class="fa fa-envelope"></i>

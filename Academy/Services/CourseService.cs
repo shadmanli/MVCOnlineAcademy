@@ -47,6 +47,14 @@ namespace Academy.Services
             var data = _mapper.Map<Course>(model);
             data.ImageUrl = fileName;
             data.CreatedDate = DateTime.Now;
+            // CourseName-dən Title-ı avtomatik doldur
+            if (model.CourseNameId > 0)
+            {
+                var courseName = await _context.CourseNames.FindAsync(model.CourseNameId);
+                if (courseName != null && string.IsNullOrWhiteSpace(model.Title))
+                    data.Title = courseName.Name;
+                data.CourseNameId = model.CourseNameId;
+            }
 
             if (model.VideoTitles != null && model.VideoTitles.Count > 0)
             {

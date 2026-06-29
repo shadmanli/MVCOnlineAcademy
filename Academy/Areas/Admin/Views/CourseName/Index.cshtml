@@ -1,0 +1,104 @@
+@model IEnumerable<Academy.ViewModels.CourseName.CourseNameVM>
+@{
+    ViewData["Title"] = "Kurs Adları";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="p-page-header">
+    <div>
+        <h1 class="p-page-title">Kurs Adları</h1>
+        <p class="p-page-sub">Kurs şablonları və onların kateqoriyalarını idarə edin</p>
+    </div>
+    <a asp-action="Create" class="p-btn p-btn-primary">
+        <i class="fa fa-plus"></i> Yeni Kurs Adı
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="p-alert p-alert-success mb-4">
+        <i class="fa fa-check-circle"></i> @TempData["Success"]
+    </div>
+}
+
+<div class="p-card">
+    <div class="p-card-body">
+        @if (!Model.Any())
+        {
+            <div style="text-align:center;padding:60px;color:#94a3b8;">
+                <i class="fa fa-bookmark" style="font-size:48px;display:block;margin-bottom:12px;"></i>
+                <p>Hələ kurs adı əlavə edilməyib.</p>
+                <a asp-action="Create" class="p-btn p-btn-primary mt-3">İlk Kurs Adını Əlavə Et</a>
+            </div>
+        }
+        else
+        {
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+                <thead>
+                    <tr style="border-bottom:2px solid #e8edf3;text-align:left;">
+                        <th style="padding:12px 16px;color:#64748b;font-weight:600;">Ad</th>
+                        <th style="padding:12px 16px;color:#64748b;font-weight:600;">Kateqoriyalar</th>
+                        <th style="padding:12px 16px;color:#64748b;font-weight:600;">Status</th>
+                        <th style="padding:12px 16px;color:#64748b;font-weight:600;">Əməliyyat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="border-bottom:1px solid #f1f5f9;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                            <td style="padding:14px 16px;">
+                                <div style="font-weight:700;color:#0f172a;">@item.Name</div>
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    <div style="font-size:12px;color:#94a3b8;margin-top:2px;">@item.Description</div>
+                                }
+                            </td>
+                            <td style="padding:14px 16px;">
+                                @if (item.CategoryNames.Any())
+                                {
+                                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                                        @foreach (var cat in item.CategoryNames)
+                                        {
+                                            <span style="background:rgba(0,196,168,0.1);color:#00c4a8;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;">@cat</span>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span style="color:#94a3b8;font-size:12px;">Kateqoriya yoxdur</span>
+                                }
+                            </td>
+                            <td style="padding:14px 16px;">
+                                <span style="background:@(item.IsActive ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)");color:@(item.IsActive ? "#10b981" : "#ef4444");padding:4px 10px;border-radius:99px;font-size:12px;font-weight:700;">
+                                    @(item.IsActive ? "Aktiv" : "Deaktiv")
+                                </span>
+                            </td>
+                            <td style="padding:14px 16px;">
+                                <div style="display:flex;gap:8px;">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);color:#818cf8;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;">
+                                        <i class="fa fa-pen"></i> Düzəlt
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
+                                          onsubmit="return confirm('@item.Name adını silmək istədiyinizdən əminsiniz?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">
+                                            <i class="fa fa-trash"></i> Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<style>
+.p-alert{padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:8px;font-size:14px;}
+.p-alert-success{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0;}
+.mb-4{margin-bottom:16px;}
+.mt-3{margin-top:12px;}
+</style>

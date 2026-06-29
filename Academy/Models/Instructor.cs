@@ -8,5 +8,8 @@
         public string? Bio { get; set; }
 
         public List<Course> Courses { get; set; }
+
+        // Müəllimin ixtisaslaşdığı kateqoriyalar
+        public List<InstructorCategory> InstructorCategories { get; set; } = new();
     }
 }

@@ -191,7 +191,7 @@
             </div>
         </div>
 
-        <div class="teacher-card">
+        <div class="teacher-card" id="instructorGrid">
             @if (Model != null && Model.Any())
             {
                 @foreach (var t in Model)
@@ -240,25 +240,50 @@
     int cur   = (int)ViewBag.CurrentPage;
     int total = (int)ViewBag.TotalPages;
 
-    <div class="instr-pagination">
+    <div class="instr-pagination" id="instrPagination">
         @if (cur > 1)
         {
-            <a href="?instrPage=@(cur - 1)" class="instr-page-btn">
+            <button onclick="loadInstrPage(@(cur - 1))" class="instr-page-btn">
                 <i class="fa-solid fa-chevron-left"></i>
-            </a>
+            </button>
         }
         @for (int p = 1; p <= total; p++)
         {
-            <a href="?instrPage=@p" class="instr-page-btn @(p == cur ? "active" : "")">@p</a>
+            <button onclick="loadInstrPage(@p)" class="instr-page-btn @(p == cur ? "active" : "")">@p</button>
         }
         @if (cur < total)
         {
-            <a href="?instrPage=@(cur + 1)" class="instr-page-btn">
+            <button onclick="loadInstrPage(@(cur + 1))" class="instr-page-btn">
                 <i class="fa-solid fa-chevron-right"></i>
-            </a>
+            </button>
         }
     </div>
 }
+
+<script>
+function loadInstrPage(page) {
+    var grid = document.getElementById('instructorGrid');
+    var pag  = document.getElementById('instrPagination');
+    if (!grid) return;
+
+    grid.style.opacity = '0.5';
+    grid.style.pointerEvents = 'none';
+
+    fetch('/Teacher/GetPage?page=' + page)
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+            var wrap = document.getElementById('instrAjaxWrap');
+            if (wrap) wrap.innerHTML = html;
+            grid.style.opacity = '1';
+            grid.style.pointerEvents = 'auto';
+            window.scrollTo({ top: (grid.offsetTop || 0) - 120, behavior: 'smooth' });
+        })
+        .catch(function() {
+            grid.style.opacity = '1';
+            grid.style.pointerEvents = 'auto';
+        });
+}
+</script>
 
 <style>
 .instr-pagination {

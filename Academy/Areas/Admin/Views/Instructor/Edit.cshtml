@@ -2,28 +2,61 @@
 @model InstructorEditVM
 @{ ViewData["Title"] = "Müəllim Redaktə"; }
 <partial name="~/Areas/Admin/Views/Shared/_AdminFormStyles.cshtml" />
+
 <div class="p-page-header">
     <div class="p-page-title">Müəllim Redaktə</div>
     <div class="p-breadcrumb"><a asp-area="Admin" asp-controller="Instructor" asp-action="Index">Müəllimlər</a> / Redaktə</div>
 </div>
-<div class="p-card" style="max-width:520px;">
+
+<div class="p-card" style="max-width:560px;">
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="Id" type="hidden" />
         <input asp-for="ExistingImage" type="hidden" />
+
         <div class="af-field">
             <label class="af-label">Ad Soyad <span class="req">*</span></label>
             <input asp-for="FullName" class="form-control" data-no-whitespace />
             <span asp-validation-for="FullName" class="field-validation-error"></span>
         </div>
+
         <div class="af-field">
             <label class="af-label">Vəzifə / İxtisas</label>
             <input asp-for="Title" class="form-control" placeholder="Məs: Frontend Developer" />
         </div>
+
         <div class="af-field">
             <label class="af-label">Bio</label>
             <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
         </div>
+
+        <!-- KATEQORİYALAR -->
+        <div class="af-field">
+            <label class="af-label">İxtisas Kateqoriyaları</label>
+            <p style="font-size:12px;color:#64748b;margin-bottom:10px;">
+                Müəllimin dərs verdiyi kateqoriyaları seçin
+            </p>
+            @{
+                var cats = Model.AllCategories ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+            }
+            @if (cats.Any())
+            {
+                <div class="instr-cat-grid">
+                    @foreach (var cat in cats)
+                    {
+                        bool isSel = Model.CategoryIds.Contains(int.Parse(cat.Value));
+                        <label class="instr-cat-item @(isSel ? "checked" : "")">
+                            <input type="checkbox" name="CategoryIds" value="@cat.Value"
+                                   @(isSel ? "checked" : "")
+                                   onchange="this.closest('label').classList.toggle('checked', this.checked)">
+                            <i class="fa fa-tag"></i>
+                            <span>@cat.Text</span>
+                        </label>
+                    }
+                </div>
+            }
+        </div>
+
         <div class="af-field">
             <label class="af-label">Şəkil</label>
             @if (!string.IsNullOrEmpty(Model.ExistingImage))
@@ -37,10 +70,21 @@
             <input asp-for="Image" type="file" class="form-control" accept="image/*" />
             <span class="af-hint">Yeni şəkil seçsəniz köhnəsinin üzərinə yazılacaq</span>
         </div>
+
         <div style="display:flex;gap:10px;margin-top:20px;">
             <button type="submit" class="af-submit"><i class="fa fa-floppy-disk"></i> Yadda Saxla</button>
             <a asp-action="Index" class="af-cancel"><i class="fa fa-arrow-left"></i> Geri</a>
         </div>
     </form>
 </div>
+
+<style>
+.instr-cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+.instr-cat-item { display:flex; align-items:center; gap:8px; padding:10px 14px; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; color:#475569; transition:all 0.15s; user-select:none; }
+.instr-cat-item:hover { border-color:#00c4a8; background:rgba(0,196,168,0.05); color:#00c4a8; }
+.instr-cat-item.checked { border-color:#00c4a8; background:rgba(0,196,168,0.1); color:#00c4a8; font-weight:700; }
+.instr-cat-item input[type="checkbox"] { display:none; }
+.instr-cat-item i { font-size:12px; }
+</style>
+
 @section Scripts { <partial name="~/Areas/Admin/Views/Shared/_AdminFormScripts.cshtml" /> }

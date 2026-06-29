@@ -98,6 +98,14 @@
                     <a href="/Order/Checkout" class="checkout-btn" style="display:block;text-align:center;text-decoration:none;">
                         Sifarişi Tamamla <i class="fas fa-check-circle checkout-icon"></i>
                     </a>
+
+                    <!-- TEST: Stripe olmadan birbaşa al -->
+                    <form asp-controller="Order" asp-action="QuickPurchase" method="post" style="margin-top:10px;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" style="width:100%;padding:14px;background:linear-gradient(135deg,#00c4a8,#0ea5e9);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">
+                            <i class="fas fa-bolt"></i> Birbaşa Al (Test)
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
