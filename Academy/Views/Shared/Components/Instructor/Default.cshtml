@@ -1,4 +1,4 @@
-﻿@using Academy.ViewModels.Instructor
+@using Academy.ViewModels.Instructor
 @model IEnumerable<InstructorVM>
 
 <style>
@@ -97,7 +97,7 @@
     transform: scale(1.06);
 }
 
-/* Şəkil yoxdursa avatar */
+/* S?kil yoxdursa avatar */
 .teacher-avatar-fallback {
     width: 100%;
     height: 100%;
@@ -216,7 +216,7 @@
                             </div>
                         </div>
                         <h4>@t.FullName</h4>
-                        <span>@(string.IsNullOrEmpty(t.Title) ? "Müəllim" : t.Title)</span>
+                        <span>@(string.IsNullOrEmpty(t.Title) ? "M�?llim" : t.Title)</span>
                         @if (!string.IsNullOrEmpty(t.Bio))
                         {
                             <p style="font-size:13px;color:#64748b;line-height:1.55;padding:0 16px 18px;margin:0;">@t.Bio</p>
@@ -228,7 +228,7 @@
             {
                 <div class="instructor-empty">
                     <i class="fa-solid fa-chalkboard-user" style="font-size:40px;display:block;margin-bottom:12px;"></i>
-                    <p>Hələ müəllim əlavə edilməyib.</p>
+                    <p>H?l? m�?llim ?lav? edilm?yib.</p>
                 </div>
             }
         </div>
@@ -243,17 +243,17 @@
     <div class="instr-pagination" id="instrPagination">
         @if (cur > 1)
         {
-            <button onclick="loadInstrPage(@(cur - 1))" class="instr-page-btn">
+            <button type="button" onclick="loadInstrPage(@(cur - 1))" class="instr-page-btn">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
         }
         @for (int p = 1; p <= total; p++)
         {
-            <button onclick="loadInstrPage(@p)" class="instr-page-btn @(p == cur ? "active" : "")">@p</button>
+            <button type="button" onclick="loadInstrPage(@p)" class="instr-page-btn @(p == cur ? "active" : "")">@p</button>
         }
         @if (cur < total)
         {
-            <button onclick="loadInstrPage(@(cur + 1))" class="instr-page-btn">
+            <button type="button" onclick="loadInstrPage(@(cur + 1))" class="instr-page-btn">
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
         }
@@ -261,28 +261,48 @@
 }
 
 <script>
-function loadInstrPage(page) {
-    var grid = document.getElementById('instructorGrid');
-    var pag  = document.getElementById('instrPagination');
-    if (!grid) return;
+// -- M�?LLIM AJAX PAGINASIYA ----------------------------------
+window.loadInstrPage = function (page) {
+    var section = document.getElementById('instructor');
+    if (!section) return;
 
-    grid.style.opacity = '0.5';
-    grid.style.pointerEvents = 'none';
+    var wrapper = section.querySelector('.common-instructors');
+    var grid = document.getElementById('instructorGrid');
+    if (grid) { grid.style.opacity = '0.4'; grid.style.pointerEvents = 'none'; }
 
     fetch('/Teacher/GetPage?page=' + page)
-        .then(function(r) { return r.text(); })
-        .then(function(html) {
-            var wrap = document.getElementById('instrAjaxWrap');
-            if (wrap) wrap.innerHTML = html;
-            grid.style.opacity = '1';
-            grid.style.pointerEvents = 'auto';
-            window.scrollTo({ top: (grid.offsetTop || 0) - 120, behavior: 'smooth' });
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+
+            var newGrid = tmp.querySelector('.teacher-card');
+            var newPag  = tmp.querySelector('.instr-pagination');
+
+            var curGrid = document.getElementById('instructorGrid');
+            var curPag  = document.getElementById('instrPagination');
+
+            if (newGrid && curGrid) {
+                curGrid.innerHTML = newGrid.innerHTML;
+                curGrid.style.opacity = '1';
+                curGrid.style.pointerEvents = 'auto';
+            }
+            if (newPag && curPag) {
+                curPag.innerHTML = newPag.innerHTML;
+            } else if (newPag && !curPag && wrapper) {
+                wrapper.appendChild(newPag);
+            } else if (!newPag && curPag) {
+                curPag.remove();
+            }
+
+            // Yalniz section-a scroll et (s?hif?nin basina GETM?)
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         })
-        .catch(function() {
-            grid.style.opacity = '1';
-            grid.style.pointerEvents = 'auto';
+        .catch(function () {
+            var g = document.getElementById('instructorGrid');
+            if (g) { g.style.opacity = '1'; g.style.pointerEvents = 'auto'; }
         });
-}
+};
 </script>
 
 <style>

@@ -73,10 +73,6 @@
            class="p-nav-link @(currentPath.Contains("/admin/liveclass") ? "active" : "")">
           <i class="fa fa-video"></i> Canlı Dərslər
         </a>
-        <a asp-area="Admin" asp-controller="Quiz" asp-action="Index"
-           class="p-nav-link @(currentPath.Contains("/admin/quiz") ? "active" : "")">
-          <i class="fa fa-circle-question"></i> Quiz
-        </a>
         <a asp-area="Admin" asp-controller="AssessmentQuestion" asp-action="Index"
            class="p-nav-link @(currentPath.Contains("/admin/assessmentquestion") ? "active" : "")">
           <i class="fa fa-list-check"></i> Assessment

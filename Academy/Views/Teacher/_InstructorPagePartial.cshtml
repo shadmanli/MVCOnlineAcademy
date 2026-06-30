@@ -45,17 +45,17 @@
     <div class="instr-pagination" id="instrPagination">
         @if (cur > 1)
         {
-            <button onclick="loadInstrPage(@(cur - 1))" class="instr-page-btn">
+            <button type="button" onclick="loadInstrPage(@(cur - 1))" class="instr-page-btn">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
         }
         @for (int p = 1; p <= total; p++)
         {
-            <button onclick="loadInstrPage(@p)" class="instr-page-btn @(p == cur ? "active" : "")">@p</button>
+            <button type="button" onclick="loadInstrPage(@p)" class="instr-page-btn @(p == cur ? "active" : "")">@p</button>
         }
         @if (cur < total)
         {
-            <button onclick="loadInstrPage(@(cur + 1))" class="instr-page-btn">
+            <button type="button" onclick="loadInstrPage(@(cur + 1))" class="instr-page-btn">
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
         }

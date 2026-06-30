@@ -23,6 +23,20 @@ namespace Academy.Controllers
             return View();
         }
 
+        // AJAX: kurs kartlarını page-ə görə gətir (refreshsiz pagination)
+        [HttpGet]
+        public IActionResult GetPage(
+            string? search, string? sort, int? categoryId,
+            int? instructorId, string? level,
+            decimal? minPrice, decimal? maxPrice, int page = 1)
+        {
+            return ViewComponent("CourseCard", new
+            {
+                search, sort, categoryId, instructorId,
+                level, minPrice, maxPrice, page
+            });
+        }
+
         // Detail səhifə
         public async Task<IActionResult> Detail(int id)
         {

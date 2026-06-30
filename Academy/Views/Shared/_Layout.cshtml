@@ -655,6 +655,49 @@
     }
     .ia-pw-toggle:hover { color: #00c4a8; }
 
+    /* Validation xəta mesajı */
+    .ia-err {
+        display: block;
+        min-height: 18px;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: #f87171;
+        margin-top: 5px;
+        padding-left: 2px;
+        letter-spacing: 0.01em;
+        line-height: 1.4;
+    }
+
+    /* Xətalı input */
+    .ia-input.ia-invalid {
+        border-color: rgba(248,113,113,0.6) !important;
+        background: rgba(248,113,113,0.04) !important;
+        box-shadow: 0 0 0 3px rgba(248,113,113,0.1) !important;
+    }
+
+    /* Düzgün input */
+    .ia-input.ia-valid {
+        border-color: rgba(0,196,168,0.5) !important;
+        box-shadow: 0 0 0 3px rgba(0,196,168,0.08) !important;
+    }
+
+    /* Şifrə güclülük indikatori */
+    .ia-pw-strength {
+        display: flex;
+        gap: 4px;
+        margin-top: 6px;
+    }
+    .ia-pw-strength-bar {
+        flex: 1;
+        height: 3px;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.08);
+        transition: background 0.3s ease;
+    }
+    .ia-pw-strength-bar.weak   { background: #ef4444; }
+    .ia-pw-strength-bar.medium { background: #f59e0b; }
+    .ia-pw-strength-bar.strong { background: #10b981; }
+
     /* Responsive */
     @@media (max-width: 700px) {
         .ia-modal { grid-template-columns: 1fr; max-width: 420px; }
@@ -725,19 +768,21 @@
                     </div>
                 }
 
-                <form asp-controller="Account" asp-action="Login" method="post">
+                <form asp-controller="Account" asp-action="Login" method="post" id="loginForm" novalidate>
                     <div class="ia-field">
                         <label class="ia-label">E-poçt</label>
-                        <input type="email" name="Email" class="ia-input" placeholder="ornek@email.com" required />
+                        <input type="email" name="Email" id="loginEmail" class="ia-input" placeholder="ornek@email.com" autocomplete="email" />
+                        <span class="ia-err" id="loginEmail-err"></span>
                     </div>
                     <div class="ia-field">
                         <label class="ia-label">Şifrə</label>
                         <div class="ia-pw-wrap">
-                            <input type="password" name="Password" id="loginPassword" class="ia-input" placeholder="••••••••" required />
+                            <input type="password" name="Password" id="loginPassword" class="ia-input" placeholder="••••••••" autocomplete="current-password" />
                             <button type="button" class="ia-pw-toggle" onclick="togglePw('loginPassword', this)" tabindex="-1">
                                 <i class="fa-regular fa-eye"></i>
                             </button>
                         </div>
+                        <span class="ia-err" id="loginPassword-err"></span>
                     </div>
                     <div class="ia-extras">
                         <label class="ia-remember" onclick="toggleRemember()">
@@ -810,35 +855,45 @@
                     </div>
                 }
 
-                <form asp-controller="Account" asp-action="Register" method="post">
+                <form asp-controller="Account" asp-action="Register" method="post" id="registerForm" novalidate>
                     <div class="ia-form-row">
                         <div class="ia-field">
                             <label class="ia-label">Ad Soyad</label>
-                            <input type="text" name="FullName" class="ia-input" placeholder="Adınız Soyadınız" required />
+                            <input type="text" name="FullName" id="regFullName" class="ia-input" placeholder="Adınız Soyadınız" autocomplete="name" />
+                            <span class="ia-err" id="regFullName-err"></span>
                         </div>
                         <div class="ia-field">
                             <label class="ia-label">E-poçt</label>
-                            <input type="email" name="Email" class="ia-input" placeholder="ornek@email.com" required />
+                            <input type="email" name="Email" id="regEmail" class="ia-input" placeholder="ornek@email.com" autocomplete="email" />
+                            <span class="ia-err" id="regEmail-err"></span>
                         </div>
                     </div>
                     <div class="ia-form-row">
                         <div class="ia-field">
                             <label class="ia-label">Şifrə</label>
                             <div class="ia-pw-wrap">
-                                <input type="password" name="Password" id="regPassword" class="ia-input" placeholder="••••••••" required />
+                                <input type="password" name="Password" id="regPassword" class="ia-input" placeholder="••••••••" autocomplete="new-password" />
                                 <button type="button" class="ia-pw-toggle" onclick="togglePw('regPassword', this)" tabindex="-1">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>
+                            </div>
+                            <span class="ia-err" id="regPassword-err"></span>
+                            <div class="ia-pw-strength" id="pwStrengthBars">
+                                <div class="ia-pw-strength-bar" id="psb1"></div>
+                                <div class="ia-pw-strength-bar" id="psb2"></div>
+                                <div class="ia-pw-strength-bar" id="psb3"></div>
+                                <div class="ia-pw-strength-bar" id="psb4"></div>
                             </div>
                         </div>
                         <div class="ia-field">
                             <label class="ia-label">Şifrəni Təsdiqləyin</label>
                             <div class="ia-pw-wrap">
-                                <input type="password" name="ConfirmPassword" id="regConfirmPassword" class="ia-input" placeholder="••••••••" required />
+                                <input type="password" name="ConfirmPassword" id="regConfirmPassword" class="ia-input" placeholder="••••••••" autocomplete="new-password" />
                                 <button type="button" class="ia-pw-toggle" onclick="togglePw('regConfirmPassword', this)" tabindex="-1">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>
                             </div>
+                            <span class="ia-err" id="regConfirmPassword-err"></span>
                         </div>
                     </div>
                     <button type="submit" class="ia-btn" style="margin-top:4px;">
@@ -869,6 +924,130 @@
                 btn.style.color = '';
             }
         }
+
+        // ── CLIENT-SIDE VALIDATION ─────────────────────────
+        function setErr(inputEl, errEl, msg) {
+            if (msg) {
+                inputEl.classList.add('ia-invalid');
+                inputEl.classList.remove('ia-valid');
+                errEl.textContent = msg;
+            } else {
+                inputEl.classList.remove('ia-invalid');
+                inputEl.classList.add('ia-valid');
+                errEl.textContent = '';
+            }
+        }
+
+        function isValidEmail(v) {
+            var re = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]{2,}$/;
+            return re.test(v.trim());
+        }
+
+        // Şifrə güclülük
+        function updatePwStrength(pw) {
+            var bars = [
+                document.getElementById('psb1'),
+                document.getElementById('psb2'),
+                document.getElementById('psb3'),
+                document.getElementById('psb4')
+            ];
+            if (!bars[0]) return;
+            bars.forEach(function(b){ b.className='ia-pw-strength-bar'; });
+            if (!pw) return;
+            var score = 0;
+            if (pw.length >= 6)  score++;
+            if (pw.length >= 10) score++;
+            if (/[A-Z]/.test(pw) || /[0-9]/.test(pw)) score++;
+            if (/[^A-Za-z0-9]/.test(pw)) score++;
+            var cls = score <= 1 ? 'weak' : score === 2 ? 'weak' : score === 3 ? 'medium' : 'strong';
+            for (var i = 0; i < score; i++) { bars[i].classList.add(cls); }
+        }
+
+        // ── LOGIN VALIDATION
+        (function(){
+            var form  = document.getElementById('loginForm');
+            if (!form) return;
+            var email = document.getElementById('loginEmail');
+            var pw    = document.getElementById('loginPassword');
+            var eErr  = document.getElementById('loginEmail-err');
+            var pErr  = document.getElementById('loginPassword-err');
+
+            // Real-time
+            email.addEventListener('input', function(){
+                if (!this.value.trim()) setErr(this, eErr, 'E-poçt boş ola bilməz');
+                else if (!isValidEmail(this.value)) setErr(this, eErr, 'Düzgün e-poçt formatı daxil edin (ornek@email.com)');
+                else setErr(this, eErr, '');
+            });
+            pw.addEventListener('input', function(){
+                if (!this.value) setErr(this, pErr, 'Şifrə boş ola bilməz');
+                else setErr(this, pErr, '');
+            });
+
+            // Submit
+            form.addEventListener('submit', function(e){
+                var ok = true;
+                if (!email.value.trim()) { setErr(email, eErr, 'E-poçt boş ola bilməz'); ok=false; }
+                else if (!isValidEmail(email.value)) { setErr(email, eErr, 'Düzgün e-poçt formatı daxil edin'); ok=false; }
+                if (!pw.value) { setErr(pw, pErr, 'Şifrə boş ola bilməz'); ok=false; }
+                if (!ok) e.preventDefault();
+            });
+        })();
+
+        // ── REGISTER VALIDATION
+        (function(){
+            var form  = document.getElementById('registerForm');
+            if (!form) return;
+            var fn    = document.getElementById('regFullName');
+            var em    = document.getElementById('regEmail');
+            var pw    = document.getElementById('regPassword');
+            var cpw   = document.getElementById('regConfirmPassword');
+            var fnErr = document.getElementById('regFullName-err');
+            var emErr = document.getElementById('regEmail-err');
+            var pwErr = document.getElementById('regPassword-err');
+            var cpwErr= document.getElementById('regConfirmPassword-err');
+
+            // Real-time
+            fn.addEventListener('input', function(){
+                if (!this.value.trim()) setErr(this, fnErr, 'Ad Soyad boş ola bilməz');
+                else if (this.value.trim().length < 2) setErr(this, fnErr, 'Ən azı 2 simvol olmalıdır');
+                else setErr(this, fnErr, '');
+            });
+            em.addEventListener('input', function(){
+                if (!this.value.trim()) setErr(this, emErr, 'E-poçt boş ola bilməz');
+                else if (!isValidEmail(this.value)) setErr(this, emErr, 'Düzgün e-poçt formatı daxil edin (ornek@email.com)');
+                else setErr(this, emErr, '');
+            });
+            pw.addEventListener('input', function(){
+                updatePwStrength(this.value);
+                if (!this.value) setErr(this, pwErr, 'Şifrə boş ola bilməz');
+                else if (this.value.length < 6) setErr(this, pwErr, 'Şifrə minimum 6 simvol olmalıdır');
+                else setErr(this, pwErr, '');
+                // Confirm-i də yenilə
+                if (cpw.value) {
+                    if (cpw.value !== this.value) setErr(cpw, cpwErr, 'Şifrələr uyğun deyil');
+                    else setErr(cpw, cpwErr, '');
+                }
+            });
+            cpw.addEventListener('input', function(){
+                if (!this.value) setErr(this, cpwErr, 'Şifrə təsdiqi boş ola bilməz');
+                else if (this.value !== pw.value) setErr(this, cpwErr, 'Şifrələr uyğun deyil');
+                else setErr(this, cpwErr, '');
+            });
+
+            // Submit
+            form.addEventListener('submit', function(e){
+                var ok = true;
+                if (!fn.value.trim()) { setErr(fn, fnErr, 'Ad Soyad boş ola bilməz'); ok=false; }
+                else if (fn.value.trim().length < 2) { setErr(fn, fnErr, 'Ən azı 2 simvol olmalıdır'); ok=false; }
+                if (!em.value.trim()) { setErr(em, emErr, 'E-poçt boş ola bilməz'); ok=false; }
+                else if (!isValidEmail(em.value)) { setErr(em, emErr, 'Düzgün e-poçt formatı daxil edin'); ok=false; }
+                if (!pw.value) { setErr(pw, pwErr, 'Şifrə boş ola bilməz'); ok=false; }
+                else if (pw.value.length < 6) { setErr(pw, pwErr, 'Şifrə minimum 6 simvol olmalıdır'); ok=false; }
+                if (!cpw.value) { setErr(cpw, cpwErr, 'Şifrə təsdiqi boş ola bilməz'); ok=false; }
+                else if (cpw.value !== pw.value) { setErr(cpw, cpwErr, 'Şifrələr uyğun deyil'); ok=false; }
+                if (!ok) e.preventDefault();
+            });
+        })();
 
         function closeAllModals() {
             document.getElementById('loginModal').classList.remove('active');
